@@ -22,10 +22,6 @@
   outline-width: 1px;
 }
 
-.hidden {
-  display: none;
-}
-
 h1 {
   font-family: Tahoma;
   font-size: 16pt;
@@ -54,12 +50,12 @@ p.abstract {
 
 span.open {
   margin-left: -20px;
-  display:none;
+  display:inline;
 }
 
 span.close {
   margin-left: -20px;
-  display:inline;
+  display:none;
 }
 
 li {
@@ -96,11 +92,19 @@ function toggle(blck) {
   }
 }
 
+function toggleAll() {
+  var papers = ["bobw", "bananas", "gvhs", "conflate", "variants", "propositions", "oversem", "cpgv", "instances", "hackage"];
+  var len = papers.length;
+  for (i = 0; i < len; i++) {
+    toggle(papers[i]);
+  }
+}
+
 </script>
 
 </head>
 
-<body>
+<body onload='toggleAll();'>
 
 <div class="topBox">
   <h1>j garrett morris</h1>
@@ -156,7 +160,7 @@ function toggle(blck) {
    To appear at ICFP 2016, Nara, Japan.
  </p>
 
- <div id="bobw" class="hidden">
+ <div id="bobw">
    <p class="abstract">
      We present a linear functional calculus with both the safety guarantees expressible with linear
      types and the rich language of combinators and composition provided by functional programming.
@@ -182,7 +186,7 @@ function toggle(blck) {
     To appear at ICFP 2016, Nara, Japan.
  </p>
 
- <div id="bananas" class="hidden">
+ <div id="bananas">
    <p class="abstract">
      Session types provide static guarantees that concurrent programs respect communication
      protocols.  We give a novel account of recursive session types in the context of GV, a small
@@ -217,7 +221,7 @@ function toggle(blck) {
    2016, Nara, Japan.
  </p>
 
- <div id="gvhs" class="hidden">
+ <div id="gvhs">
    <p class="abstract">
      We present a novel embedding of session-typed concurrency in Haskell.
 
@@ -236,15 +240,15 @@ function toggle(blck) {
  </div>
 
  <p onclick='toggle("conflate")' class="paper">
-   <span id="gvhs-closed" class="close">&#9655;</span>
-   <span id="gvhs-open" class="open">&#9661;</span>
+   <span id="conflate-closed" class="close">&#9655;</span>
+   <span id="conflate-open" class="open">&#9661;</span>
    Robert Atkey, Sam Lindley, and J. Garrett Morris. "Conflation Confers Concurrency".  In <i>A
     List of Successes That Can Change the World: Essays Dedicated to Philip Wadler on the Occasion
     of His 60th Birthday</i>. LNCS
     9600.
  </p>
 
- <div id="conflate" class="hidden">
+ <div id="conflate">
    <p class="abstract">
      Session types provide a static guarantee that concurrent programs respect communication
      protocols.  Recent work has explored a correspondence between proof rules and cut reduction in
@@ -273,7 +277,7 @@ function toggle(blck) {
      Symposium on Haskell</i>, Vancouver, BC.
  </p>
 
- <div id="variants" class="hidden">
+ <div id="variants">
    <p class="abstract">
      Extensible variants improve the modularity and expressiveness of programming languages: they
      allow program functionality to be decomposed into independent blocks, and allow seamless
@@ -316,7 +320,7 @@ function toggle(blck) {
    Sam Lindley and J. Garrett Morris.  "A Semantics for Propositions as Sessions".  ESOP 2015.
  </p>
 
- <div id="propositions" class="hidden">
+ <div id="propositions">
    <p class="abstract">
      Session types provide a static guarantee that concurrent programs respect communication
      protocols. Recently, Caires, Pfenning, and Toninho, and Wadler, have developed a correspondence
@@ -352,7 +356,7 @@ function toggle(blck) {
      ACM SIGPLAN Symposium on Haskell</i>, Gothenburg, Sweden.
  </p>
 
- <div id="oversem" class="hidden">
+ <div id="oversem">
    <p class="abstract">
      As originally proposed, type classes provide overloading and ad-hoc definition, but can still
      be understood (and implemented) in terms of strictly parametric calculi.  This is not true of
@@ -379,7 +383,7 @@ function toggle(blck) {
      2014.
  </p>
 
- <div id="cpgv" class="hidden">
+ <div id="cpgv">
    <p class="abstract">
      Recently, Wadler presented a continuation-passing translation from a session-typed functional
      language, GV, to a process calculus based on classical linear logic, CP. However, this
@@ -403,7 +407,7 @@ function toggle(blck) {
     2010.
  </p>
 
- <div id="instances" class="hidden">
+ <div id="instances">
    <p class="abstract">
      Type classes have found a wide variety of uses in Haskell programs, from simple overloading of
      operators (such as equality or ordering) to complex invariants used to implement type-safe
@@ -436,7 +440,7 @@ function toggle(blck) {
      Baltimore, Maryland.
  </p>
 
- <div id="hackage" class="hidden">
+ <div id="hackage">
    <p class="abstract">
      Hackage, an online repository of Haskell applications and libraries, provides a hub for
      programmers to both release code to and use code from the larger Haskell community.  We suggest
