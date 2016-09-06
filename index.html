@@ -22,6 +22,10 @@
   outline-width: 1px;
 }
 
+.hidden {
+  display: none;
+}
+
 h1 {
   font-family: Tahoma;
   font-size: 16pt;
@@ -40,6 +44,24 @@ p {
   font-size: 11pt;
 }
 
+p.paper {
+  cursor: pointer;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+span.open {
+  margin-left: -20px;
+  display:none;
+}
+
+span.close {
+  margin-left: -20px;
+  display:inline;
+}
+
 li {
   font-family: Tahoma;
   font-size: 11pt;
@@ -56,6 +78,25 @@ a.invisible {
 }
 
 </style>
+
+<script type="text/javascript">
+
+function toggle(blck) {
+  var el = document.getElementById(blck);
+  var closed = document.getElementById(blck + "-closed");
+  var open = document.getElementById(blck + "-open");
+  if (window.getComputedStyle(el, null).display == "none") {
+    el.style.display = "block";
+    closed.style.display = "none";
+    open.style.display = "inline";
+  } else {
+    el.style.display = "none";
+    closed.style.display = "inline";
+    open.style.display = "none";
+  }
+}
+
+</script>
 
 </head>
 
@@ -108,62 +149,314 @@ a.invisible {
 <div class="box">
  <h2>publications</h2>
 
- <p>J. Garrett Morris.  "The Best of Both Worlds: Linear Functional Programming Without Compromise".
-    To appear at ICFP 2016, Nara, Japan. [<a href="pubs/morris-icfp2016-linearity.pdf">PDF</a>]
+ <p onclick='toggle("bobw")' class="paper">
+   <span id="bobw-closed" class="close">&#9655;</span>
+   <span id="bobw-open" class="open">&#9661;</span>
+   J. Garrett Morris.  "The Best of Both Worlds: Linear Functional Programming Without Compromise".
+   To appear at ICFP 2016, Nara, Japan.
  </p>
 
- <p>Sam Lindley and J. Garrett Morris.  "Talking Bananas: Structural Recursion for Session Types".
-    To appear at ICFP 2016, Nara, Japan. [<a href="pubs/lindley-icfp2016-bananas.pdf">PDF</a>]
+ <div id="bobw" class="hidden">
+   <p class="abstract">
+     We present a linear functional calculus with both the safety guarantees expressible with linear
+     types and the rich language of combinators and composition provided by functional programming.
+     Unlike previous combinations of linear typing and functional programming, we compromise neither
+     the linear side (for example, our linear values are first-class citizens of the language) nor
+     the functional side (for example, we do not require duplicate definitions of compositions for
+     linear and unrestricted functions).  To do so, we must generalize abstraction and application
+     to encompass both linear and unrestricted functions.  We capture the typing of the generalized
+     constructs with a novel use of qualified types.  Our system maintains the metatheoretic
+     properties of the theory of qualified types, including principal types and decidable type
+     inference.  Finally, we give a formal basis for our claims of expressiveness, by showing that
+     evaluation respects linearity, and that our language is a conservative extension of existing
+     functional calculi.
+   </p>
+
+   <p>Available in <a href="pubs/morris-icfp2016-linearity.pdf">PDF</a></p>
+ </div>
+
+ <p onclick='toggle("bananas")' class="paper">
+   <span id="bananas-closed" class="close">&#9655;</span>
+   <span id="bananas-open" class="open">&#9661;</span>
+    Sam Lindley and J. Garrett Morris.  "Talking Bananas: Structural Recursion for Session Types".
+    To appear at ICFP 2016, Nara, Japan.
  </p>
 
- <p>Sam Lindley and J. Garrett Morris. "Embedding Session Types in Haskell".  To appear at Haskell
-    2016, Nara, Japan.
+ <div id="bananas" class="hidden">
+   <p class="abstract">
+     Session types provide static guarantees that concurrent programs respect communication
+     protocols.  We give a novel account of recursive session types in the context of GV, a small
+     concurrent extension of the linear &#955;-calculus.  We extend GV with recursive types and
+     catamorphisms, following the initial algebra semantics of recursion, and show that doing so
+     naturally gives rise to recursive session types.  We show that this principled approach to
+     recursion resolves long-standing problems in the treatment of duality for recursive session
+     types.
+   </p>
+   <p class="abstract">
+     We characterize the expressiveness of GV concurrency by giving a CPS translation to
+     (non-concurrent) &#955;-calculus and proving that reduction in GV is simulated by full
+     reduction in &#955;-calculus. This shows that GV remains terminating in the presence of
+     positive recursive types, and that such arguments extend to other extensions of GV, such as
+     polymorphism or non-linear types, by appeal to normalization results for sequential
+     &#955;-calculi.  We also show that GV remains deadlock free and deterministic in the presence
+     of recursive types.
+   </p>
+   <p class="abstract">
+     Finally, we extend CP, a session-typed process calculus based on linear logic, with recursive
+     types, and show that doing so preserves the connection between reduction in GV and cut
+     elimination in CP.
+   </p>
+
+   <p>Available in <a href="pubs/lindley-icfp2016-bananas.pdf">PDF</a>.</p>
+ </div>
+
+ <p onclick='toggle("gvhs")' class="paper">
+   <span id="gvhs-closed" class="close">&#9655;</span>
+   <span id="gvhs-open" class="open">&#9661;</span>
+   Sam Lindley and J. Garrett Morris. "Embedding Session Types in Haskell".  To appear at Haskell
+   2016, Nara, Japan.
  </p>
 
- <p>Robert Atkey, Sam Lindley, and J. Garrett Morris. "Conflation Confers Concurrency".  In <i>A
+ <div id="gvhs" class="hidden">
+   <p class="abstract">
+     We present a novel embedding of session-typed concurrency in Haskell.
+
+     We extend an existing HOAS embedding of \llc with a set of core session-typed primitives, using
+     indexed type families to express the constraints of the session typing discipline.
+
+     We give two interpretations of our embedding, one in terms of GHC's built-in concurrency and
+     another in terms of purely functional continuations.
+
+     Our safety guarantees, including deadlock freedom, are assured statically and introduce no
+     additional runtime overhead.
+   </p>
+   <p>Paper available in <a href="pubs/lindley-hs2016-gvhs.pdf">PDF</a>, or see the source code
+   on <a href="http://github.com/jgbm/gvinhs">Github</a>.
+   </p>
+ </div>
+
+ <p onclick='toggle("conflate")' class="paper">
+   <span id="gvhs-closed" class="close">&#9655;</span>
+   <span id="gvhs-open" class="open">&#9661;</span>
+   Robert Atkey, Sam Lindley, and J. Garrett Morris. "Conflation Confers Concurrency".  In <i>A
     List of Successes That Can Change the World: Essays Dedicated to Philip Wadler on the Occasion
     of His 60th Birthday</i>. LNCS
-    9600. [<a href="http://link.springer.com/chapter/10.1007%2F978-3-319-30936-1_2">Springer</a>]
-    [<a href="pubs/atkey-wf2016-conflate.pdf">PDF</a>]
+    9600.
  </p>
 
- <p>J. Garrett Morris. "Variations on Variants".  In <i>Proceedings of the 2015 ACM SIGPLAN
+ <div id="conflate" class="hidden">
+   <p class="abstract">
+     Session types provide a static guarantee that concurrent programs respect communication
+     protocols.  Recent work has explored a correspondence between proof rules and cut reduction in
+     linear logic and typing and evaluation of process calculi. This paper considers two approaches
+     to extend logically-founded process calculi. First, we consider extensions of the process
+     calculus to more closely resemble &#960;-calculus. Second, inspired by denotational models of
+     process calculi, we consider conflating dual types. Most interestingly, we observe that these
+     approaches coincide: conflating the multiplicatives (&#8855; and &#x214B;) allows processes to
+     share multiple channels; conflating the additives (&#8853; and &) provides
+     nondeterminism; and conflating the exponentials (! and ?) yields access points, a
+     rendezvous mechanism for initiating session typed communication.  Access points are
+     particularly expressive: for example, they are sufficient to encode concurrent state and
+     general recursion.
+   </p>
+   <p>
+     Available
+     from <a href="http://link.springer.com/chapter/10.1007%2F978-3-319-30936-1_2">Springer</a> or
+     in <a href="pubs/atkey-wf2016-conflate.pdf">PDF</a>.
+   </p>
+ </div>
+
+ <p onclick='toggle("variants")' class="paper">
+   <span id="variants-closed" class="close">&#9655;</span>
+   <span id="variants-open" class="open">&#9661;</span>
+   J. Garrett Morris. "Variations on Variants".  In <i>Proceedings of the 2015 ACM SIGPLAN
      Symposium on Haskell</i>, Vancouver, BC.
-     [<a href="http://dl.acm.org/citation.cfm?doid=2804302.2804320">ACM DL</a>]
-     [<a href="pubs/morris-haskell15-variants.pdf">PDF</a>] [<a href="Dtac.hs">Sample code</a>]
  </p>
 
- <p>Sam Lindley and J. Garrett Morris.  "A Semantics for Propositions as Sessions".  ESOP 2015.
-    [<a href="http://link.springer.com/chapter/10.1007/978-3-662-46669-8_23#">Springer</a>]
-    [<a href="pubs/lindley-esop14-propositions.pdf">PDF</a>]
+ <div id="variants" class="hidden">
+   <p class="abstract">
+     Extensible variants improve the modularity and expressiveness of programming languages: they
+     allow program functionality to be decomposed into independent blocks, and allow seamless
+     extension of existing code with both new cases of existing data types and new operations over
+     those data types.
+   </p>
+
+   <p class="abstract">
+     This paper considers three approaches to providing extensible variants in Haskell.  Row typing
+     is a long understood mechanism for typing extensible records and variants, but its adoption
+     would require extension of Haskell's core type system.  Alternatively, we might hope to encode
+     extensible variants in terms of existing mechanisms, such as type classes.  We describe an
+     encoding of extensible variants using instance chains, a proposed extension of the class
+     system.  Unlike many previous encodings of extensible variants, ours does not require the
+     definition of a new type class for each function that consumes variants.  Finally, we translate
+     our encoding to use closed type families, an existing feature of GHC.  Doing so demonstrates
+     the interpretation of instances chains and functional dependencies in closed type families.
+   </p>
+
+   <p class="abstract">
+     One concern with encodings like ours is how completely they match the encoded system.  We
+     compare the expressiveness of our encodings with each other and with systems based on row
+     types.  We find that, while equivalent terms are typable in each system, both encodings require
+     explicit type annotations to resolve ambiguities in typing not present in row type systems, and
+     the type family implementation retains more constraints in principal types than does the
+     instance chain implementation.  We propose a general mechanism to guide the instantiation of
+     ambiguous type variables, show that it eliminates the need for type annotations in our
+     encodings, and discuss conditions under which it preserves coherence.
+   </p>
+
+   <p>Paper available from the <a href="http://dl.acm.org/citation.cfm?doid=2804302.2804320">ACM
+   DL</a> or in <a href="pubs/morris-haskell15-variants.pdf">PDF</a>. Sample code available
+   <a href="Dtac.hs">here</a>.
+   </p>
+ </div>
+
+ <p onclick='toggle("propositions")' class="paper">
+   <span id="propositions-closed" class="close">&#9655;</span>
+   <span id="propositions-open" class="open">&#9661;</span>
+   Sam Lindley and J. Garrett Morris.  "A Semantics for Propositions as Sessions".  ESOP 2015.
  </p>
 
- <p>J. Garrett Morris. "A Simple Semantics of Haskell Overloading". In <i>Proceedings of the 2014
+ <div id="propositions" class="hidden">
+   <p class="abstract">
+     Session types provide a static guarantee that concurrent programs respect communication
+     protocols. Recently, Caires, Pfenning, and Toninho, and Wadler, have developed a correspondence
+     between propositions of linear logic and session typed &#960;-calculus processes.
+
+     We relate the cut-elimination semantics of this approach to an operational semantics for
+     session-typed concurrency in a functional language.
+
+     We begin by presenting a variant of Wadler's session-typed core functional language, GV. We
+     give a small-step operational semantics for GV. We develop a suitable notion of deadlock, based
+     on existing approaches for capturing deadlock in &#960;-calculus, and show that all well-typed
+     GV programs are deadlock-free, deterministic, and terminating.
+
+     We relate GV to linear logic by giving translations between GV and CP, a process calculus with
+     a type system and semantics based on classical linear logic.  We prove that both directions of
+     our translation preserve reduction; previous translations from GV to CP, in contrast, failed to
+     preserve &#946;-reduction.
+
+     Furthermore, to demonstrate the modularity of our approach, we define two extensions of GV
+     which preserve deadlock-freedom, determinism, and termination.
+   </p>
+   <p>
+     Available
+     from <a href="http://link.springer.com/chapter/10.1007/978-3-662-46669-8_23#">Springer</a> or
+     in <a href="pubs/lindley-esop14-propositions.pdf">PDF</a>.
+   </p>
+ </div>
+
+ <p onclick='toggle("oversem")' class="paper">
+   <span id="oversem-closed" class="close">&#9655;</span>
+   <span id="oversem-open" class="open">&#9661;</span>
+   J. Garrett Morris. "A Simple Semantics of Haskell Overloading". In <i>Proceedings of the 2014
      ACM SIGPLAN Symposium on Haskell</i>, Gothenburg, Sweden.
-    [<a href="http://dl.acm.org/citation.cfm?id=2633364">ACM DL</a>]
-    [<a href="pubs/morris-haskell14-oversem.pdf">PDF</a>]
  </p>
 
- <p>Sam Lindley and J. Garrett Morris. "Sessions as Propositions". In PLACES
+ <div id="oversem" class="hidden">
+   <p class="abstract">
+     As originally proposed, type classes provide overloading and ad-hoc definition, but can still
+     be understood (and implemented) in terms of strictly parametric calculi.  This is not true of
+     subsequent extensions of type classes.  Functional dependencies and equality constraints allow
+     the satisfiability of predicates to refine typing; this means that the interpretations of
+     equivalent qualified types may not be interconvertible.  Overlapping instances and instance
+     chains allow predicates to be satisfied without determining the implementations of their
+     associated class methods, introducing truly non-parametric behavior.  We propose a new approach
+     to the semantics of type classes, interpreting polymorphic expressions by the behavior of each
+     of their ground instances, but without requiring that those behaviors be parametrically
+     determined.  We argue that this approach both matches the intuitive meanings of qualified types
+     and accurately models the behavior of programs.
+   </p>
+   <p>
+     Available from the <a href="http://dl.acm.org/citation.cfm?id=2633364">ACM DL</a> or
+     in <a href="pubs/morris-haskell14-oversem.pdf">PDF</a>.
+   </p>
+ </div>
+
+ <p onclick='toggle("cpgv")' class="paper">
+   <span id="cpgv-closed" class="close">&#9655;</span>
+   <span id="cpgv-open" class="open">&#9661;</span>
+   Sam Lindley and J. Garrett Morris. "Sessions as Propositions". In PLACES
      2014.
-     [<a href="http://arxiv.org/abs/1406.3479">arXiv</a>]
-     [<a href="pubs/morris-places14-cpgv.pdf">PDF</a>]
  </p>
 
- <p>J. Garrett Morris and Mark P. Jones.  "Instance Chains: Type Class Programming Without Overlapping Instances."
+ <div id="cpgv" class="hidden">
+   <p class="abstract">
+     Recently, Wadler presented a continuation-passing translation from a session-typed functional
+     language, GV, to a process calculus based on classical linear logic, CP. However, this
+     translation is one-way: CP is more expressive than GV. We propose an extension of GV, called
+     HGV, and give translations showing that it is as expressive as CP. The new translations shed
+     light both on the original translation from GV to CP, and on the limitations in expressiveness
+     of GV.
+   </p>
+   <p>
+     Available from <a href="http://arxiv.org/abs/1406.3479">arXiv</a> or in
+     <a href="pubs/morris-places14-cpgv.pdf">PDF</a>.
+   </p>
+ </div>
+
+ <p onclick='toggle("instances")' class="paper">
+   <span id="instances-closed" class="close">&#9655;</span>
+   <span id="instances-open" class="open">&#9661;</span>
+   J. Garrett Morris and Mark P. Jones.  "Instance Chains: Type Class Programming Without Overlapping Instances."
     In <i>Proceedings of the 15th ACM SIGPLAN International Conference on Functional
     Programming (ICFP '10)</i>, Baltimore, Maryland.
     2010.
-    [<a href="http://dl.acm.org/citation.cfm?id=1863543.1863596">ACM DL</a>]
-    [<a href="pubs/morris-icfp2010-instances.pdf">PDF</a>]
  </p>
 
- <p>J. Garrett Morris. "Experience Report: Using Hackage to Inform Language Design."
+ <div id="instances" class="hidden">
+   <p class="abstract">
+     Type classes have found a wide variety of uses in Haskell programs, from simple overloading of
+     operators (such as equality or ordering) to complex invariants used to implement type-safe
+     heterogeneous lists or limited subtyping.  Unfortunately, many of the richer uses of type
+     classes require extensions to the class system that have been incompletely described in the
+     research literature and are not universally accepted within the Haskell community.
+   </p>
+
+   <p class="abstract">
+     This paper describes a new type class system, implemented in a prototype tool
+     called <tt>ilab</tt>, that simplifies and enhances Haskell-style type-class programming.
+     In <tt>ilab</tt>, we replace overlapping instances with a new feature, <i>instance chains</i>,
+     allowing explicit alternation and failure in instance declarations.  We describe a technique
+     for ascribing semantics to type class systems, relating classes, instances, and class
+     constraints (such as kind signatures or functional dependencies) directly to a set-theoretic
+     model of relations on types.  Finally, we give a semantics for <tt>ilab</tt> and describe its
+     implementation.
+   </p>
+   <p>
+     Available from the <a href="http://dl.acm.org/citation.cfm?id=1863543.1863596">ACM DL</a> or
+     in <a href="pubs/morris-icfp2010-instances.pdf">PDF</a>.
+   </p>
+ </div>
+
+ <p onclick='toggle("hackage")' class="paper">
+   <span id="hackage-closed" class="close">&#9655;</span>
+   <span id="hackage-open" class="open">&#9661;</span>
+   J. Garrett Morris. "Experience Report: Using Hackage to Inform Language Design."
      In <i>Proceedings of the 3rd ACM Symposium on Haskell (Haskell '10)</i>,
      Baltimore, Maryland.
-     [<a href="http://dl.acm.org/citation.cfm?id=1863523.1863531">ACM DL</a>]
-     [<a href="pubs/morris-hw2010-hackage.pdf">PDF</a>]
  </p>
+
+ <div id="hackage" class="hidden">
+   <p class="abstract">
+     Hackage, an online repository of Haskell applications and libraries, provides a hub for
+     programmers to both release code to and use code from the larger Haskell community.  We suggest
+     that Hackage can also serve as a valuable resource for language designers: by providing a large
+     collection of code written by different programmers and in different styles, it allows language
+     designers to see not just how features could be used theoretically, but how they are (and are
+     not) used in practice.
+   </p>
+
+   <p class="abstract">
+     We were able to make such a use of Hackage during the design of the class system for a new
+     Haskell-like programming language.  In this paper, we sketch our language design problem, and
+     how we used Hackage to help answer it.  We describe our methodology in some detail, including
+     both ways that it was and was not effective, and summarize our results.
+   </p>
+   <p>
+     Available from the <a href="http://dl.acm.org/citation.cfm?id=1863523.1863531">ACM DL</a> or
+     in <a href="pubs/morris-hw2010-hackage.pdf">PDF</a>.
+   </p>
+ </div>
 
  <p><small>Some of these papers are copyright ACM.  These are the author's versions of the work.
      They are posted here by permission of ACM for your personal use.  Not for redistribution.
