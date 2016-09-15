@@ -22,6 +22,17 @@
   outline-width: 1px;
 }
 
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
 h1 {
   font-family: Tahoma;
   font-size: 16pt;
@@ -44,13 +55,17 @@ p.paper {
   cursor: pointer;
 }
 
+p.paper:hover {
+  text-decoration: underline;
+}
+
 p.abstract {
   margin-left: 20px;
 }
 
 span.open {
   margin-left: -20px;
-  display:inline;
+  display:inline-block;
 }
 
 span.close {
@@ -84,10 +99,10 @@ function toggle(blck) {
   if (window.getComputedStyle(el, null).display == "none") {
     el.style.display = "block";
     closed.style.display = "none";
-    open.style.display = "inline";
+    open.style.display = "inline-block";
   } else {
     el.style.display = "none";
-    closed.style.display = "inline";
+    closed.style.display = "inline-block";
     open.style.display = "none";
   }
 }
@@ -176,7 +191,11 @@ function toggleAll() {
      functional calculi.
    </p>
 
-   <p>Available in <a href="pubs/morris-icfp2016-linearity.pdf">PDF</a></p>
+   <p>
+     The extended edition is available in <a href="pubs/morris-icfp2016-linearity.pdf">PDF</a>.
+     Note that this version fixes several inadvertent omissions and typographical errors, and so
+     should be preferred to the conference version.  The conference version is available from
+     the <a href="http://dl.acm.org/citation.cfm?id=2951925">ACM DL</a>.
  </div>
 
  <p onclick='toggle("bananas")' class="paper">
@@ -211,7 +230,10 @@ function toggleAll() {
      elimination in CP.
    </p>
 
-   <p>Available in <a href="pubs/lindley-icfp2016-bananas.pdf">PDF</a>.</p>
+   <p>
+     Available in <a href="pubs/lindley-icfp2016-bananas.pdf">PDF</a> or from
+     the <a href="http://dl.acm.org/citation.cfm?id=2951921">ACM DL</a>.
+   </p>
  </div>
 
  <p onclick='toggle("gvhs")' class="paper">
@@ -234,7 +256,8 @@ function toggleAll() {
      Our safety guarantees, including deadlock freedom, are assured statically and introduce no
      additional runtime overhead.
    </p>
-   <p>Paper available in <a href="pubs/lindley-hs2016-gvhs.pdf">PDF</a>, or see the source code
+   <p>Paper available in <a href="pubs/lindley-hs2016-gvhs.pdf">PDF</a> or from
+   the <a href="http://dl.acm.org/citation.cfm?id=2976018">ACM DL</a>.  See the source code
    on <a href="http://github.com/jgbm/gvinhs">Github</a>.
    </p>
  </div>
