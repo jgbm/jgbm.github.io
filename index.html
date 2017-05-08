@@ -108,7 +108,7 @@ function toggle(blck) {
 }
 
 function toggleAll() {
-  var papers = ["bobw", "bananas", "gvhs", "conflate", "variants", "propositions", "oversem", "cpgv", "instances", "hackage"];
+  var papers = ["cons-tf", "mixed", "bobw", "bananas", "gvhs", "conflate", "variants", "propositions", "oversem", "cpgv", "instances", "hackage"];
   var len = papers.length;
   for (i = 0; i < len; i++) {
     toggle(papers[i]);
@@ -128,8 +128,11 @@ function toggleAll() {
 <div class="box">
   <h2>about me</h2>
   <p>
-    I am a research associate in the <a href="http://wcms.inf.ed.ac.uk/lfcs/">Laboratory for
-    Foundations of Computer Science</a>, one institute of
+    Starting this fall, I will be an assistant professor in
+    the <a href="http://eecs.ku.edu">Department of Electrical Engineering</a> at
+    the <a href="http://www.ku.edu">University of Kansas</a>.  In the meantime, I remain a research
+    associate in the <a href="http://wcms.inf.ed.ac.uk/lfcs/">Laboratory for Foundations of Computer
+    Science</a>, one institute of
     the <a href="http://www.ed.ac.uk/schools-departments/informatics/">School of Informatics</a> at
     the <a href="http://www.ed.ac.uk/home">University of Edinburgh</a>.  My research centers on type
     systems for functional programming languages; in particular:
@@ -167,6 +170,63 @@ function toggleAll() {
 
 <div class="box">
  <h2>publications</h2>
+
+ <p onclick='toggle("cons-tf")' class="paper">
+   <span id="cons-tf-closed" class="close">&#9655;</span>
+   <span id="cons-tf-open" class="open">&#9661;</span>
+
+   J. Garrett Morris and Richard Eisenberg.  "Constrained Type Families".  To appear at <i>ICFP
+   2017</i>.
+ </p>
+
+ <div id="cons-tf">
+   <p class="abstract">
+     We present an approach to support partiality in type-level computation without compromising
+     expressiveness or type safety. Existing frameworks for type-level computation either require
+     totality or implicitly assume it. For example, type families in Haskell provide a powerful,
+     modular means of defining type-level computation. However, their current design implicitly
+     assumes that type families are total, introducing nonsensical types and significantly
+     complicating the metatheory of type families and their extensions. We propose an alternative
+     design, using qualified types to pair type-level computations with predicates that capture
+     their domains. Our approach naturally captures the intuitive partiality of type families,
+     simplifying their metatheory. As evidence, we present the first complete proof of consistency
+     for a language with closed type families.
+   </p>
+ </div>
+
+ <p onclick='toggle("mixed")' class="paper">
+   <span id="mixed-closed" class="close">&#9655;</span>
+   <span id="mixed-open" class="open">&#9661;</span>
+
+   Jack Williams, J. Garrett Morris, Philip Wadler, and Jakub Zalewski. "Mixed Messages: Measuring
+   Conformance and Non-Interference in TypeScript".  To appear at <i>ECOOP 2017</i>.
+ </p>
+
+ <div id="mixed">
+   <p class="abstract">
+     TypeScript participates in the recent trend among programming languages to support gradual
+     typing. The DefinitelyTyped Repository for TypeScript supplies type definitions for over 2000
+     popular JavaScript libraries. However, there is no guarantee that implementations conform to
+     their corresponding declarations.
+   </p>
+
+   <p class="abstract">
+     We present a practical evaluation of gradual typing for TypeScript. We have developed a tool,
+     based on the polymorphic blame calculus, for monitoring JavaScript libraries and TypeScript
+     clients against the TypeScript definition. We apply our tool, TypeScript TNG, to those
+     libraries in the DefinitelyTyped Repository which had adequate test code to use. Of the 122
+     libraries we checked, 59 had cases where either the library or its tests failed to conform to
+     the declaration.
+   </p>
+
+   <p class="abstract">
+     Gradual typing should satisfy non-interference. Monitoring a program should never change its
+     behaviour except, to raise a type error should a value not conform to its declared
+     type. However, our experience also suggests serious technical concerns with the use of the
+     JavaScript proxy mechanism for enforcing contracts. Of the 122 libraries we checked, 22 had
+     cases where the library or its tests violated non-interference.
+   </p>
+ </div>
 
  <p onclick='toggle("bobw")' class="paper">
    <span id="bobw-closed" class="close">&#9655;</span>
