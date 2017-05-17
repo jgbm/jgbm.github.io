@@ -108,7 +108,7 @@ function toggle(blck) {
 }
 
 function toggleAll() {
-  var papers = ["cons-tf", "mixed", "bobw", "bananas", "gvhs", "conflate", "variants", "propositions", "oversem", "cpgv", "instances", "hackage"];
+  var papers = ["cons-tf", "mixed", "bobw", "bananas", "gvhs", "conflate", "variants", "propositions", "oversem", "cpgv", "thesis", "instances", "hackage"];
   var len = papers.length;
   for (i = 0; i < len; i++) {
     toggle(papers[i]);
@@ -158,13 +158,6 @@ function toggleAll() {
     contributed to the design of the Habit programming language, particularly its class system, and
     to the development of the Habit compiler, particularly its typechecking and desugaring
     components.
-  </p>
-</div>
-
-<div class="box">
-  <h2>dissertation</h2>
-  <p><i>Instances Chains and Type Classes: A Relational Approach.</i>
-  [<a href="d/final.pdf">PDF</a>]
   </p>
 </div>
 
@@ -485,6 +478,34 @@ function toggleAll() {
      <a href="pubs/morris-places14-cpgv.pdf">PDF</a>.
    </p>
  </div>
+
+ <p onclick='toggle("thesis")' class="paper">
+   <span id="thesis-closed" class="close">&#9655;</span>
+   <span id="thesis-open" class="open">&#9661;</span>
+   J. Garrett Morris. <i>Type Classes and Instance Chains: A Relational Approach.</i> PhD thesis,
+   Portland State University, 2013.
+ </p>
+
+ <div id="thesis">
+   <p class="abstract">
+     Type classes, first proposed during the design of the Haskell programming language, extend
+     standard type systems to support overloaded functions. Since their introduction, type classes
+     have been used to address a range of problems, from typing ordering and arithmetic operators to
+     describing heterogeneous lists and limited subtyping. However, while type class programming is
+     useful for a variety of practical problems, its wider use is limited by the inexpressiveness
+     and hidden complexity of current mechanisms. We propose two improvements to existing class
+     systems. First, we introduce several novel language features, instance chains and explicit
+     failure, that increase the expressiveness of type classes while providing more direct
+     expression of current idioms. To validate these features, we have built an implementation of
+     these features, demonstrating their use in a practical setting and their integration with type
+     reconstruction for a Hindley-Milner type system.  Second, we define a set-based semantics for
+     type classes that provides a sound basis for reasoning about type class systems, their
+     implementations, and the meanings of programs that use them.
+   </p>
+
+   <p>Available in <a href="d/final.pdf">PDF</a>.</p>
+ </div>
+
 
  <p onclick='toggle("instances")' class="paper">
    <span id="instances-closed" class="close">&#9655;</span>
