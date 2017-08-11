@@ -63,6 +63,19 @@ p.abstract {
   margin-left: 20px;
 }
 
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  vertical-align: top;
+}
+
+td > strong {
+  text-transform: lowercase;
+}
+
+
 span.open {
   margin-left: -20px;
   display:inline-block;
@@ -124,7 +137,7 @@ function toggleAll() {
 <div class="topBox">
   <h1>j garrett morris</h1>
   <div style="font-family:tahoma; font-size:11pt; float:right; text-align: right; position: relative; top: -35px">
-    <a href="#about">about</a> | <a href="#teaching">teaching</a> | <a href="#research">publications</a>
+    <a href="#about">about</a> | <a href="#teaching">teaching</a> | <a href="#research">publications</a> | <a href="#contact">contact
   </div>
 </div>
 
@@ -134,7 +147,17 @@ function toggleAll() {
     I am an assistant professor in the <a href="http://eecs.ku.edu">Department of Electrical
     Engineering and Computer Science</a> and the <a href="http://ittc.ku.edu">Information and
     Telecommunications Technology Center</a> at the <a href="http://www.ku.edu">University of
-    Kansas</a>.  My research centers on type systems for functional programming languages; in
+    Kansas</a>.
+  </p>
+
+  <p>
+    I am currently looking for motivated Ph.D. and Master's students interested in working in
+    programming languages.  If you think that might be you,
+    please get in touch.
+  </p>
+
+  <p>
+    My research centers on type systems for functional programming languages; in
     particular:
   </p>
   <ul>
@@ -170,7 +193,11 @@ function toggleAll() {
   <h2>teaching</h2>
 
   <p>
-    <a href="eecs662f17/index.html">EECS 662, Fall 2017</a>
+    EECS 662 (Programming languages): <a href="eecs662f17/index.html">Fall 2017</a>
+  </p>
+
+  <p>
+    EECS 665 (Compilers): Spring 2018
   </p>
 </div>
 
@@ -594,6 +621,43 @@ function toggleAll() {
      They are posted here by permission of ACM for your personal use.  Not for redistribution.
      Please see each paper for the location of the definitive version.</small></p>
 </div>
+
+<div class="box" id="contact">
+  <h2>contact information</h2>
+
+  <table>
+    <tr>
+      <td><strong>email</strong></td>
+      <td colspan="2">
+        <a href="mailto:garrettm@ku.edu">garrettm@ku.edu</a> (general) <br>
+        <a href="mailto:garrett@ittc.ku.edu">garrett@ittc.ku.edu</a> (research-related)
+      </td>
+    </tr>
+    <tr>
+      <td><strong>postal mail</strong></td>
+      <td>
+        2028 Eaton Hall <br>
+        1520 W 15th St <br>
+        Lawrence, KS 66045 <br>
+      </td>
+      <td>
+        253 Nichols Hall <br>
+        2335 Irving Hill Rd <br>
+        Lawrence, KS 66045<br>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>telephone</strong></td>
+      <td>
+        (785) 864-8825
+      </td>
+      <td>
+        (785) 864-7968
+      </td>
+    </tr>
+  </table>
+</div>
+
 
 </body>
 </html>
