@@ -123,9 +123,12 @@ function toggleAll() {
 
 <div class="topBox">
   <h1>j garrett morris</h1>
+  <div style="font-family:tahoma; font-size:11pt; float:right; text-align: right; position: relative; top: -35px">
+    <a href="#about">about</a> | <a href="#teaching">teaching</a> | <a href="#research">publications</a>
+  </div>
 </div>
 
-<div class="box">
+<div class="box" id="about">
   <h2>about me</h2>
   <p>
     I am an assistant professor in the <a href="http://eecs.ku.edu">Department of Electrical
@@ -163,7 +166,16 @@ function toggleAll() {
   </p>
 </div>
 
-<div class="box">
+<div class="box" id="teaching">
+  <h2>teaching</h2>
+
+  <p>
+    <a href="eecs662f17/index.html">EECS 662, Fall 2017</a>
+  </p>
+</div>
+
+
+<div class="box" id="research">
  <h2>publications</h2>
 
  <p onclick='toggle("cons-tf")' class="paper">
