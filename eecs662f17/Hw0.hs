@@ -233,7 +233,7 @@ form, it is played between a single player and a dealer.  The player and dealer
 each have a hand, scored as follows:
 
   - Face cards (King, Queen, and Jack) are each worth 10 points
-  - Aces are worth EITHER 1 or 10 points
+  - Aces are worth EITHER 1 or 11 points
   - Other cards are worth their pip value (for example, a nine of spades is
     worth 9 points).
 
