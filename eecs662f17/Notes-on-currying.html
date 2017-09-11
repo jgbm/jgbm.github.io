@@ -1,0 +1,450 @@
+<html>
+<head>
+<title>Notes on Currying</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topbox">
+
+  <h1>Notes on currying</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Functions with multiple arguments</h2>
+
+  <p>
+    At this point in the course, we're collecting many of the building blocks of a simple
+    programming language, the <em>simply typed lambda calculus</em> or STLC.  However, many of them
+    may seem too simple to actually correspond to real programming languages.  For example, our
+    functions can only operate on single arguments, whereas functions in real programming languages
+    operate on many arguments at a time.  In this note, I'll talk about two ways we can represent
+    multiple-argument functions in STLC, and we'll see that these ways are actually equivalent (or,
+    if you prefer, interconvertable).
+  </p>
+
+  <h2>Tuples of arguments</h2>
+
+  <p>
+    One approach to expressing functions of multiple arguments is to use product types to compact
+    multiple "intuitive" arguments into a single actual argument.  For a simple example, consider a
+    function that adds three numbers.  In a language like C or Java, this function might be written
+    as follows.
+  </p>
+
+  <pre>
+int f(int x, int y, int z) {
+  return x + y + z;
+}</pre>
+
+  <p>
+    We think of this as a single function <code>f</code> with three arguments, <code>x</code>,
+    <code>y</code>, and <code>z</code>.  That is, we must apply this function to three arguments,
+    and when we do it will produce a result.  The most direct way we can express such a function in
+    our language is to use <em>products</em> to combine multiple individual arguments into a single
+    compound argument.  For example, we could write a function in STLC that takes a tuple of
+    arguments <code>(int * int) * int -> int</code> as follows
+  </p>
+
+  <pre>
+\p : (int * int) * int ->
+  let (q, z) = p in
+  let (x, y) = q in
+    x + y + z</pre>
+
+  <p>
+    We have defined a function which must be given three arguments (packaged in product types), and
+    then immediately computes their sum.  If we call the function above <code>f<sub>1</sub></code>,
+    then a sample evaluation of this function would go something as follows:
+  </p>
+
+  <pre>
+f<sub>1</sub> ((1, 2), 3)
+          --->
+let (q, z) = ((1,2), 3) in
+let (x, y) = q in
+  x + y + z
+          --->
+let (x, y) = (1, 2) in
+  x + y + 3
+          --->
+1 + 2 + 3
+          --->
+6
+</pre>
+
+  <p>
+    Hopefully this corresponds to your intuition of how a multi-argument function "ought" to work
+    (albeit with some extra boilerplate surrounding the use of tuples).
+  </p>
+
+  <h2>Functions returning functions</h2>
+
+  <p>
+    However, you may have noticed that this doesn't seem to be the way that Haskell treats
+    multi-argument functions.  Indeed, it isn't.  There's an alternative approach,
+    called <em>currying</em>, which is what's actually used in Haskell (and several other functional
+    languages).  A curried function is essentially a nest of functions; each nested function
+    collects one more argument until all the arguments have been collected.  For example, we could
+    also write our 3-argument addition function as follows.
+  </p>
+
+  <pre>
+\x : int ->
+  (\y : int ->
+     (\z: int -> x + y + z))</pre>
+
+  <p>
+    Here, the outermost function collects the value of parameter <code>x</code>, the next function
+    collects the value of parameter <code>y</code>, while the innermost function collects the value
+    of parameter <code>z</code> and computes the result.  If we call this
+    function <code>f<sub>2</sub></code>, then a sample evaluation of this function would go
+    something as follows.
+  </p>
+
+  <pre>
+((f<sub>2</sub> 1) 2) 3
+          --->
+((\y : int -> (\z : int -> 1 + y + z)) 2) 3
+          --->
+(\z : int -> 1 + 2 + z) 3
+          --->
+1 + 2 + 3
+          --->
+6</pre>
+
+  <p>
+    The curried view may not immediately correspond to your intuition about how multi-argument
+    functions should operate.  However, hopefully this example convinces you that it's actually
+    doing the same thing!
+  </p>
+
+  <h2>A note on syntax</h2>
+
+  <p>
+    Haskell employs various syntactic abbreviations to make writing and using curried functions
+    natural.  For example, when you write a Haskell function that seems to have multiple arguments:
+  </p>
+
+  <pre>
+f x y z = x + y + z</pre>
+
+  <p>
+    Haskell actually interprets that definition as if it were defining a nest of three lambdas.  You
+    can see this if you ask for the type, which Haskell well render as something like <code>Int ->
+    Int -> Int</code>. When reading this type, remember that Haskell groups function arrows to the
+    right, so that type is equivalent to <code>Int -> (Int -> Int)</code>. Similarly, when you write
+    a function application like <code>map f xs</code>, Haskell automatically groups applications to
+    the left, so that is equivalent to writing <code>(map f) xs</code>.
+  </p>
+
+  <h2>Currying and uncurrying</h2>
+
+  <p>
+    Now, we have two apparently equivalent approaches to multi-argument functions: the curried
+    version, in which functions are actually nests of functions, and the uncurried version, in which
+    functions take tuples of arguments.  The next question that should arise is whether one of these
+    versions is more expressive than the other.  That is to say, can we write functions in a curried
+    style that we could not write in an uncurried style, or vice-versa?
+  </p>
+
+  <p>
+    In fact, we cannot.  To provide a "formal" argument that we can't, we'll write functions that
+    convert between the curried and uncurried versions of a given function.  To start, let's
+    consider the type of the "currying" function, which takes an uncurried function and returns its
+    curried variant.
+  </p>
+
+  <pre>((a * b) -> c) -> (a -> (b -> c))</pre>
+
+  <p>
+    I've gone a little outside of our STLC language here by writing abstract
+    types <code>a,b,c</code> instead of concrete types like <code>Int</code> or <code>Bool</code>.
+    At this point, you should view these as "slots" in my explanation, into which you (the reader)
+    could plug arbitrary types.  Later in the semester, we'll see how to capture this notion of
+    abstract types within our language.
+  </p>
+
+  <p>
+    Now, let's attempt to define a function of this type.  STLC has very little syntax around, so
+    most of our choices are determined by the type.  In particular, we're supposed to start out
+    creating a function that takes something of type <code>(a * b) -> c</code>, so we'd better start
+    out with a lambda: <code>\ f : ((a * b) -> c) -> ...</code>  We need to produce a return value
+    of type <code>a -> (b -> c)</code>.  Again, the only syntactic form available to us is lambdas,
+    so we'll have a few more of them: <code> \ f : ((a * b) -> c) -> (\x : a -> (\y -> b ->
+    ...</code>  Finally, we need to produce a value of type <code>c</code>.  For any
+    concrete <code>c</code>, like <code>Int</code> or <code>Bool</code>, I would have some idea how
+    to produce such a value.  But I'm trying to make a generic argument, where you get to pick which
+    types go in <code>a, b, c</code>.  This means that the only way I could make a value of
+    type <code>c</code> is to call the function <code>f</code>.  The complete code for the currying
+    function is as follows:
+  </p>
+
+<pre>
+\ f : ((a * b) -> c) ->
+  (\x : a ->
+     (\y -> b ->
+        f (x, y)</pre>
+
+   <p>
+     Of course, we can also go the other way, and write an uncurrying function with the following
+     type.
+   </p>
+
+   <pre>(a -> (b -> c)) -> ((a * b) -> c)</pre>
+
+   <p>
+     As for the currying function, our choices in writing this function are mostly determined by the
+     type we'd like the result to have.  I'll leave you to go through the details, but the end
+     result should be:
+   </p>
+
+<pre>
+\f : (a -> (b -> c)) ->
+  (\p : (a * b) ->
+     let (x, y) = p in
+       f x y)</pre>
+
+  <p>
+    At this point, it may not be entirely obvious that we've done the right thing.  Perhaps an
+    example will help.  Let's name the currying function <code>curry</code>, and let's also
+    introduce a function to curry.  Here's a simple one.
+  </p>
+
+<pre>
+add = \p : int * int ->
+        let (x, y) = p in x + y</pre>
+
+  <p>
+    Now, if our currying function does what it's supposed to do, we should be able to use it to
+    curry the <code>add</code> function.  Let's see how the reduction works out.  Note that I'll
+    leave the <code>add</code> function un-expanded as long as possible, just to avoid symbol
+    overload.
+  </p>
+
+<pre>
+((curry add) 2) 3
+          --->
+(((\f : ((Int * Int) -> Int) -> (\x : Int -> (\y : Int -> f (x, y)))) add) 2) 3
+          --->
+((\x : Int -> (\y : Int -> add (x, y))) 2) 3
+          --->
+(\y : Int -> add (2, y)) 3
+          --->
+add (2, 3)</pre>
+
+  <p>
+    We could continue the evaluation of <code>add (2, 3)</code>, but we don't need to.  We've
+    already seen that currying has turned a curried function call into an uncurried one.
+  </p>
+
+  <p class="exercise">
+    <em>Optional exercise.</em> Define a curried addition function <code>add<sub>2</sub></code> function, and then confirm
+    that <code>uncurry add<sub>2</sub> (1,2)</code> works as you'd expect.
+  </p>
+
+  <p class="exercise">
+    <em>Optional exercise:</em> The <code>uncurry</code> function is itself curried!  Understand that
+    statement, and then write an uncurried version of the uncurry function.  Confirm that you get
+    the same result if you evaluate <code>uncurry uncurry</code>.
+  </p>
+
+  <h2>Equivalence</h2>
+
+  <p>
+    So now, in addition to having two different views of multi-argument functions, we also have
+    functions that convert between these two views.  What have we learned?
+  </p>
+
+  <p>
+    For one, we've learned that there aren't any functions we can write one way that we couldn't
+    write the other way.  Suppose we thought that we had a curried function <code>f</code> which
+    couldn't be written uncurried.  The counterexample is immediate: <code>uncurry f</code> computes
+    the uncurried version of function <code>f</code>.  More generally, we can think of these
+    functions as proving that the curried and uncurried functions are in some sense "the same".
+    That is, every uncurried function corresponds to exactly one curried function, and vice versa.
+    (For an analogy, think of how cartesian and polar coordinates each describe exactly the same 2-d
+    plane.)
+  </p>
+
+  <p>
+    This is an example of a pervasive technique in the study of programming languages.  We'll
+    frequently want to compare the expressiveness of different language features; that is, to ask
+    whether we can express more programs using one feature than another, or to ask whether some
+    feature actually extends the expressiveness of a language or just makes it easier to use.  One
+    way to answer these questions is to define mappings between the features, just as we've done
+    here with multi-argument functions, or to show that such mappings can't be defined.
+  </p>
+
+  <p>
+    As the semester goes on, we'll see more and more examples of languages features and mappings
+    between them.
+  </p>
+
+  <h2>Why curry?</h2>
+
+  <p>
+    You may still be left wondering about the point.  What's the value of having two different ways
+    of viewing multi-argument functions?  Are we better off now than we were when we just had
+    multi-argument functions, as in C or Java?
+  </p>
+
+  <p>
+    The first answer is that curried functions can be more flexible.  Many examples of more advanced
+    functional programming, particularly in Haskell, rely on currying to describe computations (or
+    pipelines of computation).  There are several examples of this in
+    the <a href="Hw0Solutions.hs">sample solutions to homework 0</a> (look in particular around uses
+    of the function composition operator <code>.</code>).
+  </p>
+
+  <p>
+    The second answer is that currying and uncurrying is one of the simplest examples
+    of <em>higher-order</em> functional programming---that is to say, programming that manipulates
+    functions, not just values.  By studying simple examples of higher-order functional programming,
+    it will hopefully be easier to understand more complicated examples as they come along later in
+    the semester.
+  </p>
+
+  <p>
+    The third answer is that the curried versions of functions are, in a technical sense, simpler
+    than the uncurried versions.  That is to say: uncurried functions are defined in terms of two
+    distinct ideas, functions and products, while curried functions require only the idea of
+    functions.  Later in the semester, we'll see that with a bit more magic in our types, we'll be
+    able to do away with the idea of products entirely.
+  </p>
+
+</div>
+
+</body>
+
+</html>
