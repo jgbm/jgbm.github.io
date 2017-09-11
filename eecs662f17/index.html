@@ -99,6 +99,15 @@ a.invisible {
   text-decoration: none;
 }
 
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
 </style>
 
 </head>
@@ -164,6 +173,49 @@ a.invisible {
   <h2>announcements</h2>
 
   <table>
+    <tr>
+      <td>
+        9/11
+      </td>
+
+      <td>
+        <p>
+          There will be a couple of Haskell labs this week and next week, scheduled as follows:
+          These are optional sessions to review Haskell programming (and functional programming in
+          general), and to answer any questions you may have.
+        </p>
+
+        <table class="bordered">
+          <tr>
+            <td>Wednesday, 9/13</td>
+            <td>5:00-7:00 PM</td>
+            <td>Eaton 1005C</td>
+          </tr>
+          <tr>
+            <td>Thursdsay, 9/14</td>
+            <td>5:00-7:00 PM</td>
+            <td>Eaton 1005C</td>
+          </tr>
+          <tr>
+            <td>Tuesday, 9/19</td>
+            <td>5:00-7:00 PM</td>
+            <td>Eaton 1005C</td>
+          </tr>
+          <tr>
+            <td>Wednesday, 9/20</td>
+            <td>5:00-7:00 PM</td>
+            <td>Eaton 1005C</td>
+          </tr>
+        </table>
+
+        <p>
+          If you would like to come to one of the labs, but cannot make any of the scheduled times,
+          please get in touch (soon).
+        </p>
+
+      </td>
+    </tr>
+
     <tr>
       <td>
         9/6
@@ -335,9 +387,29 @@ a.invisible {
 
     <tr>
       <td>9/6</td>
-      <td></td>
+      <td>Substitutions and environments</td>
       <td></td>
       <td><a href="#hw1">Homework 1 out</a></td>
+    </tr>
+
+    <tr>
+      <td>9/8</td>
+      <td>
+        Substitutions and environments<br>
+        Products
+      </td>
+    </tr>
+
+    <tr>
+      <td>9/11</td>
+      <td>
+        Products<br>
+        Currying and uncurrying<br>
+        Higher-order functions
+      </td>
+      <td>
+        <a href="Stlc1.hs">Stlc1.hs</a>
+      </td>
     </tr>
   </table>
 
