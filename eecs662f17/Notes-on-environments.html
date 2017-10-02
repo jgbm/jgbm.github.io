@@ -1,0 +1,466 @@
+<html>
+<head>
+<title>Notes on environments</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+</style>
+
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+</script>
+
+<div class="topbox">
+
+  <h1>Notes on environments</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    The fundamental idea in our operational account of the simply-typed &lamnda;-calculus
+    is <i>substitution</i>.  However, in practice, substitution is an inefficient way to implement
+    functional programming languages.  These notes will motivate an alternative view, based on the
+    idea of <i>environments</i>, and discuss some historical alternatives to our standard notion of
+    &lambda;-calculus reduction
+  </p>
+
+  <h2>Substitutions</h2>
+
+  <p>
+    We use substitution to describe the meaning of variables in the simply-typed &lambda;-calculus.
+    For example, the reduction rule for application is as follows.
+  </p>
+
+  <script type="math/tex; mode=display">
+    \frac{e_1 \Eval \lambda x. e \quad
+          e_2 \Eval w \quad
+          [x \mapsto w] \, e \Eval v}
+         {e_1 \, e_2 \Eval v}
+  </script>
+
+  <p>
+    Intuitively, we read this rule as saying: "if $e_1$ reduces to $\lambda x. e$, and $e_2$ reduces
+    to $w$, and $e$ with $x$ mapped to $w$ reduces to $v$, then $e_1 \, e_2$ reduces to $v$".  To
+    understand what this means, we need some understanding of "$e$ with $x$ mapped to $w$".  This is
+    the operation of substitution.
+  </p>
+
+  <p>
+    Our first approach to understanding substitution is to define it directly.  That is, we give a
+    (recursive) definition of what it means to substitute a value $w$ for a variable $x$ in each
+    possible &lambda;-calculus term.  Some terms, such as addition or application, do not manipulate
+    variables directly, and so substitution can be defined simply.
+  </p>
+
+  <script type="math/tex; mode=display">
+    \begin{align*}
+      [x \mapsto v]\, (e_1\,e_2) &= ([x \mapsto v]\,e_1) \, ([x \mapsto v]\,e_2) \\
+      [x \mapsto v]\, (e_1 + e_2) &= [x \mapsto v]\,e_1 + [x \mapsto v]\,e_2
+    \end{align*}
+  </script>
+
+  <p>
+    The more interesting cases of substitution are to do with the introduction and use of variables,
+    in lambda and variable terms.
+  </p>
+
+  <script type="math/tex; mode=display">
+    \begin{align*}
+      [x \mapsto v] \, y &= \begin{cases}
+        v &\text{if $x = y$} \\
+        y &\text{otherwise}
+      \end{cases} \\
+      [x \mapsto v] \, (\backslash y : t. e) &= \begin{cases}
+        \backslash y : t. e & \text{if $x = y$} \\
+        \backslash y : t. [x \mapsto v] e & \text{otherwise}
+      \end{cases}
+    \end{align*}
+  </script>
+
+  <p>
+    The variable rule says that, if we are replacing $x$ by $w$, then we replace variables if they
+    are $x$ and leave them alone otherwise.  The rule for functions is more interesting.  It says
+    that, if we are attempting to replace a variable $x$, and we have a function that abstracts over
+    a variable $x$, we stop substituting.  Intuitively, this is because the variable $x$ inside the
+    function is a different variable than the variable $x$ which we are replacing.  If the function
+    abstracts over a different variable, then we do continue replacing $x$ by $w$ in the body of the
+    function.
+  </p>
+
+  <p>
+    (An aside.  One conseqeunce of our treatment of variables is that the variable name used in a
+    function expression can be changed at will.  That is, a function expression $\backslash y : t
+    . e$ is exactly equivalent to $\backslash z : t . [y \mapsto z]\,e$.  This rule is frequently
+    called &alpha;-equivalence.  Another way to account for the opreation of substitution on
+    function terms is to assume that functions never reuse variables---which we can do safely,
+    because we can always apply &alpha;-equivalence to turn a function that does reuse a variable
+    name into one that does not.)
+  </p>
+
+  <p>
+    Substitutions provide a simple, complete explanation of the behavior of the &lambda;-calculus,
+    and we will continue to use them formally.  However, as an implementation technique, using
+    substitution directly leaves much to be desired.  Each substitution operation has to
+    (potentially) traverse the syntax of the entire expression.  Consequently, nested substitutions
+    (such as might arise from nested applications, a common pattern in functional programming)
+    result in repeated traversals of the target expression.
+  </p>
+
+  <h2>From substitutions to environments</h2>
+
+  <p>
+    Our alternative approach is based on the idea of <i>environments</i>.  Rather than apply
+    substitutions immediately when they arise (such as in the application rule), we will maintain an
+    environment mapping variables to values as we perform evaluation.  This is appealing from two
+    perspectives.  First, it addresses the complexity of &lambda;-calculus evaluation: updating the
+    environment can be done in constant time, and we only need to look up values in the environment
+    at variables.  Second, it matches very closely with our idea of typing: just as in typing, we
+    use an environment $\Gamma$ to match variables with types, now in evaluation we will use an
+    environment $H$ to match variables with values.
+  </p>
+
+  <p>
+    We start out by defining environments.  We define enviroments $H$ to be sequences of mappings
+    from variables to values $x_1 \mapsto v_1, \dots, x_n \mapsto v_n$.  As with type environments
+    $\Gamma$, we will extend environments $H$ by writing $H, x \mapsto v$.  Finally, we define
+    $H(y)$, the value associated with $y$ in $H$, as the value <i>right-most</i> mapping of $y$.
+    Formally,
+  </p>
+
+  <script type="math/tex; mode=display">
+    (H,x \mapsto v)(y) = \begin{cases}
+       v &\text{if $x = y$} \\
+       H(y) &\text{otherwise}
+    \end{cases}
+  </script>
+
+  <p>
+    Next, we want to define evaluation rules that use the environment.  This means we need a new
+    evaluation relation.  Where we previously treated evaluation as a two-place relation $e \Eval
+    v$, where our expression $e$ sometimes was itself the result of substitution, we will now use a
+    three-place relation $\HEval H e v$, where $H$ is an environment, $e$ is an expression, and $v$
+    is a value.  Many of our evaluation rules do not use variables, and so adding the environment
+    $H$ is trivial:
+  </p>
+
+  <script type="math/tex; mode=display">
+    \frac{\HEval H {e_1} {v_1} \quad
+          \HEval H {e_2} {v_2}}
+         {\HEval H {e_1 + e_2} {v_1 + v_2}}
+  </script>
+
+  <p>
+    The interesting cases are all to do with the handling of variables.
+  </p>
+
+  <script type="math/tex; mode=display">
+    \frac{H(x) = v}
+         {\HEval H x v}
+    \qquad
+    \frac{\HEval H {e_1} w \quad
+          \HEval {H, x \mapsto w} {e_2} v}
+         {\HEval H {\Let x {e_1} {e_2}} v}
+  </script>
+
+  <p>
+    The rule for variables depends on their values in $H$; note that, if $H$ does not contain a
+    binding for $x$, then $H(x)$ is undefined and so there is no $v$ for which you can construct a
+    derivation of $\HEval H x v$.  The rule for let adds a new binding to $H$ when evaluating the
+    body.
+  </p>
+
+
+  <h2>The function problem</h2>
+
+  <p>
+    We turn to the evaluation rule for functions.  In the substution model, function evaluation was
+    quite simple: we evaluate a term $\backslash x : t \to e$ to the function $\lambda x. e$.
+    However, now things are not so simple.  A function term $\backslash x : t \to e$ may itself
+    contain free variables; in the environment model, those variables should be defined by the
+    environment $H$.  However, the body of a function is not evaluated at the time it is defined,
+    but at the time that it is used, at which point we may have a very different environment $H'$.
+    For a (somewhat contrived) example, consider the following definition:
+  </p>
+
+  <pre>
+let y = 3 in
+let f = \ x : Int -> x + y in
+let y = 4 in
+  f 2 + y</pre>
+
+  <p>
+    In the substitution model, we start out by substitution <code>3</code> for <code>y</code>.
+    Consequently, the body of function f is <code>\x : Int -> x + 3</code>, and the meaning of the
+    entire term is <code>9</code>.  We would like the same to be true in the environment model, but
+    that means we need to be clear that the <code>y</code> in <code>f</code> is not the
+    same <code>y</code> as is visible at the call site.
+  </p>
+
+  <p>
+    This might seem like just an issue of variable naming again; for example, in the above code,
+    either <code>y</code> could be changed to another variable, like <code>z</code>, and the result
+    would be unambiguous.  However, we can construct more interesting examples in which this does
+    not suffice.  Convince yourself that the following example cannot be solved simply by renaming
+    variables.
+  </p>
+
+  <pre>
+let f = let y = 3 in
+        \x : Int -> x + y in
+let y = 4 in
+  f 2 + y</pre>
+
+  <p>
+    To solve this problem, we need to be a little cleverer about the result of evaluting a function
+    term.  Instead of evaluating a function term to just the parameter and the body, we need to also
+    keep the environment in which the function was evaluated.  This combination of environment and
+    function is called a <i>closure</i>, and the environment is called the <i>captured
+    environment</i>.  We will write closures as $\Clos H x e$, denoting a function with parameter
+    $x$, body $e$, and captured environment $H$.  We can now state evaluation rules that take
+    closures into account.
+  </p>
+
+  <script type="math/tex; mode=display">
+    \frac{ }
+         {\HEval H {\backslash x : t . e} {\Clos H  x e}}
+    \qquad
+    \frac{\HEval H {e_1} {\Clos {H'} x e} \quad
+          \HEval H {e_2} w \quad
+          \HEval {H', x \mapsto w} {e} v}
+         {\HEval H {e_1 \, e_2} v}
+  </script>
+
+  <p>
+    The evaluation rule for function terms now captures the environment $H$ and stores it in the
+    resulting closure.  Similarly, the evaluation rule for application evaluates the function body
+    (but not, of course, the argument) in the captured environment.  Convince yourself that these
+    rules give the expected results for the examples above.
+  </p>
+
+
+  <h2>Dynamic scope</h2>
+
+  <p>
+    Historically, there is another approach to implementing functions.  In this approach, rather
+    than capturing the environment when evaluating a function term, function bodies are evaluated in
+    the environment in which they are used.  This is called <i>dynamic scope</i>, because the
+    meaning of a variable is determined by the execution of the program rather than by its location
+    in the source.  We could write evaluation rules for dynamic scoping as follows.
+  </p>
+
+  <script type="math/tex; mode=display">
+    \frac{ }
+         {\HEval H {\backslash x : t . e} {\lambda x. e}}
+    \qquad
+    \frac{\HEval H {e_1} {\lambda x. e} \quad
+          \HEval H {e_2} w \quad
+          \HEval {H,x \mapsto w} e v}
+         {\HEval H {e_1 \, e_2} v}
+  </script>
+
+  <p>
+    Most immediately, dynamic scoping breaks the correspondence between our implementation of the
+    &lambda;-calculus and the substitution model; it also breaks the connection bewteen typing and
+    evaluation.  Convince yourself that the following two programs are well-typed, but cannot
+    evaluate without errors.
+  </p>
+
+  <pre>
+let f = let y = 3 in
+        \x : Int -> x + y in
+let y = 4 in
+  f 2 + y</pre>
+
+  <pre>
+let f = \x : Int -> \y : Int -> x + y in
+  f 1 2</pre>
+
+  <p>
+    So, it may be confusion why dynamic scoping was ever implemented in the first place.  However,
+    there are strange benefits to dynamically scoped languages as well.  For example, they provide a
+    way to achieve recursive definitions but without any explicit scope for recursion.  Consider the
+    following definition and use of the factorial function:
+  </p>
+
+  <pre>
+let fact = \n : Int -> if isz n then 1 else n * fact (n - 1) in
+  fact 3</pre>
+
+  <p>
+    With static scope, this program cannot execute: the body of the function is executed in its
+    captured environment, at which point <code>fact</code> is not defined.  However, with dynamic
+    scope, this program executes fine; by the time the body of <code>fact</code> is
+    executed, <code>fact</code> is itself defined.  You may wish to convince yourself of this:
+    attempt to derive a value for <code>fact 2</code> with both static and dynamic scoping.
+  </p>
+
+  <h2>Conclusion</h2>
+
+  <p>
+    The elegance of the &lambda;-calculus arises from how remarkably complex behavior can be
+    specified using only very simple formal ideas, and substitution plays a central role in that
+    story.  These notes have considered how we can implement substitution in practice, and gives
+    some historical insight on alternative implementations.  While we can now see clearly that
+    dynamic scoping is wrong, the correct implementation of static scoping was an open question in
+    functional programming for much of the 1960s and 1970s.
+  </p>
+
+</div>
+
+</body>
+
+</html>
