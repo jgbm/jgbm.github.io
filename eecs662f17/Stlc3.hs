@@ -20,7 +20,7 @@ data Expr = EInt Integer | EAdd Expr Expr | EMult Expr Expr | ESubt Expr Expr
 -- Typing and type checking
 --------------------------------------------------------------------------------
 
-data Type = TInt | TBool | TFun Type Type | TPair Type Type | TOne
+data Type = TInt | TBool | TFun Type Type | TProd Type Type | TOne
   deriving (Eq, Show)
 
 type TEnv = [(Ident, Type)]
@@ -78,9 +78,9 @@ check g (ELet x e1 e2) =
 check g (EPair e1 e2) =
     do t1 <- check g e1
        t2 <- check g e2
-       return (TPair t1 t2)
+       return (TProd t1 t2)
 check g (ELetPair x1 x2 e1 e2) =
-    do TPair t1 t2 <- check g e1
+    do TProd t1 t2 <- check g e1
        check ((x1, t1) : (x2, t2) : g) e2
 check g EUnit =
     return TOne

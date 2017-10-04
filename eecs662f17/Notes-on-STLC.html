@@ -1,0 +1,988 @@
+<html>
+<head>
+<title>Notes on the simply-typed &lambda;-calculus</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse;
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black;
+  vertical-align: middle;
+}
+
+
+</style>
+
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+\newcommand{\Int}{\mathtt{Int}}
+\newcommand{\Bool}{\mathtt{Bool}}
+\newcommand{\Inl}[3]{{\mathtt{Inl}[#1 + #2] \; #3}}
+\newcommand{\Vinl}[1]{{\mathsf{vinl} \; #1}}
+\newcommand{\Inr}[3]{{\mathtt{Inr}[#1 + #2] \; #3}}
+\newcommand{\Vinr}[1]{{\mathsf{vinr} \; #1}}
+\newcommand{\CCase}[5]{{\mathtt{case}\;#1\;\mathtt{of}\;\mathtt{Inl}\;#2 \to #3 \mid \mathtt{Inr}\;#4 \to #5}}
+</script>
+
+<div class="topbox">
+
+  <h1>Notes on the simply-typed &lambda;-calculus</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    These notes give a brief recap of the simply-typed &lambda;-calculus, its typing and evaluation,
+    and pointers to where each rule is implemented in Stlc3.hs.
+  </p>
+
+  <h2>Syntax</h2>
+
+  <p>
+    The syntax of &lambda;-calculus expressions is as follows.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Expression</b></td>
+      <td><b>Meaning</b></td>
+      <td><b>Constructor</b></td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>1</code>, <code>2</code>, <code>3</code>
+      </td>
+      <td>
+        Integer constants
+      </td>
+      <td>
+        <tt>EInt</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>True</code>, <code>False</code>
+      </td>
+      <td>
+        Boolean constants
+      </td>
+      <td>
+        <tt>EBool</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>e<sub>1</sub> + e<sub>2</sub></code>
+      </td>
+      <td>
+        Addition
+      </td>
+      <td>
+        <tt>EAdd</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>e<sub>1</sub> - e<sub>2</sub></code>
+      </td>
+      <td>
+        Subtraction
+      </td>
+      <td>
+        <tt>ESubt</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>e<sub>1</sub> * e<sub>2</sub></code>
+      </td>
+      <td>
+        Multiplication
+      </td>
+      <td>
+        <tt>EMult</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>isz e</code>
+      </td>
+      <td>
+        Zero test
+      </td>
+      <td>
+        <tt>EIs0</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>if e<sub>1</sub> then e<sub>2</sub> else e<sub>3</sub></code>
+      </td>
+      <td>
+        Conditional
+      </td>
+      <td>
+        <tt>EIf</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>\x : t -> e</code>
+      </td>
+      <td>
+        Function abstraction
+      </td>
+      <td>
+        <tt>ELam</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>e<sub>1</sub> e<sub>2</sub></code>
+      </td>
+      <td>
+        Function application
+      </td>
+      <td>
+        <tt>EApp</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>let x = e<sub>1</sub> in e<sub>2</sub></code>
+      </td>
+      <td>
+        Name binding
+      </td>
+      <td>
+        <tt>ELet</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>(e<sub>1</sub>, e<sub>2</sub>)</code>
+      </td>
+      <td>
+        Pair introduction
+      </td>
+      <td>
+        <tt>EPair</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>let (x<sub>1</sub>, x<sub>2</sub>) = e<sub>1</sub> in e<sub>2</sub></code>
+      </td>
+      <td>
+        Pair elimination
+      </td>
+      <td>
+        <tt>ELetPair</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>()</code>
+      </td>
+      <td>
+        Unit introduction
+      </td>
+      <td>
+        <tt>EUnit</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>e<sub>1</sub>; e<sub>2</sub></code>
+      </td>
+      <td>
+        Unit elimination
+      </td>
+      <td>
+        <tt>ELetUnit</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>fix e</code>
+      </td>
+      <td>
+        Fixed point
+      </td>
+      <td>
+        <tt>EFix</tt>
+      </td>
+    </tr>
+
+
+    <tr>
+      <td colspan=3>
+        <i>Note: the following two forms were introduced in Hw1, and follow the naming scheme therefrom.</i>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>Inl[t+u] e</code>, <code>Inr[t+u] e</code>
+      </td>
+      <td>
+        Sum introduction
+      </td>
+      <td>
+        <tt>CInl</tt>, <tt>CInr</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>case e of Inl x<sub>1</sub> -> e<sub>1</sub> | Inr x<sub>2</sub> -> e<sub>2</sub></code>
+      </td>
+      <td>
+        Sum elimination
+      </td>
+      <td>
+        <tt>CCase</tt>
+      </td>
+    </tr>
+  </table>
+
+  The syntax of &lambda;-calculus types is as follows
+
+  <table class="bordered">
+    <tr>
+      <td><b>Type</b></td>
+      <td><b>Meaning</b></td>
+      <td><b>Constructor</b></td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>Int</code>
+      </td>
+      <td>
+        Integers
+      </td>
+      <td>
+        <tt>TInt</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>Bool</code>
+      </td>
+      <td>
+        Booleans
+      </td>
+      <td>
+        <tt>TBool</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>t<sub>1</sub> -> t<sub>2</sub></code>
+      </td>
+      <td>
+        Functions
+      </td>
+      <td>
+        <tt>TFun</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>t<sub>1</sub> * t<sub>2</sub></code>
+      </td>
+      <td>
+        Products
+      </td>
+      <td>
+        <tt>TProd</tt>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan=3>
+        <i>The following type was introduced in Hw1, and follows the naming scheme therefrom.</i>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <code>t<sub>1</sub> + t<sub>2</sub></code>
+      </td>
+      <td>
+        Sums
+      </td>
+      <td>
+        <tt>CTSum</tt>
+      </td>
+    </tr>
+  </table>
+
+
+
+
+  <h2>Typing</h2>
+
+  <p>
+    Typing judgments take the form $\Gamma \vdash e : t$, where $\Gamma$ is a typing environment
+    (i.e., an association of variable names to types), $e$ is a &lambda;-calculus expression, and
+    $t$ is a &lambda;-calculus type.
+  </p>
+
+  <p>
+    Not all valid &lambda;-calculus expressions built following the rules above are meaningful.  For
+    example, neither <code>True + 4</code> or <code>\x : Bool -> x + x</code> are meaningful
+    expressions.  Typing can be thought of as characterizing those terms which do have meaning.
+  </p>
+
+  <p>
+    Alternatively, if we assume the evaluating an non-meaningful term would give rise to an error,
+    typing can be thought of as an approximation of evaluation that determines whether or not
+    expressions will give rise to errors.
+  </p>
+
+  <p>
+    Typing is implemented by the function <tt>check :: TEnv -> Expr -> Maybe Type</tt>,
+    where <tt>TEnv</tt> is a list of identifiers and types, and the result of <tt>Just t</tt> if the
+    input expression has type <tt>t</tt>, and <tt>Nothing</tt> otherwise.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Typing rule</b></td>
+      <td><b>Code reference</b></td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }{\Gamma \vdash 1 : \Int}$$
+      </td>
+      <td>
+        Stlc3.hs, 42&ndash;43
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : \Int \quad \Gamma \vdash e_2 : \Int}{\Gamma \vdash e_1 + e_2 : \Int}$$
+      </td>
+      <td>
+        Stlc3.hs, 44&ndash;47
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : \Int \quad \Gamma \vdash e_2 : \Int}{\Gamma \vdash e_1 - e_2 : \Int}$$
+      </td>
+      <td>
+        Stlc3.hs, 48&ndash;51
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : \Int \quad \Gamma \vdash e_2 : \Int}{\Gamma \vdash e_1 * e_2 : \Int}$$
+      </td>
+      <td>
+        Stlc3.hs, 52&ndash;55
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }{\Gamma \vdash \mathtt{True} : \Bool}$$
+      </td>
+      <td>
+        Stlc3.hs, 56&ndash;57
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : \Int}{\Gamma \vdash \mathtt{isz}\,e : \Bool}$$
+      </td>
+      <td>
+        Stlc3.hs, 58&ndash;60
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : \Bool \quad
+                \Gamma \vdash e_2 : t \quad
+                \Gamma \vdash e_3 : t}
+               {\Gamma \vdash \If{e_1}{e_2}{e_3} : t}$$
+      </td>
+      <td>
+        Stlc3.hs, 61&ndash;65
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{(x : t) \in \Gamma}{\Gamma \vdash x : t}$$
+      </td>
+      <td>
+        Stlc3.hs, 66&ndash;67
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma, x : t \vdash e : u}{\Gamma \vdash \mathtt{\backslash x : t \to u : t \to u}}$$
+      </td>
+      <td>
+        Stlc3.hs, 68&ndash;70
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : t \to u \quad \Gamma \vdash e_2 : t}{\Gamma \vdash e_1\,e_2 : u}$$
+      </td>
+      <td>
+        Stlc.hs, 71&ndash;74
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : t \quad \Gamma, x : t \vdash e_2 : u}
+               {\Gamma \vdash \Let{x}{e_1}{e_2} : u}$$
+      </td>
+      <td>
+        Stlc.hs, 75&ndash;77
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : t_1 \quad \Gamma \vdash e_2 : t_2}
+               {\Gamma \vdash (e_1, e_2) : t_1 * t_2}$$
+      </td>
+      <td>
+        Stlc.hs, 78&ndash;81
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : t_1 * t_2 \quad
+                \Gamma, x_1 : t_1, x_2 : t_2 \vdash e_2 : u}
+               {\Gamma \vdash \Let{(x_1,x_2)}{e_1}{e_2} : u}$$
+      </td>
+      <td>
+        Stlc.hs, 82&ndash;84
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }{\Gamma \vdash () : 1}$$
+      </td>
+      <td>
+        Stlc.hs, 85&ndash;86
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : 1 \quad \Gamma \vdash e_2 : t}
+               {\Gamma \vdash e_1; e_2 : t}$$
+      </td>
+      <td>
+        Stlc.hs, 87&ndash;89
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : (t \to u) \to (t \to u)}
+               {\Gamma \vdash \mathtt{fix}\,e : t \to u}$$
+      </td>
+      <td>
+        Stlc.hs, 90&ndash;92
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t}{\Gamma \vdash \Inl t u e : t + u}$$
+      </td>
+      <td>
+        Hw1Solutions/Core.hs, 63&ndash;65
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t}{\Gamma \vdash \Inr t u e : t + u}$$
+      </td>
+      <td>
+        Hw1Solutions/Core.hs, 66&ndash;68
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t_1 + t_2 \quad
+                \Gamma, x_1 : t_1 \vdash e_1 : u \quad
+                \Gamma, x_2 : t_2 \vdash e_2 : u}
+               {\Gamma \vdash \CCase e {x_1} {e_1} {x_2} {e_2} : u}$$
+      </td>
+      <td>
+        Hw1Solutions/Core.hs, 69&ndash;73
+      </td>
+    </tr>
+  </table>
+
+  <h2>Evaluation</h2>
+
+  <p>
+    Evaluation judgments take the form $e \Eval v$, where $e$ is a &lambda;-calculus expression and
+    $v$ is a value.  They are defined in terms of substitution $[x \mapsto v]e$, which denotes the
+    expression $e$ in which all occurrences of variable $x$ have been replaced by value $v$.
+  </p>
+
+  <p>
+    Values are as follows:
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Value</b></td>
+      <td><b>Meaning</b></td>
+      <td><b>Constructor</b></td>
+    </tr>
+
+    <tr>
+      <td>$1$, $2$, $3$</td>
+      <td>Integer values</td>
+      <td><tt>VInt</tt></td>
+    </tr>
+
+    <tr>
+      <td>$\mathtt{True}$, $\mathtt{False}$</td>
+      <td>Boolean values</td>
+      <td><tt>VBool</tt></td>
+    </tr>
+
+    <tr>
+      <td>$\lambda x.e$</td>
+      <td>Function values</td>
+      <td><tt>VFun</tt></td>
+    </tr>
+
+    <tr>
+      <td colspan="3"><i>See the <a href="Notes-on-environments.html">notes on environments</a> for discussion of the implementation of function values</i></td>
+    </tr>
+
+    <tr>
+      <td>$\langle v_1, v_2 \rangle$</td>
+      <td>Pair values</td>
+      <td><tt>VPair</tt></td>
+    </tr>
+
+    <tr>
+      <td>$\langle \rangle$</td>
+      <td>Unit value</td>
+      <td><tt>VUnit</tt></td>
+    </tr>
+
+    <tr>
+      <td>$\Vinl v$, $\Vinr v$</td>
+      <td>Sum values</td>
+      <td><tt>VInl</tt>, <tt>VInr</tt></td>
+    </tr>
+  </table>
+
+  <p>
+    Our implementation of evaluation uses <a href="Notes-on-environments.html">environments</a>
+    rather than using substitutions directly.  So, evaluation is implemented by a
+    function <tt>eval</tt> of type <tt>VEnv -> Expr -> Value</tt>, where <tt>VEnv</tt> maps variable
+    identifiers to values.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Evaluation rule</b></td>
+      <td><b>Code reference</b></td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }
+               {1 \Eval 1}$$
+      </td>
+      <td>
+        Stlc3.hs, 111&ndash;112
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval v_1 \quad e_2 \Eval v_2}
+               {e_1 + e_2 \Eval v_1 + v_2}$$
+      </td>
+      <td>
+        Stlc3.hs, 113&ndash;116
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval v_1 \quad e_2 \Eval v_2}
+               {e_1 - e_2 \Eval v_1 - v_2}$$
+      </td>
+      <td>
+        Stlc3.hs, 117&ndash;120
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval v_1 \quad e_2 \Eval v_2}
+               {e_1 * e_2 \Eval v_1 \times v_2}$$
+      </td>
+      <td>
+        Stlc3.hs, 121&ndash;124
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }
+               {\mathtt{True} \Eval \mathtt{True}}$$
+      </td>
+      <td>
+        Stlc3.hs, 125&ndash;126
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e \Eval 0}
+               {\mathtt{isz}\,e \Eval \mathtt{True}}
+          \qquad
+          \frac{e \Eval n \quad n \not= 0}
+               {\mathtt{isz}\,e \Eval \mathtt{False}}$$
+      </td>
+      <td>
+        Stlc3.hs, 127&ndash;129
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval \mathtt{True} \quad e_2 \Eval v}
+               {\If{e_1}{e_2}{e_3} \Eval v}
+          \qquad
+          \frac{e_1 \Eval \mathtt{False} \quad e_3 \Eval v}
+               {\If{e_1}{e_2}{e_3} \Eval v}$$
+      </td>
+      <td>
+        Stlc3.hs, 130&ndash;132
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }
+               {\mathtt{\backslash x : t \to e} \Eval \lambda x.e}$$
+      </td>
+      <td>
+        Stlc3.hs, 135&ndash;136
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval \lambda x. e \quad
+                e_2 \Eval w \quad
+                [x \mapsto w]e \Eval v}
+               {e_1\,e_2 \Eval v}$$
+      </td>
+      <td>
+        Stlc3.hs, 137&ndash;140
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval w \quad
+                [x \mapsto w]e_2 \Eval v}
+               {\Let{x}{e_1}{e_2} \Eval v}$$
+      </td>
+      <td>
+        Stlc3.hs, 141&ndash;143
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval v_1 \quad e_2 \Eval v_2}
+               {(e_1, e_2) \Eval \langle v_1, v_2 \rangle}$$
+      </td>
+      <td>
+        Stlc3.hs, 144&ndash;147
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval \langle w_1,w_2 \rangle \quad
+                [x_1 \mapsto w_1, x_2 \mapsto w_2]e_2 \Eval v}
+               {\Let{(x_1,x_2)}{e_1}{e_2} \Eval v}$$
+      </td>
+      <td>
+        Stlc3.hs, 148&ndash;150
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }
+               {() \Eval \langle \rangle}$$
+      </td>
+      <td>
+        Stlc3.hs, 151&ndash;152
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e_1 \Eval \langle\rangle \quad e_2 \Eval v}
+               {e_1; e_2 \Eval v}$$
+      </td>
+      <td>
+        Stlc3.hs, 153&ndash;155
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }
+               {\mathtt{fix}\,e \Eval \lambda x. e\,(\mathtt{fix}\,e)\,x}$$
+      </td>
+      <td>
+        Stlc3.hs, 156&ndash;157
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="3"><i>See the <a href="Notes-on-recursion.html">notes on recursion</a> for a more detailed discussion of fixed points.</i></td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e \Eval v}
+               {\Inl t u e \Eval \Vinl v}
+          \qquad
+          \frac{e \Eval v}
+               {\Inl t u e \Eval \Vinr v}$$
+      </td>
+      <td>
+        Hw1Solutions/Core.hs, 119&ndash;124
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{e \Eval \Vinl w \quad
+                [x_1 \mapsto w]e_1 \Eval v}
+               {\CCase{e}{x_1}{e_1}{x_2}{e_2} \Eval v}$$
+        <br>
+        $$\frac{e \Eval \Vinr w \quad
+                [x_2 \mapsto w]e_2 \Eval v}
+               {\CCase{e}{x_1}{e_1}{x_2}{e_2} \Eval v}$$
+      </td>
+      <td>
+        Hw1Solutions/Core.hs, 125&ndash;129
+      </td>
+    </tr>
+
+  </table>
+
+</div>
+
+</body>
+
+</html>
