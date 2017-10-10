@@ -1,0 +1,511 @@
+<html>
+<head>
+<title>Notes on monads</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse;
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black;
+  vertical-align: middle;
+}
+
+
+</style>
+
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+\newcommand{\Int}{\mathtt{Int}}
+\newcommand{\Bool}{\mathtt{Bool}}
+\newcommand{\Inl}[3]{{\mathtt{Inl}[#1 + #2] \; #3}}
+\newcommand{\Vinl}[1]{{\mathsf{vinl} \; #1}}
+\newcommand{\Inr}[3]{{\mathtt{Inr}[#1 + #2] \; #3}}
+\newcommand{\Vinr}[1]{{\mathsf{vinr} \; #1}}
+\newcommand{\CCase}[5]{{\mathtt{case}\;#1\;\mathtt{of}\;\mathtt{Inl}\;#2 \to #3 \mid \mathtt{Inr}\;#4 \to #5}}
+</script>
+
+<div class="topbox">
+
+  <h1>Notes on monads</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    Over the lectures from 10/2&ndash;10/9, we developed the idea of a <i>monad</i> as an
+    abstraction and generalization of our techniques for extending the &lambda;-calculus
+    with <i>computational effects</i>, such as exceptions and state.  These notes review that
+    development.
+  </p>
+
+  <h2>Generalizing effects</h2>
+
+  <p>
+    Our implementations of computational effects shared two common operations.  The first was a way
+    to inject values into the effect.  For example, in our implementation of exceptions
+    (see <a href="Lcex.hs">Lcex.hs</a>), we use the <code>Ok</code> constructor to denote
+    non-exception values.
+  </p>
+
+  <pre>
+eval _ (EInt x) =
+  Ok (VInt x)</pre>
+
+  <p>
+    Similarly, in our implementation of state (see <a href="Lcst0.hs">Lcst0.hs</a>), we express
+    values as having the constant state transformer:
+  </p>
+
+  <pre>
+eval _ (EInt x) =
+  \s -> (VInt x, s)</pre>
+
+  <p>
+    The second is a way to combine computations.  For example, the code for evaluating
+    an <code>EAdd</code> expression needs to do two sub-computations, one for each branch.  Without
+    computational effects, this is straightforward.
+  </p>
+
+  <pre>
+eval h (EAdd e1 e2) =
+  let VInt x1 = eval h e1
+      VInt x2 = eval h e2 in
+  VInt (x1 + x2)</pre>
+
+  <p>
+    However, with computational effects around, it is not as simple.  For example, with exceptions,
+    either the evaluation of <code>e1</code> or the evaluation of <code>e2</code> may raise an
+    exception.  In either case, the result of evaluating <code>EAdd e1 e2</code> should raise an
+    exception as well.  One example of this pattern:
+  </p>
+
+  <pre>
+eval h (EAdd e1 e2) =
+  case eval h e1 of
+    Exception -> Exception
+    Ok (VInt x1) ->
+      case eval h e2 of
+        Exception -> Exception
+        Ok (VInt x2) -> Ok (VInt (x1 + x2))</pre>
+
+  <p>
+    This style of programming would rapidly become tedious.  We discovered that, by introducing some
+    simple combinators, we could simplify the task of programming with effects.  These combinators
+    are: the <code>return</code> function (which we initially called <code>ok</code>), which injects
+    values (or pure computations) into effectful computations; and, the <code>>=</code> function
+    (which we originally called <code>andThen</code>), which combines computations.  Using these
+    combinators, the previous evaluation case would be written as:
+  </p>
+
+  <pre>
+eval h (EAdd e1 e2) =
+  eval h e1 >>= \ (VInt x1) ->
+  eval h e2 >>= \ (VInt x2) ->
+  return (VInt (x1 + x2))</pre>
+
+  <p>
+    We also observed that these operations characterize a number of models of computational effects,
+    not just exceptions.  The generalization of these models is called a <i>monad</i>, and is
+    captured by the following <i>type class</i> declaration.
+  </p>
+
+  <pre>
+class Monad m where
+  return :: t -> m t
+  (>>=) :: m t -> (t -> m u) -> m u</pre>
+
+  <p>
+    In this definition, <code>m</code> is a <i>type constructor</i>, not a type.  That is: there are
+    not values of type <code>m</code> directly, but rather values of type <code>m t</code> for
+    arbitrary types <code>t</code>.  We have already seen several examples of type constructors,
+    such as <code>Maybe</code> (there are no <code>Maybe</code> values, but there are <code>Maybe
+    Int</code>, <code>Maybe Bool</code>, <code>Maybe (Maybe Bool)</code> values, and so forth), and
+    the list type constructor <code>[]</code>.
+  </p>
+
+  <h2>Syntax for monads</h2>
+
+  <p>
+    The monadic combinators make it much simpler to write code that deals with computational
+    effects, but still require a certain amount of syntactic overhead.  Monads are common enough in
+    Haskell that they language provides special notation for writing expressions of monadic
+    type---the so-called <tt>do</tt> notation
+  </p>
+
+  <p>
+    In general, <tt>do</tt> notation consists of the keyword <tt>do</tt>, followed by any number
+    of <i>statements</i>.  A state can be either an expression <code>e</code> (of monadic type), or
+    a binding <code>x &lt;- e</code>, where <code>x</code> is any variable (or pattern),
+    and <code>e</code> is an expression (also of monadic type).  The last statement in a <tt>do</tt>
+    block cannot be a binding.
+  </p>
+
+  <p>
+    We have already seen several examples of <tt>do</tt> notation, in the type checker.  For
+    example, the type checking code for addition is
+  </p>
+
+  <pre>
+check g (EAdd e1 e2) =
+  do TInt <- check g e1
+     TInt <- check g e2
+     return TInt</pre>
+
+  <p>
+    The first two statements are bindings, requiring that the recursive calls <code>check g
+      e<sub>n</sub></code> each returns <code>TInt</code>.  The final statement is an expression.
+    Note that both the calls to <code>check</code> and <code>return</code> produce monadic
+    computations themselves.
+  </p>
+
+  <p>
+    The translation from <tt>do</tt> notation to the monadic combinators is straightforward.  Each
+    binding is translated into an application of the <code>>>=</code> operator.  For example, the
+    simple block
+
+  <pre>
+do x <- e<sub>1</sub>
+   e<sub>2</sub></pre>
+
+  <p>
+    would be translated to the following application of the <code>>>=</code> operator.
+  </p>
+
+  <pre>e<sub>1</sub> >>= \ x -> e<sub>2</sub></pre>
+
+  <p>
+    Longer <tt>do</tt> blocks can be translated by recursively applying the same simple translation
+    step.  For example, the block
+  </p>
+
+  <pre>
+do x <- e<sub>1</sub>
+   y <- e<sub>2</sub>
+   e<sub>3</sub></pre>
+
+  <p>
+    could be translated by translating the first binding
+  </p>
+
+  <pre>
+e<sub>1</sub> >>= \ x ->
+do y <- e<sub>2</sub>
+   e<sub>3</sub></pre>
+
+  <p>
+    and then by applying the same translation again, this time to the second binding
+  </p>
+
+  <pre>
+e<sub>1</sub> >>= \ x ->
+e<sub>2</sub> >>= \ y ->
+e<sub>3</sub></pre>
+
+  <p>
+    Intermediate statements need not be bindings; in these cases, the intermediate computations are
+    run simply for their effects, not for their results.  An example of this appears in the driver
+    code from the various homework assignments:
+  </p>
+
+  <pre>
+go s =
+    do e <- parse s
+       e' <- desugar e
+       check' e'
+       v <- eval' e'
+       return (show v)</pre>
+
+  <p>
+    We need to run the type checker to make sure that expressions are well-typed; however, we do not
+    need the result of type checking.  Expressions like these can simply be treated as bindings that
+    ignore their results.  We could express this using a <i>wild card</i> pattern, such as the
+    following:
+  </p>
+
+  <pre>
+go s =
+    do e <- parse s
+       e' <- desugar e
+       _ <- check' e'
+       v <- eval' e'
+       return (show v)</pre>
+
+  <p>
+    Now the desugaring proceeds as normal; for example, the subexpression beginning with the call
+    to <code>check</code> is desugared to
+  </p>
+
+  <pre>
+check' e' >>= \ _ ->
+eval' e' >>= \ v ->
+return (show v)</pre>
+
+  <p>
+   This pattern is common enough that the Haskell prelude defines an operator to sequence monadic
+   expressions without capturing their results, called <code>>></code> and of type <code>m t -> m u
+   -> m u</code>.  We could have chosen to use this combinator instead, which would give the
+   following desugaring:
+  </p>
+
+  <pre>
+check' e' >>
+eval' e' >>= \ v ->
+return (show v)</pre>
+
+  <p>
+    This is purely a matter of style; there is no computational or typing difference
+    between <code>e<sub>1</sub> >>= \ _ -> e<sub>2</sub></code> and <code>e<sub>1</sub> >>
+    e<sub>2</sub></code>
+  </p>
+
+<!--
+
+  <h2>Common monads: Exceptions</h2>
+
+  <p>
+
+  </p>
+
+  <pre>
+data Maybe t = Nothing | Just t</pre>
+
+  <pre>
+instance Monad Maybe where
+  return x = Just x
+  Nothing >>= _ = Nothing
+  Just v >>= vf = vf v</pre>
+
+
+  <h2>Common monads: State</h2>
+
+  <p>
+
+  </p>
+
+  <pre>
+data St s t = St (s -> (t, s))
+runSt (St f) = f</pre>
+
+  <pre>
+instance Monad (St s) where
+  return x = \s -> (x, s)
+  St sf >>= vf = St (\s -> let (v, s1) = sf s in
+                            runSt (vf v) s1)</pre>
+
+
+  <h2>Combining monads</h2>
+
+  <p>
+
+  </p>
+
+  <pre>
+data Xs s t = Xs (s -> Maybe (t, s))
+runXs (Xs sf) = sf</pre>
+
+  <pre>
+instance Monad (Xs s) where
+  return x = Xs (\s -> Just (x, s))
+  Xs sf >>= vf = Xs (\s -> case sf s of
+                             Nothing -> Nothing
+                             Just (v, s1) -> runXs (vf v) s1)</pre>
+
+  <pre>
+data Sx s t = Sx (s -> (Maybe t, s))
+runSx (Sx sf) = sf</pre>
+
+  <pre>
+instance Monad (Sx s) where
+  return x = Sx (\s -> (Just x, s))
+  Sx sf >>= vf = Sx (\s -> case sf s of
+                             (Nothing, s1) -> (Nothing, s1)
+                             (Just v, s1) -> runSx (vf f) s1</pre>
+-->
+
+  <h2>A note about functors</h2>
+
+  <p>
+    The definition above leaves out one important part of the prelude definition of
+    the <code>Monad</code> class.  Haskell monads also have to be instances of
+    the <code>Functor</code> and <code>Applicative</code> classes.  Luckily, for the vast majority
+    of monads (including all the ones in this course), the <code>Functor</code>
+    and <code>Applicative</code> instances carry no information that is not already in
+    the <code>Monad</code> instance.  So, we can use a common template to provide these instances.
+    If we have an instance <code>Monad T</code>, where <code>T</code> is any Haskell type
+    expression, then we can add
+  </p>
+
+  <pre>
+instance Functor T where
+  fmap f = (>>= return . f)
+instance Applicative T where
+  pure = return
+  f <*> a = f >>= \f' -> a >>= \a' -> f' a'</pre>
+
+  <p>
+    to supply the necessary superclass definitions.
+  </p>
+
+</div>
+
+</body>
+
+</html>
