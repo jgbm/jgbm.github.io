@@ -1,0 +1,430 @@
+<html>
+<head>
+<title>Notes on the types and effects</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse;
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black;
+  vertical-align: middle;
+}
+
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      noErrors: {
+        disabled: true
+      },
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\With}{\mathbin{\&}}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
+\newcommand{\Catch}[2]{\mathtt{try}\;#1\;\mathtt{catch}\;#2}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+\newcommand{\Int}{\mathtt{Int}}
+\newcommand{\Bool}{\mathtt{Bool}}
+\newcommand{\Inl}[3]{{\mathtt{Inl}[#1 + #2] \; #3}}
+\newcommand{\Vinl}[1]{{\mathsf{vinl} \; #1}}
+\newcommand{\Inr}[3]{{\mathtt{Inr}[#1 + #2] \; #3}}
+\newcommand{\Vinr}[1]{{\mathsf{vinr} \; #1}}
+\newcommand{\CCase}[5]{{\mathtt{case}\;#1\;\mathtt{of}\;\mathtt{Inl}\;#2 \to #3 \mid \mathtt{Inr}\;#4 \to #5}}
+</script>
+
+
+<div class="topbox">
+
+  <h1>Notes on types and effects</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    These notes recap our development of type and effect systems for typing languages with
+    computational effects.
+  </p>
+
+  <h2>Syntax</h2>
+
+  <p>
+    The term syntax of our language is identical to the term language of the simply-typed
+    &lambda;-calculus, with the following extensions.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Expression</b></td>
+      <td><b>Meaning</b></td>
+    </tr>
+
+    <tr>
+      <td><code>throw[t]</code></td>
+      <td>Throw an exception (result type <code>t</code>)</td>
+    </tr>
+
+    <tr>
+      <td><code>try e<sub>1</sub> catch e<sub>2</sub></code></td>
+      <td>Execute <code>e<sub>1</sub></code>; if it throws an exception, execute <code>e<sub>2</sub></code></td>
+    </tr>
+
+    <tr>
+      <td><code>get</code></td>
+      <td>Get the value of the accumulator</td>
+    </tr>
+
+    <tr>
+      <td><code>put e</code></td>
+      <td>Evaluate <code>e</code>, and store the result in the accumulator</td>
+    </tr>
+  </table>
+
+  <p>
+    The type system itself refines the type of functions to capture the effects of running them.
+    Functions types are as follows; the remaining types are identical to the types of the
+    simply-typed &lambda;-calculus.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Type</b></td>
+      <td><b>Meaning</b></td>
+    </tr>
+
+    <tr>
+      <td>
+        $t \stackrel{z}{\to} u$
+      </td>
+      <td>
+        Functions from $t$ to $u$, with side effects $z$
+      </td>
+    </tr>
+  </table>
+
+  <h2>Types</h2>
+
+  <p>
+    Our typing judgment will now take the form $\Gamma \vdash e : t \With z$, meaning that, with
+    assumptions $\Gamma$, expression $e$ has type $t$ and may cause side effects $z$.  The side
+    effects will be represented as a <i>set</i> of possible side effects.
+  </p>
+
+  <p>
+    The typing rules themselves are as follows.  Many of the rules are a straightforward extension
+    of the existing rules for the simply-typed &lambda;-calculus.  Two representative samples are:
+  </p>
+
+  $$\frac{(x : t) \in \Gamma}{\Gamma \vdash x : t \With \emptyset}
+    \qquad
+    \frac{\Gamma \vdash e_1 : \Int \With z_1 \quad
+          \Gamma \vdash e_2 : \Int \With z_2}
+         {\Gamma \vdash e_1 + e_2 : \Int \With z_1 \cup z_2}$$
+
+  <p>
+    Variables have no side effects, so the effect annotation on the variable rule is the empty set.
+    Addition propagates whatever effects took place in its arguments, so its effect annotation is
+    the union of the effect annotations on its subexpressions.
+  </p>
+
+  $$\frac{\Gamma \vdash e : \Bool \With z \quad
+          \Gamma \vdash e_1 : t \With z_1 \quad
+          \Gamma \vdash e_2 : t \With z_2}
+         {\Gamma \vdash \If{e}{e_1}{e_2} : t \With z \cup z_1 \cup z_2}$$
+
+  <p>
+    At type checking time, we do not know which branch of an <code>if</code> statement will be
+    executed.  So, our effect annotation for an <code>if</code> statement includes the effects of
+    both branches.  This will most likely be an over approximation; for example, consider the
+    function
+  </p>
+
+  <pre>
+\ x : Int -> if isz x then throw[Int] else get</pre>
+
+  <p>
+    Executing this function will either throw an exception, or read from the accumulator, but
+    definitely not both.  Nevertheless, the typing of the body will be
+  </p>
+
+  $$x : \Int \vdash \If{\mathtt{isz}\,x}{\mathtt{throw[Int]}}{\mathtt{get}} : \Int \With \{ \mathsf{ex}, \mathsf{read} \}$$
+
+  <p>
+    reflecting both possible branches.
+  </p>
+
+  $$\frac{ }{\Gamma \vdash \mathtt{throw[t]} : t \With \{ \mathsf{ex} \}}
+    \qquad
+    \frac{\Gamma \vdash e_1 : t \With z_1 \quad
+          \Gamma \vdash e_2 : t \With z_2}
+         {\Gamma \vdash \Catch{e_1}{e_2} : t \With (z_1 \setminus \{ \mathsf{ex} \}) \cup z_2}$$
+
+  <p>
+    The <code>throw</code> term always produces an exception, so its effect annotation includes
+    exceptions.  The <code>try..catch</code> construct eliminates any exceptions caused in the first
+    branch, but leaves other effects unchanged.
+  </p>
+
+  $$\frac{ }{\Gamma \vdash \mathtt{get} : \Int \With \{ \mathsf{read} \}}
+    \qquad
+    \frac{\Gamma \vdash e : \Int \With z}
+         {\Gamma \vdash \mathtt{put}\;e : 1 \With \{ \mathsf{write} \} \cup z}$$
+
+  <p>
+    We distinguish between reading and writing effects; for example, the expressions $e_1 + e_2$ and
+    $e_2 + e_1$ are equivalent if both read, but not if either writes.
+  </p>
+
+  $$\frac{\Gamma, x : t \vdash e : u \With z}
+         {\Gamma \vdash \backslash x : t \to e : t \stackrel z \to u \With \emptyset}
+    \quad
+    \frac{\Gamma \vdash e_1 : t \stackrel z \to u \With z_1 \quad
+          \Gamma \vdash e_2 : t \With z_2}
+         {\Gamma \vdash e_1\,e_2 : u \With z \cup z_1 \cup z_2}$$
+
+  <p>
+    The side-effects in the body of a function take place when the function is executed, not when it
+    is defined.  Consequently, we extend function types to capture the side effects of the body, and
+    add those captured side-effects to the effect annotation of applications.
+  </p>
+
+  $$\frac{\Gamma \vdash e : t \With z_1 \quad
+          z_1 \subseteq z_2}
+         {\Gamma \vdash e : t \With z_2}$$
+
+  <p>
+    Effect annotations are a conservative approximation of the actual side effects of the program.
+    We can always weaken this assumption further.  This rule is called <i>subsumption</i>.  One use
+    of this is in typing code that uses functions as arguments.  For example, consider the following
+    function
+  </p>
+
+  <pre>
+\ f : (Int -{ex}-> Int) -> f 4</pre>
+
+  <p>
+    where I write <code>-{ex}-></code> as the ASCII rendering of $\stackrel{\{\mathsf{ex}\}}{\to}$.
+    Intuitively, we expect <code>f</code> to possibly, but not necessarily throw exceptions.  But
+    now consider an attempt to use this function.
+  </p>
+
+  <pre>
+(\ f : (Int -{ex}-> Int) -> f 4) (\ x : Int -> x)</pre>
+
+  <p>
+    Now we have a problem.  The function <code>\x : Int -> x</code> has type <code>Int -{}->
+    Int</code>, not <code>Int -{ex}-></code>, so this application is ill-typed.  However,
+    intuitively, we expect it to succeed.  In this case, we could apply the subsumption rule,
+    however, to conclude $x : \Int \vdash x : \Int \With \{ \mathsf{ex} \}$, and so the application
+    can type.
+  </p>
+
+  <h2>Flavored exceptions</h2>
+
+  <p>
+    Our model of exceptions so far has been somewhat inexpressive: we can only throw one kind of
+    exception.  This might seem to lead to an uninteresting effect system as well.  To make it more
+    interesting, we consider a system in which we can include arbitrary values in thrown exceptions.
+  </p>
+
+  <p>
+    Our first change is that <code>throw</code> needs a value to throw, and <code>catch</code> needs
+    to bind the caught value.  More interestingly, however, we will allow <code>catch</code> to only
+    catch exceptions of a particular type.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Expression</b></td>
+      <td><b>Meaning</b></td>
+    </tr>
+
+    <tr>
+      <td><code>throw[u,t] e</code></td>
+      <td>Throw an exception of type <code>u</code> (with result type <code>t</code>)</td>
+    </tr>
+
+    <tr>
+      <td><code>try e<sub>1</sub> catch \ x : u -> e<sub>2</sub></code></td>
+      <td>Execute <code>e_2</code>; if it throws an exception of type <code>u</code>, execute <code>e<sub>2</sub></code></td>
+    </tr>
+  </table>
+
+  <p>
+    To account for the variety of exceptions, we will now annotate the $\mathsf{ex}$ effect with the
+    type the exception being thrown.  Similarly, <code>catch</code> expression will now only filter
+    exceptions of one type.
+  </p>
+
+  $$\frac{\Gamma \vdash e : u \With z}
+         {\Gamma \vdash \mathtt{throw[u,t]\;e} : t \With z \cup \{ \mathsf{ex}(u) \}}
+    \qquad
+    \frac{\Gamma \vdash e_1 : t \With z_1 \quad
+          \Gamma, x : u \vdash e_2 : t \With z_2}
+         {\Gamma \vdash \Catch{e_1}{\backslash x : u \to e_2} : t \With (z_1 \setminus \{ \mathsf{ex}(u) \}) \cup z_2}$$
+
+  <p>
+    While the individual typing rules have become more detailed, the overall structure has not
+    changed.  In particular, <code>catch</code> passes on exceptions of types other
+    than <code>u</code> just as it passed on non-exception effects before.
+  </p>
+
+</div>
+
+</body>
+
+</html>
