@@ -607,7 +607,7 @@ table.bordered td {
 
     <tr>
       <td>
-        $$\frac{\Gamma, x : t \vdash e : u}{\Gamma \vdash \mathtt{\backslash x : t \to u : t \to u}}$$
+        $$\frac{\Gamma, x : t \vdash e : u}{\Gamma \vdash \mathtt{\backslash x : t \to e : t \to u}}$$
       </td>
       <td>
         Stlc3.hs, 68&ndash;70
@@ -694,7 +694,7 @@ table.bordered td {
 
     <tr>
       <td>
-        $$\frac{\Gamma \vdash e : t}{\Gamma \vdash \Inr t u e : t + u}$$
+        $$\frac{\Gamma \vdash e : u}{\Gamma \vdash \Inr t u e : t + u}$$
       </td>
       <td>
         Hw1Solutions/Core.hs, 66&ndash;68
