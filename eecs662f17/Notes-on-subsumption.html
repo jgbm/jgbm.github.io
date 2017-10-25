@@ -1,0 +1,402 @@
+<html>
+<head>
+<title>Notes on subsumption and subtyping</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse;
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black;
+  vertical-align: middle;
+}
+
+
+</style>
+
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Set}[1]{\{#1\}}
+\newcommand{\Sub}{\mathbin{<:}}
+\newcommand{\Ex}[0]{\mathsf{ex}}
+\newcommand{\Read}[0]{\mathsf{read}}
+\newcommand{\Write}[0]{\mathsf{write}}
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\With}{\mathbin{\&}}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+\newcommand{\Throw}[1]{\mathtt{throw}[#1]}
+\newcommand{\Get}{\mathtt{get}}
+\newcommand{\Int}{\mathtt{Int}}
+\newcommand{\Bool}{\mathtt{Bool}}
+\newcommand{\Inl}[3]{{\mathtt{Inl}[#1 + #2] \; #3}}
+\newcommand{\Vinl}[1]{{\mathsf{vinl} \; #1}}
+\newcommand{\Inr}[3]{{\mathtt{Inr}[#1 + #2] \; #3}}
+\newcommand{\Vinr}[1]{{\mathsf{vinr} \; #1}}
+\newcommand{\CCase}[5]{{\mathtt{case}\;#1\;\mathtt{of}\;\mathtt{Inl}\;#2 \to #3 \mid \mathtt{Inr}\;#4 \to #5}}
+</script>
+
+<div class="topbox">
+
+  <h1>Notes on subsumption and subtyping</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    These notes review our discussion of subsumption and subtyping in type-and-effect systems.
+  </p>
+
+  <h2>Subsumption</h2>
+
+  <p>
+    <a href="Notes-on-effects.html">Our discussion of type and effect systems</a> included
+    the <em>subsumption</em> rule.
+  </p>
+
+  $$
+  \frac{\Gamma \vdash e : t \With z_1 \quad
+        z_1 \subseteq z_2}
+       {\Gamma \vdash e : t \With z_2}
+  $$
+
+  <p>
+    This rule should seem counter-intuitive: the conclusion has more effects---that is, makes a
+    weaker statement about the term $e$---that the premises.  And, in the absense of abstraction, we
+    could mostly work around the need for subsumption.  But once we introduction abstractions (i.e.,
+    functions), subsumption becomes unavoidable.  Consider the following example:
+  </p>
+
+  <pre>if isz x then throw[Int] else get - x</pre>
+
+  <p>
+    The two branches of the <code>if</code> have different effects, so these effects must be merged
+    in the type of the expression.  We have written the typing rule for <code>if</code> to take this
+    possibility into account, and so we can conclude that this example has type $Int
+    \stackrel{\{\mathsf{ex,read}\}}\to Int$.  However, if we add an extra layer of abstraction, we
+    have a problem:
+  </p>
+
+  <pre>if isz x then \y : 1 -> throw[Int] else \y : 1 -> get - x</pre>
+
+  <p>
+    Now, the naive derivations of the two branches are
+
+    $$
+      x : \Int \vdash \backslash y : 1 \to \Throw{\Int} : \Int \stackrel{\{\mathsf{ex}\}}\to \Int \With \emptyset
+    $$
+
+    and
+
+    $$
+      x : \Int \vdash \backslash y : 1 \to \Get : \Int \stackrel{\{\mathsf{read}\}}\to \Int \With \emptyset
+    $$
+
+    The problem is no longer that the effects do not match, but that the types themselves do not
+    match.  To construct a typing for this term, we need to use the subsumption rule in the
+    derivation of each branch, to conclude that they can both have the type $\Int
+    \stackrel{\{\mathsf{ex,read}\}}\to \Int$.
+  </p>
+
+  <p>
+    If that were as far as it went, this would not be too bad.  But consider another example.
+    Suppose that $g_1$ has type $(\Int \stackrel{\Set{\Ex}}\to \Int) \stackrel{z}{\to} 1$ and $g_2$
+    has type $(\Int \stackrel{\Set{\Read}}\to \Int) \stackrel{z}{\to} 1$, and consider the term
+  </p>
+
+  <pre>let f = \x : Int -> x in if isz y then g<sub>1</sub> f else g<sub>2</sub> f</pre>
+
+  <p>
+    Now, we have a problem.  If we inline the body of <code>f</code> in the two branch of
+    the <code>if</code> statement, then the resulting term can type.  In the first branch, we use
+    subsumption to conclude that <code>\x : Int -> x</code> has type $\Int \stackrel{\Set{\Ex}}\to
+    \Int$, and in the second branch that it has type $\Int \stackrel{\Set{\Read}}\to \Int$.  But we
+    cannot give <code>f</code> a single type that encompasses both of these uses, and so it seems
+    that we cannot type this term.
+  </p>
+
+
+  <h2>Subtyping</h2>
+
+  <p>
+    The key relationship that we need to capture is one among types, corresponding to (hypothetical)
+    uses of the subsumption rule.  This is an example of a more general pattern
+    called <em>subtyping</em>, which appears throughout programming languages, particularly in
+    object-oriented programming languages.
+  </p>
+
+  <p>
+    To capture this relationship, we start by introducing a new relation on types, $t_1 \Sub t_2$.
+    The intuition behind this relation is that any time you expect a value of type $t_2$, you can
+    substitute a value of type $t_1$.  An alternative view is that the values of type $t_1$ are a
+    subset of the values of type $t_2$.  For example, suppose we had a type <code>Pos</code> that
+    contained only the positive integers.  Then, we would have that $\mathtt{Pos} \Sub
+    \mathtt{Int}$.
+  </p>
+
+  <p>
+    We can formally define the $\Sub$ relation using natural deduction rules, as follows.
+  </p>
+
+  $$
+  \frac{ }{\Int \Sub \Int}
+  \quad
+  \frac{ }{\Bool \Sub \Bool}
+  $$
+
+  <p>
+    The base types are subtypes only of themselves.
+  </p>
+
+  $$
+  \frac{t_1 \Sub t_2 \quad
+        u_1 \Sub u_2}
+       {t_1 \times u_1 \Sub t_2 \times u_2}
+  \quad
+  \frac{t_1 \Sub t_2 \quad
+        u_1 \Sub u_2}
+       {t_1 + u_1 \Sub t_2 + u_2}
+  $$
+
+  <p>
+    Product and sum types are subtypes if their components are subtypes.  Consider the product
+    types: if $t_1 \times u_1 \Sub t_2 \times t_2$, then we expect to be able to use a $t_1 \times
+    u_1$ value anywhere we expect a $t_2 \times u_2$ value.  What does this mean?  The primary thing
+    we can do with a term of product type is to access its components, so it must be the case that
+    the components of the $t_1 \times u_1$ value can be used where the components of the $t_2 \times
+    u_2$ value are expected.  The intuition for sums is similar.
+  </p>
+
+  $$
+  \frac{t_2 \Sub t_1 \quad
+        u_1 \Sub u_2 \quad
+        z_1 \subseteq z_2}
+       {t_1 \stackrel{z_1}{\to} u_1 \Sub t_2 \stackrel{z_2}{\to} u_2}
+  $$
+
+  <p>
+    Functions are the interesting case.  Suppose that $t_1 \stackrel{z_1}{\to} u_1 \Sub t_2
+    \stackrel{z_2}{\to} u_2$; this means that we should be able to use a function of type $t_1
+    \stackrel{z_1}{\to} u_1$ any time we expect a function of type $t_2 \stackrel{z_2}{\to} u_2$.
+    What does this require?  It requires that the result $u_1$ be usable wherever we expected a
+    result $u_2$, so $u_1 \Sub u_2$; it also requires that the effects $z_1$ be no more than the
+    expected effects $z_2$, so $z_1 \subseteq z_2$.  Finally, it requires that any argument valid
+    for $t_2 \stackrel{z_2}{\to} u_2$ also be valid for $t_1 \stackrel{z_1}{\to} u_1$; that is, that
+    $t_2 \Sub t_1$.  Note that this is reversed from the other relations.
+  </p>
+
+  <h2>Typing with subtyping</h2>
+
+  <p>
+    Having defined the subtyping relation, we need to introduce it to the type system.  As with
+    subsumption, the most straightforward way to do so is by introducing a new typing rule.
+  </p>
+
+  $$
+  \frac{\Gamma \vdash e : t' \quad
+        t' \Sub t}
+       {\Gamma \vdash e : t}
+  $$
+
+  <p>
+    This captures the intuition of subtyping directly: any time you need a term of type $t$, a term
+    of type $t'$ will do.
+  </p>
+
+  <p>
+    However, from an implementation perspective, this rule is problematic.  Up to this point, our
+    type systems have been <em>syntax-directed</em>.  That is, the typing rule to be applied at each
+    point is determined by the syntax of the term.  This is not true for the subtyping (or
+    subsumption) rules: they can be applied at any point in a derivation.  However, we do not want
+    to over-eagerly apply subtyping or subsumption, as doing so loses information about the term.
+  </p>
+
+  <p>
+    To resolve this problem, we observe that, while we <em>could</em> apply subtyping at arbitrary
+    points, it is only necessary to do so when we are comparing types for equality.  This leads us
+    to an alternative approach, in which we do not include the subtyping rule in its full
+    generality, but instead build subtyping into the other rules where it could usefully be applied.
+  </p>
+
+  $$
+  \frac{\Gamma \vdash e_1 : t \stackrel{z_1}\to u \With z_1 \quad
+        \Gamma \vdash e_2 : t' \With z_2 \quad
+        t' \Sub t}
+       {\Gamma \vdash e_1\,e_2 : u \With z \cup z_1 \cup z_2}
+  $$
+
+  $$
+  \frac{\Gamma \vdash e : \Bool \With z \quad
+        \Gamma \vdash e_1 : t_1 \With z_1 \quad
+        \Gamma \vdash e_2 : t_2 \With z_2 \quad
+        t_1 \Sub t \quad
+        t_2 \Sub t}
+       {\Gamma \vdash \If{e}{e_1}{e_2} : t \With z \cup z_1 \cup z_2}
+  $$
+
+  $$
+  \frac{\Gamma \vdash e : t_1 + t_2 \With z \quad
+        \Gamma, x_1 : t_1 \vdash e_1 : t_1 \With z_1 \quad
+        \Gamma, x_2 : t_2 \vdash e_2 : t_2 \With z_2 \quad
+        t_1 \Sub t \quad
+        t_2 \Sub t}
+       {\Gamma \vdash \mathtt{case}\;e\;\mathtt{of} x_1 \to e_1 \mid x_2 \to e_2 : t \With z \cup z_1 \cup z_2}
+  $$
+</div>
+
+</body>
+</html>
