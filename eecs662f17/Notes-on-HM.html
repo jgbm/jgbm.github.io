@@ -1,0 +1,552 @@
+<html>
+<head>
+  <title>Notes on Hindley-Milner polymorphism</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse;
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black;
+  vertical-align: middle;
+}
+
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      noErrors: {
+        disabled: true
+      },
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\With}{\mathbin{\&}}
+\newcommand{\Set}[1]{\{#1\}}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
+\newcommand{\Catch}[2]{\mathtt{try}\;#1\;\mathtt{catch}\;#2}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+\newcommand{\Int}{\mathtt{Int}}
+\newcommand{\Bool}{\mathtt{Bool}}
+\newcommand{\Inl}[3]{{\mathtt{Inl}[#1 + #2] \; #3}}
+\newcommand{\Vinl}[1]{{\mathsf{vinl} \; #1}}
+\newcommand{\Inr}[3]{{\mathtt{Inr}[#1 + #2] \; #3}}
+\newcommand{\Vinr}[1]{{\mathsf{vinr} \; #1}}
+\newcommand{\CCase}[5]{{\mathtt{case}\;#1\;\mathtt{of}\;\mathtt{Inl}\;#2 \to #3 \mid \mathtt{Inr}\;#4 \to #5}}
+</script>
+
+
+<div class="topbox">
+
+  <h1>Notes on Hindley-Milner polymorphism</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    These notes summarize our development of Hindley-Milner polymorphism.
+  </p>
+
+  <h2>Syntax</h2>
+
+  <p>
+    The key syntactic step that distinguishes this calculus is the separation of types (or ground
+    types), which cannot contain quantifiers, and type schemes (or schematic types), which do.
+    Types are defined as before, but with the addition of type variables.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Type</b></td>
+      <td><b>Meaning</b></td>
+      <td><b>Type</b></td>
+      <td><b>Meaning</b></td>
+    <tr>
+      <td><code>t * u</code></td>
+      <td>Product types</td>
+      <td><code>Int</code></td>
+      <td>Integers</td>
+    </tr>
+    <tr>
+      <td><code>t + u</code></td>
+      <td>Sum types</td>
+      <td><code>Bool</code></td>
+      <td>Booleans</td>
+    </tr>
+    <tr>
+      <td><code>t -> u</code></td>
+      <td>Function types</td>
+      <td><code>1</code></td>
+      <td>Unit type</td>
+    </tr>
+    <tr>
+      <td><code>a</code></td>
+      <td>Type variables</td>
+    </tr>
+  </table>
+
+  <p>
+    Type schemes include types and the universal quantifier.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Scheme</b></td>
+      <td><b>Meaning</b></td>
+    </tr>
+    <tr>
+      <td><code>t</code></td>
+      <td>Trivial schemes</td>
+    </tr>
+    <tr>
+      <td><code>&forall;a.t</code></td>
+      <td>Universal quantification</td>
+    </tr>
+  </table>
+
+  <p>
+    In practical languages, the quantifiers are usually left implicit.  So in Haskell we write the
+    type of the <code>length</code> function as <code>[a] -&gt; Integer</code>,
+    not <code>&forall;a.[a] -&gt; Integer</code>.  However, this is purely a matter of syntactic
+    convenience.  We write the quantifiers explicitly here to make the role of the type rules clear.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Non-syntax directed type system</h2>
+
+  <p>
+    Our first description of Hindley-Milner typing relies on introducing two non-syntax directed
+    rules: one for the introduction of quantifiers, and one for their elimination.  We also discover
+    the term-level consequence of the stratification of types and schemes: only <code>let</code>
+    introduces polymorphism, while the remainder of the existing terms operate only on ground
+    types.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Rule</b></td>
+      <td><b>Name</b></td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{x : s \in \Gamma}
+               {\Gamma \vdash x : s}$$
+      </td>
+      <td>
+        (var)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash x : s \quad
+                a \not\in fv(\Gamma)}
+               {\Gamma \vdash x : \forall a. s}$$
+      </td>
+      <td>
+        (&forall;I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash x : \forall a. s}
+               {\Gamma \vdash x : [a \mapsto t] s}$$
+      </td>
+      <td>
+        (&forall;E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : s \quad
+                \Gamma, x : s \vdash e_2 : t}
+               {\Gamma \vdash \Let{x}{e_1}{e_2} : t}$$
+      </td>
+      <td>
+        (let)
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="3">
+        The following rules are unchanged from their simply typed presentations; however, note that they are restricted to apply to types, not to type schemes.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma, x : t \vdash e : u}{\Gamma \vdash \mathtt{\backslash x \to e : t \to u}}$$
+      </td>
+      <td>
+        (&rarr;I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : t \to u \quad \Gamma \vdash e_2 : t}{\Gamma \vdash e_1\,e_2 : u}$$
+      </td>
+      <td>
+        (&rarr;E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : t_1 \quad \Gamma \vdash e_2 : t_2}
+               {\Gamma \vdash (e_1, e_2) : t_1 * t_2}$$
+      </td>
+      <td>
+        (&times;I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : t_1 * t_2 \quad
+                \Gamma, x_1 : t_1, x_2 : t_2 \vdash e_2 : u}
+               {\Gamma \vdash \Let{(x_1,x_2)}{e_1}{e_2} : u}$$
+      </td>
+      <td>
+        (&times;E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }{\Gamma \vdash () : 1}$$
+      </td>
+      <td>
+        (1I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : 1 \quad \Gamma \vdash e_2 : t}
+               {\Gamma \vdash e_1; e_2 : t}$$
+      </td>
+      <td>
+        (1E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t}{\Gamma \vdash \Inl t u e : t + u}$$
+      </td>
+      <td>
+        (+I<sub>1</sub>)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : u}{\Gamma \vdash \Inr t u e : t + u}$$
+      </td>
+      <td>
+        (+I<sub>2</sub>)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t_1 + t_2 \quad
+                \Gamma, x_1 : t_1 \vdash e_1 : u \quad
+                \Gamma, x_2 : t_2 \vdash e_2 : u}
+               {\Gamma \vdash \CCase e {x_1} {e_1} {x_2} {e_2} : u}$$
+      </td>
+      <td>
+        (+E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : (t \to u) \to (t \to u)}
+               {\Gamma \vdash \mathtt{fix}\,e : t \to u}$$
+      </td>
+      <td>
+        (fix)
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="3">
+        The following rules are entirely unchanged.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }{\Gamma \vdash 1 : \Int}$$
+      </td>
+      <td>
+        (const)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : \Int \quad \Gamma \vdash e_2 : \Int}{\Gamma \vdash e_1 + e_2 : \Int}$$
+      </td>
+      <td>
+        (const)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : \Int \quad \Gamma \vdash e_2 : \Int}{\Gamma \vdash e_1 - e_2 : \Int}$$
+      </td>
+      <td>
+        (const)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : \Int \quad \Gamma \vdash e_2 : \Int}{\Gamma \vdash e_1 * e_2 : \Int}$$
+      </td>
+      <td>
+        (const)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{ }{\Gamma \vdash \mathtt{True} : \Bool}$$
+      </td>
+      <td>
+        (const)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : \Int}{\Gamma \vdash \mathtt{isz}\,e : \Bool}$$
+      </td>
+      <td>
+        (const)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : \Bool \quad
+                \Gamma \vdash e_2 : t \quad
+                \Gamma \vdash e_3 : t}
+               {\Gamma \vdash \If{e_1}{e_2}{e_3} : t}$$
+      </td>
+      <td>
+        (if)
+      </td>
+    </tr>
+  </table>
+
+  <h2>Equivalence of type schemes</h2>
+
+  <p>
+    The syntax of type schemes distinguishes some types that might seem equivalent.  For example,
+    the schemes <code>&forall;a. a -&gt; a</code> and <code>&forall;b. b -&gt; b</code> are
+    syntactically distinct, even though our intuition is that they describe the same terms.
+    Similarly, the types <code>&forall;a. &forall b. a -&gt; b -&gt; a</code>
+    and <code>&forall;b.&forall;a. a -&gt; b -&gt; a</code> differ in the order of quantifiers,
+    which we might again expect to be insignificant.
+  </p>
+
+  <p>
+    We can demonstrate that these differences are acutally inconsequential, however.  The following
+    derivations are left as exercises.
+  </p>
+
+  <p>
+    <i>Quantifier variables 1.</i> Derive the following judgments.
+  </p>
+
+  $$ \vdash \backslash x \to x : \forall a. a \to a \qquad
+     \vdash \backslash x \to x : \forall b. b \to b $$
+
+  <p>
+    <i>Quantifier variables 2.</i> Derive the following judgment.
+  </p>
+
+  $$ \Set{id : \forall a. a \to a} \vdash id : \forall b. b \to b $$
+
+  <p>
+    <i>Quantifier ordering 1.</i> Derive the following judgments.
+  </p>
+
+  $$ \vdash \backslash x \to \backslash y \to x : \forall a. \forall b. a \to b \to a \qquad
+     \vdash \backslash x \to \backslash y \to x : \forall b. \forall a. a \to b \to a $$
+
+  <p>
+    <i>Quantifier ordering 2.</i> Derive the following judgment.
+  </p>
+
+  $$ \Set{k : \forall a. \forall b. a \to b \to a} \vdash k : \forall b. \forall a. a \to b \to a $$
+
+</div>
+
+</body>
+
+</html>
