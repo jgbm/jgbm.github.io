@@ -172,6 +172,7 @@ table.bordered td {
 \newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
 \newcommand{\With}{\mathbin{\&}}
 \newcommand{\Set}[1]{\{#1\}}
+\newcommand{\gr}[1]{\lfloor #1 \rfloor}
 \newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
 \newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
 \newcommand{\Catch}[2]{\mathtt{try}\;#1\;\mathtt{catch}\;#2}
@@ -268,14 +269,13 @@ table.bordered td {
 
 <div class="box">
 
-  <h2>Non-syntax directed type system</h2>
+  <h2>The Hindley-Milner type system</h2>
 
   <p>
-    Our first description of Hindley-Milner typing relies on introducing two non-syntax directed
-    rules: one for the introduction of quantifiers, and one for their elimination.  We also discover
-    the term-level consequence of the stratification of types and schemes: only <code>let</code>
-    introduces polymorphism, while the remainder of the existing terms operate only on ground
-    types.
+    Our first description of Hindley-Milner typing relies on introducing two new typing rules: one
+    for the introduction of quantifiers, and one for their elimination.  We also discover the
+    term-level consequence of the stratification of types and schemes: only <code>let</code>
+    introduces polymorphism, while the remainder of the existing terms operate only on ground types.
   </p>
 
   <table class="bordered">
@@ -503,13 +503,53 @@ table.bordered td {
     </tr>
   </table>
 
+  <h2>Auxiliary definitions</h2>
+
+  <p>
+    The typing rules above make use of several auxiliary definitions&mdash;the (&forall;I) rule
+    relies on knowing the <em>free type variables</em> of the typing environment, while the
+    (&forall;E) rule uses <em>substitutions</em> on types.  The definition of these ideas is
+    routine; we present them here without further comment.
+  </p>
+
+  $$
+  \begin{align*}
+  fv(\Int) = fv(\Bool) = fv(1) &= \emptyset & fv(t \times u) &= fv(t) \cup fv(u) \\
+  fv(a) &= \Set{a} & fv(t + u) &= fv(t) \cup fv(u) \\
+  fv(\forall a. t) &= fv(t) \setminus \Set a & fv(t \to u) &= fv(t) \cup fv(u)
+  \end{align*}
+  $$
+
+  $$
+  fv(\Gamma) = \bigcup \Set{fv(s) : (x : s) \in \Gamma}
+  $$
+
+  $$
+  \begin{align*}
+  [a \mapsto t] b &= \begin{cases}
+    t &\text{if $a = b$} \\
+    b &\text{otherwise}
+  \end{cases} &
+  [a \mapsto t] (\forall b. u) &= \begin{cases}
+    \forall b. u & \text{if $a = b$} \\
+    \forall b. [a \mapsto t]u & \text{otherwise}
+  \end{cases} \\
+  [a \mapsto t]\Int &= \Int & [a \mapsto t](u_1 \times u_2) &= [a \mapsto t]u_1 \times [a \mapsto t]u_2 \\
+  [a \mapsto t]\Bool &= \Bool & [a \mapsto t](u_1 + u_2) &= [a \mapsto t]u_1 + [a \mapsto t]u_2 \\
+  [a \mapsto t]1 &= 1 & [a \mapsto t](u_1 \to u_2) &= [a \mapsto t]u_1 \to [a \mapsto t]u_2
+  \end{align*}
+  $$
+
+</div>
+
+<div class="box">
   <h2>Equivalence of type schemes</h2>
 
   <p>
     The syntax of type schemes distinguishes some types that might seem equivalent.  For example,
     the schemes <code>&forall;a. a -&gt; a</code> and <code>&forall;b. b -&gt; b</code> are
     syntactically distinct, even though our intuition is that they describe the same terms.
-    Similarly, the types <code>&forall;a. &forall b. a -&gt; b -&gt; a</code>
+    Similarly, the types <code>&forall;a. &forall;b. a -&gt; b -&gt; a</code>
     and <code>&forall;b.&forall;a. a -&gt; b -&gt; a</code> differ in the order of quantifiers,
     which we might again expect to be insignificant.
   </p>
@@ -544,6 +584,82 @@ table.bordered td {
   </p>
 
   $$ \Set{k : \forall a. \forall b. a \to b \to a} \vdash k : \forall b. \forall a. a \to b \to a $$
+
+</div>
+
+<div class="box">
+
+  <h2>A syntax-directed variant</h2>
+
+  <p>
+    We can also give a syntax-directed variant of the Hindley-Milner type system.  The key
+    observation is that, other than the (var) and (let) rules, the rules for the syntax forms all
+    operation only on ground types.  So, applications of (&forall;E) must occur immediately below
+    the (var) rule, and applications of (&forall;I) can only usefully occur immediately above a
+    (let) rule.  Following this idea, we can introduce new versions of the variable and let rules
+    that incorporate the uses of (&forall;E) and (&forall;I), as follows.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Rule</b></td>
+      <td><b>Name</b></td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{(x : s) \in \Gamma \quad
+                t \in \gr s}
+               {\Gamma \vdash x : t}$$
+      </td>
+      <td>
+        (var<sup>S</sup>)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : u \quad
+                s = Gen(u, \Gamma) \quad
+                \Gamma, x : s \vdash e_2 : t}
+               {\Gamma \vdash \Let{x}{e_1}{e_2} : t}$$
+      </td>
+      <td>
+        (let<sup>S</sup>)
+      </td>
+    </tr>
+  </table>
+
+  <p>
+    Again, we make use of several auxiliary definitions.  The <em>generalization of $u$ with respect
+      to $\Gamma$</em>, written $Gen(u, \Gamma)$, is the most general type scheme that we can derive
+      starting from $u$ by repeated applciations of the (&forall;I) rule.  It is defined by
+  </p>
+
+  $$
+  Gen(u, \Gamma) = \forall a_1. \dots \forall a_n. u \quad \text{where $\Set{a_1, \dots, a_n} = fv(u) \setminus fv(\Gamma)$}
+  $$
+
+  <p>
+    The <em>ground instance of $s$</em>, written $\gr s$, is the set of ground types (i.e.,
+    non-schemes) that can be obtained by instantiating the quantifiers.  That is, it is the set of
+    types that can be obtained from $s$ by repeated applications of the (&forall;E) rule.  It is
+    defined as follows.
+  </p>
+
+  $$
+  \gr{\forall a. s} = \bigcup \Set{\gr{[a \mapsto t]s} : t \in Type} \qquad \gr t = \Set t
+  $$
+
+  <p>
+    The idea of the ground instances of a type scheme captures many of the intutions for type
+    schemes that are not reflected directly in the syntax.  For example, the following two
+    properties are easy to prove.
+  </p>
+
+  $$
+  \gr{\forall a. \forall b. s} = \gr{\forall b. \forall a. s} \qquad \gr{\forall a. s} = \gr{\forall b. [a \mapsto b]s}
+  $$
 
 </div>
 

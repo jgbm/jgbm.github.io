@@ -1,0 +1,640 @@
+<html>
+<head>
+  <title>Notes on Girard-Reynolds polymorphism</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse;
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black;
+  vertical-align: middle;
+}
+
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      noErrors: {
+        disabled: true
+      },
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\With}{\mathbin{\&}}
+\newcommand{\Set}[1]{\{#1\}}
+\newcommand{\gr}[1]{\lfloor #1 \rfloor}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
+\newcommand{\Catch}[2]{\mathtt{try}\;#1\;\mathtt{catch}\;#2}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+\newcommand{\Int}{\mathtt{Int}}
+\newcommand{\Isz}[1]{\mathtt{isz}\,#1}
+\newcommand{\Bool}{\mathtt{Bool}}
+\newcommand{\Inl}[1]{{\mathtt{Inl} \; #1}}
+\newcommand{\Vinl}[1]{{\mathsf{vinl} \; #1}}
+\newcommand{\Inr}[1]{{\mathtt{Inr} \; #1}}
+\newcommand{\Vinr}[1]{{\mathsf{vinr} \; #1}}
+\newcommand{\CCase}[5]{{\mathtt{case}\;#1\;\mathtt{of}\;\mathtt{Inl}\;#2 \to #3 \mid \mathtt{Inr}\;#4 \to #5}}
+\newcommand{\llbracket}{[\![}
+\newcommand{\rrbracket}{]\!]}
+\newcommand{\Tr}[1]{\llbracket #1 \rrbracket}
+</script>
+
+
+<div class="topbox">
+
+  <h1>Notes on Girard-Reynolds polymorphism</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    This notes review our development of the Girard-Reynolds polymorphic &lambda;-calculus (also
+    called System F), and the relationship of the GR calculus with the other &lambda;-calculi
+    developed during the semester.
+  </p>
+
+  <p>
+    The distinguishing feature of System F is that it provides <i>explicit</i> polymorphism, by
+    providing terms for type abstraction (type lambdas) and type application.  The resulting system
+    is more verbose than implicit polymorphism, but also more expressive.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Terms and types</h2>
+
+  <p>
+    The types of System F are as follows.  (Unlike in H-M polymorphism, we do not introduce a
+    distinction between generic, or quantified, and ground types.)
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Type</b></td>
+      <td><b>Meaning</b></td>
+    </tr>
+    <tr>
+      <td><code>a</code></td>
+      <td>Type variables</td>
+    </tr>
+    <tr>
+      <td><code>t &rarr; u</code></td>
+      <td>Functions from <code>t</code> to <code>u</code></td>
+    </tr>
+    <tr>
+      <td><code>&Pi;a . t</code></td>
+      <td>Polymorphic type</td>
+    </tr>
+  </table>
+
+  <p>
+    The type language is significantly reduced from earler calculi!  Later, we will see how the
+    remainder of our familiar types can be encoded in terms of the types of System F.
+  </p>
+
+  <p>
+    The term language is equally simple.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Term</b></td>
+      <td><b>Meaning</b></td>
+    </tr>
+
+    <tr>
+      <td><code>x</code></td>
+      <td>Term variables</td>
+    </tr>
+
+    <tr>
+      <td><code>\ x : t &rarr; e</code></td>
+      <td>Function from <code>x</code> of type <code>t</code> to <code>e</code></td>
+    </tr>
+
+    <tr>
+      <td><code>e<sub>1</sub> e<sub>2</sub></code></td>
+      <td>Application of <code>e<sub>1</sub></code> to <code>e<sub>2</sub></code></td>
+    </tr>
+
+    <tr>
+      <td><code>&Lambda; a. e</code></td>
+      <td>Type abstraction: <code>e</code> for any type <code>a</code></td>
+    </tr>
+
+    <tr>
+      <td><code>e [t]</code></td>
+      <td>Type application: instantiation of outermost type parameter in <code>e</code> with <code>t</code></td>
+    </tr>
+  </table>
+
+  <p>
+    Functions have regrown their type annotations.  Unlike H-M, we cannot compute the most general
+    types for terms in the G-R calculus, so we will rely on the programmer to supply some type
+    annotations.
+  </p>
+
+  <p>
+    Typing judgments take the form $\Delta; \Gamma \vdash e : t$, indicating that, with valid type
+    variables in $\Delta$ and term variables as in $\Gamma$, expression $e$ has type $t$.  For now,
+    we only have one kind of type, and so $\Delta$ only needs to keep a list of variables.
+  </p>
+
+  <table class="bordered">
+    <tr>
+      <td><b>Rule</b></td>
+      <td><b>Name</b></td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{x:t \in \Gamma}
+               {\Delta; \Gamma \vdash x : t}$$
+      </td>
+      <td>
+        (var)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Delta; \Gamma, x : t \vdash e : u \quad
+                \Delta \vdash t\;\mathsf{type}}
+               {\Delta; \Gamma \vdash \backslash x : t \to e : t \to u}$$
+      </td>
+      <td>
+        (&rarr;I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Delta; \Gamma \vdash e_1 : t \to u \quad
+                \Delta; \Gamma \vdash e_2 : t}
+               {\Delta; \Gamma \vdash e_1\,e_2 : u}$$
+      </td>
+      <td>
+        (&rarr;E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Delta, a; \Gamma \vdash e : t \quad
+                a \not\in \Delta}
+               {\Delta; \Gamma \vdash \Lambda a. e : \Pi a. t}$$
+      </td>
+      <td>
+        (&Pi;I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Delta; \Gamma \vdash e : \Pi a. t \quad
+                \Delta \vdash u \; \mathsf{type}}
+               {\Delta; \Gamma \vdash e[u] : [a \mapsto u]t}$$
+      </td>
+      <td>
+        (&Pi;E)
+      </td>
+    </tr>
+  </table>
+
+  <p>
+    The rules that mention types now rely on an auxiliary judgment $\Delta \vdash t \;
+    \mathsf{type}$, meaning that with type variables in $\Delta$, $t$ is a valid type.  This
+    requires checking that any type variables mentioned in $t$ appear in $\Delta$.
+  </p>
+
+  $$
+  \frac{a \in \Delta}
+       {\Delta \vdash a \; \mathsf{type}}
+  \quad
+  \frac{\Delta, a \vdash t \; \mathsf{type}}
+       {\Delta \vdash \Pi a. t \; \mathsf{type}}
+  \quad
+  \frac{\Delta \vdash t \; \mathsf{type} \quad
+        \Delta \vdash u \; \mathsf{type}}
+       {\Delta \vdash t \to u \; \mathsf{type}}
+  $$
+
+  <h2>Examples</h2>
+
+  <p>
+    The identity function in System F is typed as follows
+  </p>
+
+  $$ \Lambda a. \backslash x : a \to x : \Pi a. a \to a $$
+
+  <p>
+    The K combinator can be given either of the following typings
+  </p>
+
+  $$\begin{gather*}
+    \Lambda a. \Lambda b. \backslash x : a \to \backslash y : b \to x : \Pi a. \Pi b. a \to b \to a \\
+    \Lambda a. \Lambda b. \backslash x : b \to \backslash y : a \to x : \Pi a. \Pi b. b \to a \to b
+    \end{gather*}$$
+
+  <p>
+    <i>Optional exercise.</i> Show that the two types above are <i>isomorphic</i>.  To do so, write two
+    terms, one with each of the following two types.
+  </p>
+
+  $$\begin{gather*}
+    (\Pi a. \Pi b. a \to b \to a) \to (\Pi a. \Pi b. b \to a \to b) \\
+    (\Pi a. \Pi b. b \to a \to b) \to (\Pi a. \Pi b. a \to b \to a)
+    \end{gather*}$$
+
+  <h2>Evaluation</h2>
+
+  <p>
+    The evaluation rules for System F terms are as follows.  Formally, we specify these rules in
+    terms of substitution of types into terms; however, in practice, all type manipulation can be
+    omitted from evaluation.  Nevertheless, it is important to include <i>some</i> runtime
+    representation of type lambdas.  Can you see why?)
+  </p>
+
+  $$
+  \begin{gather*}
+  \frac{ }
+       {\backslash x : t . e \Downarrow \lambda x. e}
+  \quad
+  \frac{e_1 \Downarrow \lambda x. e \quad
+        e_2 \Downarrow w \quad
+        [x \mapsto w]e \Downarrow v}
+       {e_1 \, e_2 \Downarrow v}
+  \quad
+  \frac{ }
+       {\Lambda a. e \Downarrow \Lambda a. e}
+  \quad
+  \frac{e_1 \Downarrow \Lambda a. e}
+       {e_1[t] \Downarrow [a \mapsto t]e}
+  \end{gather*}
+  $$
+
+</div>
+
+<div class="box">
+
+  <h2>Encoding products in System F</h2>
+
+  <p>
+    Our central observation is that computation is character by elimination forms, rather than
+    introduction forms.  Consider the evaluation rules for products.
+  </p>
+
+  $$
+  \frac{e_1 \Downarrow v_1 \quad
+        e_2 \Downarrow v_2}
+       {(e_1, e_2) \Downarrow \langle v_1, v_2 \rangle}
+  \quad
+  \frac{e_1 \Downarrow \langle w_1, w_2 \rangle \quad
+        [x_1 \mapsto w_1, x_2 \mapsto w_2]e_2 \Downarrow v}
+       {\Let{(x_1,x_2)}{e_1}{e_2} \Downarrow v}
+  $$
+
+  <p>
+    The introduction form is just packaging the values $v_1$ and $v_2$; everything interesting
+    happens in the elimination form.  If we want to encode products, then, the key step is to be
+    able to encode the elimination form.  That is to say, we will encode the pair $(e_1, e_2)$ as
+    something that can perform the corresponding elimination action.
+  </p>
+
+  <p>
+    Before we get to the translation itself, two observations on notation.  First, we write
+    translation using double brackets (also called "Oxford bracket" or "semantic brackets"), so
+    $\llbracket X \rrbracket$ is notation for "the translation of $X$" (whatever kind of thing $X$
+    may happen to be).  Second, our translation of terms relies on a small bit of typing
+    information; so, rather than defining a translation on terms alone $\llbracket e \rrbracket$, we
+    define a translation on terms <em>and their types</em> $\llbracket e : t \rrbracket$.  Of
+    course, as we have claimed in class (and you are discovering in your homework) it is frequently
+    possible to compute the types of terms, so this is for convenience rather than illustrating a
+    fundamental weakness of the translation.
+  </p>
+
+  <p>
+    Now, we can have the encoding itself:
+  </p>
+
+  $$
+  \begin{align*}
+  \Tr{t_1 \times t_2} &= \Pi a. (t_1 \to t_2 \to a) \to a \\
+  \Tr{(e_1, e_2) : t_1 \times t_2} &= \Lambda a. \backslash f : (t_1 \to t_2 \to a) \to f\, \Tr{e_1} \, \Tr{e_2} \\
+  \Tr{\Let{(x_1,x_2)}{e_1}{e_2} : u} &= \Tr{e_1} \, [\Tr u] \, (\backslash x_1 : t_1 \to \backslash x_2 : t_2 \to e_2)
+  \end{align*}
+  $$
+
+  <p>
+    The translation is driven by the need to do elimination.  Consider the second hypothesis of the
+    elimination rule.  Term $e_2$ has two free variables $x_1$ and $x_2$; given values for this
+    variables, the evaluation of $e_2$ is the evaluation of the whole term.  We make two steps.
+    First, we can represent a term with holes as a function.  So, rather than talking about $e_2$,
+    of type $u$ directly, we will talk about a function of type $t_1 \to t_2 \to u$.  Second, we
+    encode a pair itself as a thing that performs the elimination form.  That is, given a suitable
+    $e_2$, wrapped as a function, it produces the resulting value.
+  </p>
+
+  <p>
+    Here is a simple example.  For the purpose of this example, we will leave the constants untranslated.
+  </p>
+
+  $$\begin{align}
+  & \Tr{\Let{(x,y)}{(4,5)}{x + y}} \\
+  &= \Tr{(4,5)} \, [\Tr\Int] \, (\backslash x : \Tr\Int \to \backslash y : \Tr\Int \to x \Tr{+} y) \\
+  &= (\Lambda a. \backslash f : (\Tr\Int \to \Tr\Int \to a) \to f\,\Tr 4\, \Tr 5)\, [\Tr\Int] (\backslash x : \Tr\Int \to \backslash y : \Tr\Int \to x \Tr{+} y) \\
+  &= (\backslash f : (\Tr\Int \to \Tr\Int \to \Tr\Int) \to f\,\Tr 4\, \Tr 5)\, (\backslash x : \Tr\Int \to \backslash y : \Tr\Int \to x \Tr{+} y) \\
+  &= (\backslash x : \Tr\Int \to \backslash y : \Tr\Int \to x \Tr{+} y) \,\Tr 4\, \Tr 5 \\
+  &= (\backslash y : \Tr\Int \to \Tr 5 \Tr{+} y)\,\Tr 5 \\
+  &= \Tr 4 \Tr + \Tr 5
+  \end{align}$$
+
+  <p>
+    We perform translation in two steps: From line 1 to line 2, we translate the outer
+    $\mathtt{let}$, and from line 2 to line 3 we translate the inner pair term.  In line 2, observe
+    that we have wrapped the body of the $\mathtt{let}$ expression in a function to abstract the
+    variables $x$ and $y$.  Line 3, then, gives the full translation of the original term.  We are
+    not at this point concerned with the translations of integers, so both the various integer
+    constants and the integer type itself remain untranslated throughout this example.  The
+    remaining steps are all substitutions.  Line 4 substites the type $\Tr\Int$ for type parameter
+    $a$; line 5 substitutes the encoding of $e_2$ for $f$ in the encoding of the pair, and the
+    remaining lines substitute the components of the pair into the body of $f$.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Encoding sums in System F</h2>
+
+  <p>
+    We can take a similar approach to encoding sums.  Again, in the evaluation rules, everything
+    interesting happens in the elimination form.
+  </p>
+
+  $$
+  \begin{gather*}
+  \frac{e \Eval v}{\Inl e \Eval \Vinl v} \quad
+  \frac{e \Eval \Vinl w \quad
+        [x_1 \mapsto w]e_1 \Eval v}
+       {\CCase e {x_1} {e_1} {x_2} {e_2} \Eval v} \\[5px]
+  \frac{e \Eval v}{\Inr e \Eval \Vinr v} \quad
+  \frac{e \Eval \Vinr w \quad
+        [x_2 \mapsto w]e_2 \Eval v}
+       {\CCase e {x_1} {e_1} {x_2} {e_2} \Eval v}
+  \end{gather*}
+  $$
+
+  <p>
+    In the case of products, evaluating the elimination required substituting the components of the
+    pair.  For sums, we additionally choose between the two branches.
+  </p>
+
+  $$
+  \begin{align*}
+  \Tr{t_1 + t_2} &= \Pi a. (\Tr{t_1} \to a) \to (\Tr{t_2} \to a) \to a \\
+  \Tr{\Inl{e} : t_1 + t_2} &= \Lambda a. \backslash f_1 : (t_1 \to a) \to \backslash f_2 : (t_2 \to a) \to f_1 \Tr{e : t_1} \\
+  \Tr{\Inr{e} : t_1 + t_2} &= \Lambda a. \backslash f_1 : (t_1 \to a) \to \backslash f_2 : (t_2 \to a) \to f_2 \Tr{e : t_2} \\
+  \Tr{\CCase e {x_1} {e_1} {x_2} {e_2} : u} &= \Tr{e : t_1 + t_2} \, [\Tr u] \, (\lambda x_1 : t_1 \to e_1) \, (\lambda x_2 : t_2 \to e_2)
+  \end{align*}
+  $$
+
+  <p>
+    The encoding of the type $t_1 + t_2$ follows the pattern of the case statement: given two
+    functions, one from $t_1$ to the result type, the other from $t_2$ to the result type, we
+    produce a value of the result type.  The encodings of $\mathtt{Inl}$ and $\mathtt{Inr}$ are
+    reponsibile for making the choice: $\mathtt{Inl}$ calls its first argument, while $\mathtt{Inr}$
+    calls its second.  Finally, the translation of $\texttt{case}$ just has to package the two
+    branches as functions and pass them to the translation of the scrutinee.
+  </p>
+
+  <p>
+    Again, a simple example.  We lave the constants untranslated.
+  </p>
+
+  $$
+  \begin{align}
+  & \Tr{\CCase{\Inl{4}}{x}{\Isz{x}}{y}{y} : \Bool} \\
+  &= \Tr{\Inl 4 : \Tr\Int + \Tr\Bool} \, [\Tr\Bool] \, (\lambda x : \Tr\Int \to \Tr{\mathtt{isz}}\, x) \, (\backslash y : \Tr\Bool \to y) \\
+  &= \begin{split}
+     (\Lambda a. \backslash (f_1 : \Tr\Int \to a) \to \backslash (f_2 : \Tr\Bool \to a) \to f_1 \Tr 4) \, [\Tr\Bool] \\ (\lambda x : \Tr\Int \to \Tr{\mathtt{isz}}\, x) \, (\backslash y : \Tr\Bool \to y)
+     \end{split} \\
+  &= \begin{split}
+     (\backslash (f_1 : \Tr\Int \to \Tr\Bool) \to \backslash (f_2 : \Tr\Bool \to \Tr\Bool) \to f_1 \Tr 4) \\ (\lambda x : \Tr\Int \to \Tr{\mathtt{isz}}\, x) \, (\backslash y : \Tr\Bool \to y)
+     \end{split} \\
+  &= (\backslash (f_2 : \Tr\Bool \to \Tr\Bool) \to (\lambda x : \Tr\Int \to \Tr{\mathtt{isz}}\, x) \, \Tr 4) \, (\backslash y : \Tr\Bool \to y) \\
+  &= (\lambda x : \Tr\Int \to \Tr{\mathtt{isz}}\, x) \, \Tr 4 \\
+  &= \Tr{\mathtt{isz}}\, \Tr{4}
+  \end{align}
+  $$
+
+  <p>
+    We split the translation of the source term across lines 8 to 10; from lines 8 to 9 we translate
+    the case block, while from lines 9 to 10 we translate the scrutinee.  The remaining lines are
+    substitutions. The key step is from line 11 to 12, when we substitution for $f_1$, and thus set
+    the behavior of the resulting term.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>The unit type</h2>
+
+  <p>
+    As a final note, we consider the unit type.  By itself, the unit type has very little
+    computational content of interest.  However, by following the same pattern as we did for
+    products and sums, we arrive at an interesting observation.  Recall the evaluation rules for the
+    unit.
+  </p>
+
+  $$
+  \frac{ }{() \Eval \langle \rangle}
+  \quad
+  \frac{e_1 \Eval \langle \rangle \quad
+        e_2 \Eval v}
+       {e_1 ; e_2 \Eval v}
+  $$
+
+  <p>
+    In evaluting the elimination form, there is no extra information to pass to the body ($e_2$), as
+    the unit carries no other information.  Following the pattern above, we have the following
+    translation.
+  </p>
+
+  $$
+  \begin{align*}
+  \Tr{1} &= \Pi a. a \to a \\
+  \Tr{()} &= \Lambda a. \backslash x : t \to x \\
+  \Tr{e_1 ; e_2 : u} &= \Tr{e_1} \, [\Tr u] \, \Tr{e_2}
+  \end{align*}
+  $$
+
+  <p>
+    The unit type has a unique inhabitant, the unit value.  Now, consider the translation of the
+    unit type.  As we have discussed (intuitively) in class, there is also only one possible value
+    of type $\Pi a. a \to a$.  As we have no knowledge of type $a$, the only way we could produce an
+    $a$ value is to use the one we're given.  So this value <i>must</i> be the identity function.
+    The pleasant result here being that the translation of the unit type does not just simulate its
+    behavior, but also captures its meaning.
+  </p>
+
+</body>
+
+</html>
