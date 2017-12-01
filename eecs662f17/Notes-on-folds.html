@@ -1,0 +1,532 @@
+<html>
+<head>
+  <title>Notes on folds</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse;
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black;
+  vertical-align: middle;
+}
+
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      noErrors: {
+        disabled: true
+      },
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\With}{\mathbin{\&}}
+\newcommand{\Set}[1]{\{#1\}}
+\newcommand{\gr}[1]{\lfloor #1 \rfloor}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
+\newcommand{\Catch}[2]{\mathtt{try}\;#1\;\mathtt{catch}\;#2}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+\newcommand{\Int}{\mathtt{Int}}
+\newcommand{\Isz}[1]{\mathtt{isz}\,#1}
+\newcommand{\Nat}{\mathtt{Nat}}
+\newcommand{\Bool}{\mathtt{Bool}}
+\newcommand{\Inl}[1]{{\mathtt{Inl} \; #1}}
+\newcommand{\Vinl}[1]{{\mathsf{vinl} \; #1}}
+\newcommand{\Inr}[1]{{\mathtt{Inr} \; #1}}
+\newcommand{\Vinr}[1]{{\mathsf{vinr} \; #1}}
+\newcommand{\CCase}[5]{{\mathtt{case}\;#1\;\mathtt{of}\;\mathtt{Inl}\;#2 \to #3 \mid \mathtt{Inr}\;#4 \to #5}}
+\newcommand{\llbracket}{[\![}
+\newcommand{\rrbracket}{]\!]}
+\newcommand{\Tr}[1]{\llbracket #1 \rrbracket}
+\newcommand{\Fold}[2]{\mathtt{fold}_{#1} \, (#2)}
+\newcommand{\In}[2]{\mathtt{In}_{#1}\,#2}
+\newcommand{\Inv}[1]{\mathsf{in}\,#1}
+\newcommand{\Map}[2]{\mathsf{map}_{#1} (#2)}
+</script>
+
+
+<div class="topbox">
+
+  <h1>Notes on folds</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    The <a href="Notes-on-recursion.html">fixed point combinator</a> gives us a very general way of
+    expressing recursive computations.  However, we lose many of the desirable properties of our
+    language---for example, we can use the fixed point combinator to encode arbitrary diverging
+    program behavior.  In these notes, we consider an alternative approach, based on the recursive
+    structure of data types.
+  </p>
+
+  <p>
+    Sections followed by an asterix contain more advanced material.  You may find this interesting,
+    but should not expect to see it appear on the exam.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Type operators</h2>
+
+  <p>
+    Before we can talk about recursive data types, and recursive computation based on those data
+    types, we need to lay a bit of ground work.  We will introduce the idea of type operators,
+    allowing us to abstract over the structure of types.  These will play roughly the same role as
+    the "step" functions did in our account of fixed point terms.
+  </p>
+
+  <p>
+    Consider several examples of recursive types: the natural numbers <code>Nat</code>, and lists
+    and trees natural numbers <code>NatList</code> and <code>NatTree</code>.  We might express them
+    using data type declarations as follows.
+  </p>
+
+<pre>
+data Nat = Z | S Nat
+data NatList = Nil | Cons Nat NatList
+data NatTree = Leaf | Branch Nat NatTree NatTree</pre>
+
+  <p>
+    We can distinguish two parts of these recursive definitions.  One part is the information
+    present at each "iteration" of the recursive type.  In the case of <code>Nat</code>, that's
+    simply whether the type represents 0 or the successor of another natural;
+    for <code>NatList</code>, we capture whether the list is empty, or a cons node, and in the
+    latter case also capture the value stored in the node.  The second part is the recursive
+    structure.
+  </p>
+
+  <p>
+    To separate these two parts, we introduce the idea of type operators.  Intuitively speaking, a
+    type operator is a type with a "hole", which we will use to indicate the points of recursion.
+    Formally, we can consider this to be a type with an identified free type variable.  For example,
+    the type operators extracted from the recursive definitions about would be:
+  </p>
+
+  $$
+  \begin{align*}
+  N(a) &= 1 + a \\
+  L_N(a) &= 1 + (N \times a) \\
+  T_N(a) &= 1 + (N \times a \times a)
+  \end{align*}
+  $$
+
+  <p>
+    Each of these type operators also gives rise to a term operator, called its map, which modifies
+    the $a$ value while leaving the rest of the structure unchanged.  These operators have the
+    following typing rule:
+  </p>
+
+  $$
+  \frac{\Gamma \vdash f : t \to u}
+       {\Gamma \vdash \Map F f : F(t) \to F(u)}
+  $$
+
+  <p>
+    For example, $\Map N {even}$ would have type $1 + \Nat \to 1 + \Bool$, while $\Map {L_N} {even}$
+    would have type $1 + (\Nat \times \Nat) \to 1 + (\Nat \times \Bool)$.
+  </p>
+
+  <p>
+    <em>Optional exercise.</em> Write out the terms that implement $\Map N - : (t \to u) \to (N(t) \to
+    N(u))$ and $\Map {L_N} - : (t \to u) \to (L_N(t) \to L_N(u)$.  Treat $t$ and $u$ as concrete but
+    arbitrary types.
+  </p>
+
+  <h2>Functors*</h2>
+
+  <p>
+    In general, structures that have this kind of transformer are called <i>functors</i>, and the
+    fact that these type operators are functors will be crucial to defining the meaning of
+    computations over the corresponding recursive types.  Unfortunately, it turns out that not all
+    type operators describe functors.
+  </p>
+
+  <p>
+    <em>Optional exercise.</em> Attempt to write map functions for the following type operators.
+    What goes wrong for $F_{Neg}$?
+  </p>
+
+  $$
+  \begin{align*}
+  F_{Pos}(a) &= \Nat \to a \\
+  F_{Neg}(a) &= a \to \Nat \\
+  \end{align*}
+  $$
+
+  <p>
+    We can formally capture those operators which describe functors by distinguishing
+    between <em>positive</em> and <em>negative</em> occurrences of type variables.  We introduce two
+    operators $fv^+(t)$ and $fv^-(t)$ to describe the positive and negative variables in type $t$.
+    They are defined as follows.
+  </p>
+
+  $$
+  \begin{gather*}
+  fv^+ = \Set a \qquad fv^- = \emptyset \qquad fv^\pm(t \to u) = fv^\mp(t) \cup fv^\pm(u) \\
+  fv^\pm(t \times u) = fv^\pm(t) \cup fv^\pm(u) \qquad fv^\pm(t + u) = fv^\pm(t) \cup fv^\pm(u)
+  \end{gather*}
+  $$
+
+  <p>
+    The definitions of $fv^\pm(t)$ abbreviate both the positive and negative definitions for type
+    $t$; subsequent references to $\mp$ mean the opposite polarity as $\pm$.  For example, the
+    definition for functions abbreviates the following two definitions.
+  </p>
+
+  $$
+  fv^+(t \to u) = fv^-(t) \cup fv^+(u) \qquad fv^-(t \to u) = fv^+(t) \cup fv^-(u)
+  $$
+
+  <p>
+    Now, we can say that the type operator $F(a) = t$ defines a functor exactly when $a \not\in
+    fv^-(t)$.
+  </p>
+
+  <p>
+    <em>Optional exercise.</em> Write down the map function for $F_{NN}(a) = (a \to \Nat) \to \Nat$.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Recursive types and folds</h2>
+
+  <p>
+    We build a recursive type out of a type operator the same way we built a recursive term out of a
+    step function: by applying a (least) fixed point operator.  The least fixed point operator for
+    types is conventionally written with the green letter $\mu$.  We would recover the
+    original <code>Nat</code> and <code>NatList</code> types as the least fixed points of the
+    corresponding type operators:
+  </p>
+
+  $$
+  \Nat = \mu N  \qquad  \mathtt{NatList} = \mu L_N
+  $$
+
+  <p>
+    As for fixed points of step functions, the intuition of these types is that they give the
+    infinite iteration of the type operator.  For example, the two fixed points above are
+    intuitively equivalent to:
+  </p>
+
+  $$
+  \begin{align*}
+  \Nat &= 1 + (1 + (1 + (1 + \dots))) \\
+  \mathtt{NatList} &= 1 + (\Nat \times (1 + (\Nat \times (1 + \dots))))
+  \end{align*}
+  $$
+
+  <p>
+    In this intuitive understanding, zero would be represented by $\Inl{()}$, while two would be
+    represented by $\Inr{(\Inr{(\Inl{()})})}$.  Unfortunately, this are not quite this simple.  In
+    particular, this intuitive view gives us no way to define computation over values of recursive
+    data types.
+  </p>
+
+  <p>
+    To get our actual understanding of these types, we need to introduce explicit introduction and
+    elimination forms for least fixed point types.  This will get us back in familiar ground, where
+    each type comes with its own introduce and elimination form; it will also allow us to define
+    recursive computations over these types.
+  </p>
+
+  <p>
+    The introduction rule for type $\mu F$ is called $\mathsf{in}_F$, while the elimination form is
+    called $\mathtt{fold}_F$.  Their typing rules are as follows.
+  </p>
+
+  $$
+  \frac{\Gamma \vdash e : F(\mu F)}
+       {\Gamma \vdash \In F e : \mu F}
+  \qquad
+  \frac{\Gamma \vdash f : F(t) \to t}
+       {\Gamma \vdash \Fold F f : \mu F \to t}
+  $$
+
+  <p>
+    The $\mathtt{In}_F$ term "wraps" one expansion of a recursive type into an instance of the
+    recursive type.  For example, the term $\Inl{()}$ is an instance of type $N(\mu N)$, so the term
+    $\In N {(\Inl{()})}$ is an instance of type $\mu N$.  Similarly, two would be represented by the
+    following term.
+  </p>
+
+  $$
+  \In N {(\Inr {(\In N {(\Inr {(\In N {(\Inl{()})})})})})}
+  $$
+
+  <p>
+    Intuitively, the term $\mathtt{fold}_F\,f$ replaces each instance of the $\mathtt{In}_F$
+    constructor with an application of the $f$ function.  To see this in action, we consider several
+    sample folds, defining simple operations.
+  </p>
+
+
+  <h2>Example folds</h2>
+
+  <p>
+    We begin with a simple predicate, testing for even numbers.  This can be defined as follows.
+  </p>
+
+  $$
+  even = \Fold N {\backslash x : 1 + \Bool \to \CCase x z {\mathtt{True}} b {\mathtt{not}\,b}}
+  $$
+
+  <p>
+    Consider the action of $even$ on 0 (encoded by $\In N {(\Inl {()})}$).  We want to replace the
+    (one) instance of the $\mathtt{In}_F$ constructor with the function in the fold.
+  </p>
+
+  $$
+  \begin{align*}
+  &(\backslash x : 1 + \Bool \to \CCase x z {\mathtt{True}} b {\mathtt{not}\,b}) \, (\Inl{()}) \\
+  & = \CCase {\Inl{()}} z {\mathtt{True}} b {\mathtt{not}\,b}) \\
+  & = \mathtt{True}
+  \end{align*}
+  $$
+
+  <p>
+    Now, consider the action of $even$ in 1 (encoded by $\In N {(\Inr {(\In N {(\Inl {()})})})}$).
+    Again, we want to replace the two instance of the $\mathtt{In}_N$ constructor with the function
+    in the fold; to simplify the example, we abbreviate that function as $e$.
+  </p>
+
+  $$
+  \begin{align*}
+  & e \, (\Inr {(e \, (\Inl {()}))}) \\
+  & = e \, (\Inr {\mathtt{True}})  \tag{*}\\
+  & = (\backslash x : 1 + \Bool \to \CCase x z {\mathtt{True}} b {\mathtt{not}\,b}) \, (\Inr {\mathtt{True}}) \\
+  & = \CCase {\Inr {\mathtt{True}}} z {\mathtt{True}} b {\mathtt{not}\,b} \\
+  & = \mathtt{not} \, \mathtt{True} \\
+  & = \mathtt{False}
+  \end{align*}
+  $$
+
+  <p>
+    In the $*$ labeled step, we rely on the previous example to replace $e\,(\Inl{()})$ with
+    $\mathtt{True}$.  The remainder of the evaluation is unsurprising.
+  </p>
+
+  <p>
+    Here are several other examples of simple folds: two encodings of addition, and one encoding of
+    tree sum.  (We rely on familiar notation for naturals in the tree sum function purely for
+    convenience.
+  </p>
+
+  $$
+  \begin{align*}
+  plus_1 &= \backslash m : \mu N \to \Fold N {\backslash x : 1 + \mu N \to \CCase x z m p {\In N {(\Inr{p})}}} \\
+  plus_2 &= \mathtt{fold}_N \, (\begin{array}[t]{@{}l}
+                     \backslash x : 1 + (\mu N \to \mu N) \to \\
+                     \quad \CCase x z {(\backslash n : \mu N \to n)} f {(\backslash n : \mu N \to \In N {(\Inr {(f\,n)})})})
+                     \end{array} \\
+
+  treeSum &= \mathtt{fold}_{T_N} \, (\begin{array}[t]{@{}l}
+               \backslash x : 1 + (\mu N \times \mu N \times \mu N) \to \\
+               \quad \CCase x z 0 p {\Let{(x,y,z)}{p}{x + y + z}})
+               \end{array}
+
+  \end{align*}
+  $$
+
+
+  <h2>Evaluation rules</h2>
+
+  <p>
+    Finally, we can give formal evaluation rules for recursive types.
+  </p>
+
+  $$
+  \frac{e \Eval v}
+       {\In F e \Eval \Inv v}
+  \qquad
+  \frac{f \Eval \lambda x. e_1 \quad
+        e \Eval \Inv w \quad
+        f (\Map F {\Fold F f} \, w) \Eval v}
+       {\Fold F f \, e \Eval v}
+  $$
+
+  <p>
+    As is hopefully unsurprising at this point, the computational content is all in the elimination
+    form.  When eliminating a fold, we begin by evaluating both the fold function and the value.
+    Then, intuitively, we want to replace the outer $\mathsf{in}$ with an application of the fold
+    function.  However, before doing so, we need to account for the recursion.  We do this by
+    relying on the $\mathsf{map}$ defined for type operator $F$.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Encoding folds in System F*</h2>
+
+  $$
+  \begin{align*}
+  \Tr{\mu F} &= \Pi a. (F(a) \to a) \to a \\
+  \Tr{\In F e : \mu F} &= \Lambda a. \backslash f : (F(a) \to a) \to f\,(\Map F {\Tr{\Fold F f}}\,e) \\
+  \Tr{\Fold F f : t} &= \backslash e : \Tr{\mu F} \to e \, [t] \, \Tr{f}
+  \end{align*}
+  $$
+
+</div>
+
+</body>
+
+</html>

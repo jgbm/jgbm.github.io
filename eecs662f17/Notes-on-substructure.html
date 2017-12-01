@@ -1,0 +1,659 @@
+<html>
+<head>
+  <title>Notes on substructural typing</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse;
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black;
+  vertical-align: middle;
+}
+
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      noErrors: {
+        disabled: true
+      },
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+
+</head>
+
+<body>
+
+<script type="math/tex; mode=display">
+\newcommand{\Eval}{\Downarrow}
+\newcommand{\HEval}[3]{#1\,;\,#2 \Eval #3}
+\newcommand{\With}{\mathbin{\&}}
+\newcommand{\lolli}{\multimap}
+\newcommand{\Set}[1]{\{#1\}}
+\newcommand{\gr}[1]{\lfloor #1 \rfloor}
+\newcommand{\Let}[3]{\mathtt{let}\;#1 = #2\;\mathtt{in}\;#3}
+\newcommand{\If}[3]{\mathtt{if}\;#1\;\mathtt{then}\;#2\;\mathtt{else}\;#3}
+\newcommand{\Fst}[1]{\mathtt{fst}\,#1}
+\newcommand{\Snd}[1]{\mathtt{snd}\,#1}
+\newcommand{\Inl}[1]{\mathtt{Inl}\,#1}
+\newcommand{\Inr}[1]{\mathtt{Inr}\,#1}
+\newcommand{\Catch}[2]{\mathtt{try}\;#1\;\mathtt{catch}\;#2}
+\newcommand{\Clos}[3]{\langle #1 ; \lambda #2 . #3 \rangle}
+\newcommand{\Int}{\mathtt{Int}}
+\newcommand{\Bool}{\mathtt{Bool}}
+\newcommand{\Vinl}[1]{{\mathsf{vinl} \; #1}}
+\newcommand{\Vinr}[1]{{\mathsf{vinr} \; #1}}
+\newcommand{\CCase}[5]{{\mathtt{case}\;#1\;\mathtt{of}\;\mathtt{Inl}\;#2 \to #3 \mid \mathtt{Inr}\;#4 \to #5}}
+</script>
+
+<div class="topbox">
+
+  <h1>Notes on substructural types</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    The type systems we have studied so far are good for catching some kinds of program
+    errors---such as using values inconsistently with their types, or (in the case of effect typing)
+    failing to account for possible exceptions.  However, they assume that the types of objects are
+    unchanging over the course of the program.  This means that these type sytems are unable to
+    catch some classes of program errors, such as using a file handle after closing it, writing to a
+    memory reference after freeing it, or failing to follow communication protocols.
+  </p>
+
+  <p>
+    These notes describe <i>substructural</i> type systems, one approach to capturing these kinds of
+    errors.  The key idea behind substructural type systems is that the errors above can all be
+    detected in the usage pattens of the program variables.  By restricting the use of variables, we
+    can provide a basis for detecting other kinds of errors.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Logical and structural rules in proofs</h2>
+
+  <p>
+    We draw our inspiration from similar ideas in the study of formal proofs.  There, the
+    manipulation of assumptions (equivalent to variables) are regulated by what are called
+    the <i>structural rules</i>; the remaining rules are called <i>logical rules</i>.  The typing
+    rules that we are familiar with correspond to the logical rules; for example
+  </p>
+
+  $$
+  \frac{~}{A \vdash A}
+  \quad
+  \frac{C \vdash A \quad
+        D \vdash B}
+       {C,D \vdash A \land B}
+  \quad
+  \frac{C, A \vdash B}
+       {C \vdash A \implies B}
+  \quad
+  \frac{C \vdash A \implies B \quad
+        D \vdash A}
+       {C,D \vdash B}
+  $$
+
+  <p>
+    correspond to the familiar rules for variables, pairs, function abstraction, and function
+    application.  The structural rules may be less familiar.  There are three of them:
+  </p>
+
+  $$
+  \frac{C \vdash A}
+       {C, B \vdash A}
+  \text{(Weakening)}
+  \quad
+  \frac{C, B, B \vdash A}
+       {C, B \vdash A}
+  \text{(Contraction)}
+  \quad
+  \frac{C, B_1, B_2, D \vdash A}
+       {C, B_2, B_1, D \vdash A}
+  \text{(Exchange)}
+  $$
+
+  <p>
+    The (Weakening) rule allows derivations of conclusions from "irrelevant" hypotheses---if you can
+    prove $A$ from $C$, then a proof of $A$ from $C,B$ must not make essential use of the $B$
+    hypothesis.  The (Contraction) rule allows the same assumption ($B$) to be used multiple times.
+    Finally, the (Exchange) rule allows the hypotheses to be reordered.
+  </p>
+
+  <p>
+    It may not be immediately apparent that the structural rules have any analog in type systems.
+    However, consider the analogy between the ($\to$E) rule with which we are familiar and the
+    logical modus ponens rule given above.
+  </p>
+
+  $$
+  \frac{C \vdash A \implies B \quad
+        D \vdash A}
+       {C,D \vdash B}
+  \quad
+  \frac{\Gamma \vdash e_1 : t_1 \to t_2 \quad
+        \Gamma \vdash e_2 : t_1}
+       {\Gamma \vdash e_1\,e_2 : t_2}
+  $$
+
+  <p>
+    In the rule on the left, each hypothesis has a distinct role: those in $C$ go towards proving $A
+    \implies B$, while those in $D$ go towards proving $A$.  In contrast, in the rule on the right,
+    we allow all the hypotheses in $\Gamma$ to be used in both the left-hand and right-hand
+    subderivations.  We can relate these rules, however, by viewing the right-hand rule as combining
+    (a version of) the left-hand rule with a series of applications of the (Contraction) rule, one
+    to duplicate each assumption found in $\Gamma$.  Similarly, consider the analogy between the
+    (var) rule and the axiom given above:
+  </p>
+
+  $$
+  \frac{~}{A \vdash A}
+  \quad
+  \frac{(x : t) \in \Gamma}
+       {\Gamma \vdash x : t}
+  $$
+
+  <p>
+    The left-hand rule has a single antecedent, whereas the right-hand rule allows arbitrary
+    antecedents so long as they contain the succedent.  We can relate these by considering the
+    right-hand rule to be a combination of the left-hand rule with a number of applications of the
+    (Weakening) rule.
+  </p>
+
+  <h2>Limiting the structural rules</h2>
+
+  <p>
+    Having identified the role the structural rules play in proofs, we can consider what would
+    result from restricting their use.  Logical systems that do this are generally
+    called <i>substructural</i> logics, as they have fewer structural rules than intuitionistic
+    logic.
+  </p>
+
+  <p>
+    Limiting weakening results in systems in which every hypothesis must be used somewhere in the
+    proof.  This approach has been taken in philosophy, where it leads to relevant logics, and in
+    computer science, where it appeared in Church's original $\lambda$ calculus, frequently called
+    the $\lambda I$ calculus.  Practically speaking, this approach rules out memory or resource
+    leaks: each resource allocated by the program, whether dynamic memory or some operating system
+    resource, must be disposed of somewhere in the program.
+  </p>
+
+  <p>
+    Limiting contraction results in systems in which every hypothesis can only be used one place in
+    the the proof.  This approach also has a long history in computer science, having first appeared
+    in Reynolds' classic paper "Syntactic Control of Interference".  Practically speaking, this
+    approach rules out conflicts between different parts of a program; for example, one part of the
+    program cannot close a file while another part of the program is still expecting to read from
+    it.
+  </p>
+
+  <p>
+    Limiting both weakening and contraction leads to a system in which every hypothesis is used
+    exactly once; this combines the benefits of the previous approaches, ruling out both resource
+    leaks and interference.  The best known instances of this approach are Girard's "Linear logic"
+    and O'Hearn and Pym's "Logic of bunched implications".
+  </p>
+
+  <p>
+    Limiting exchange is relevant in systems where ordering is important---these includes uses of
+    logic to capture natural language or quantum computation.  We will not discuss these settings
+    further.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Discovering new connectives</h2>
+
+  <p>
+    When we consider our familiar typing rules in a linear context, we discover fine structure that
+    was not captured by our previous type systems.  Consider two variations on the elimination of
+    products, shown below.
+  </p>
+
+  $$
+  \frac{\Gamma_1 \vdash e_1 : t_1 \times t_2 \quad
+        \Gamma_2, x_1 : t_1, x_2 : t_2 \vdash e_2 : t}
+       {\Gamma_1, \Gamma_2 \vdash \Let{(x_1, x_2)}{e_1}{e_2} : t}
+  (\times E_1)
+  \quad
+  \frac{\Gamma \vdash e: t_1 \times t_2}
+       {\Gamma \vdash \Fst e : t_1}
+  (\times E_2)
+  \quad
+  \frac{\Gamma \vdash e: t_1 \times t_2}
+       {\Gamma \vdash \Snd e : t_2}
+  (\times E_3)
+  $$
+
+  <p>
+    So far, we've only used the first elimination form.  We might prefer to use the second two---for
+    example, they're parallel with the treatment of sums.  In our type systems so far, these two
+    approaches are entirely equivalent---that is, they are interdefinable.  However, from a
+    substructural perspective, these are very different ideas.  In the first case, by deconstructing
+    a product, we get back <i>both</i> of the values used to construct it.  In the second case, when
+    we deconstruct a pair, we get only <i>one</i> of the values used to construct it.  In
+    substructural type systems, we distinguish these two cases.  The first, $t_1 \otimes t_2$,
+    contains our familiar rules for pair elimination.  However, the introduction form splits its
+    environment to construct the two components of the pair.  Practically speaking, you can think of
+    the introduction rule as computing $e_1$ and $e_2$ in parallel, where the type system guarantees
+    no interference between the two computations.
+  </p>
+
+  $$
+  \frac{\Gamma_1 \vdash e_1 : t_1 \quad
+        \Gamma_2 \vdash e_2 : t_2}
+       {\Gamma_1, \Gamma_2 \vdash (e_1, e_2) : t_1 \otimes t_2}
+  \quad
+  \frac{\Gamma_1 \vdash e_1 : t_1 \otimes t_2 \quad
+        \Gamma_2, x_1 : t_1, x_2 : t_2 \vdash e_2 : t}
+       {\Gamma_1, \Gamma_2 \vdash \Let{(x_1, x_2)}{e_1}{e_2} : t}
+  $$
+
+  <p>
+    The other form, $t_1 \With t_2$ of product constructs a pair of values from a single set of
+    resources.  This gets us the projection elimination forms.  You can think if it as offering a
+    delayed choice of two possible ways to use a single set of resources.
+  </p>
+
+  $$
+  \frac{\Gamma \vdash e_1 : t_1 \quad
+        \Gamma \vdash e_2 : t_2}
+       {\Gamma \vdash \langle e_1, e_2 \rangle}
+  \quad
+  \frac{\Gamma \vdash e: t_1 \With t_2}
+       {\Gamma \vdash \Fst e : t_1}
+  \quad
+  \frac{\Gamma \vdash e: t_1 \With t_2}
+       {\Gamma \vdash \Snd e : t_2}
+  $$
+
+  <h2>Embedding intuitionistic logic</h2>
+
+  <p>
+    While substructural logics, and the corresponding type systems, provide a valuable refinement of
+    traditional logics and type systems, they may also impose restrictions that are not always
+    applicable.  For example, while we want to be sure that file handles are not leaked, and that we
+    do not read from files after they are closed, there a no corresponding worries about integers.
+    Having to write our integer programs with substructural restrictions would rule out many
+    existing programs.
+  </p>
+
+  <p>
+    Girard's solution to this problem was to introduce a <i>modality</i>, or one-place type
+    constructor, $!t$ (pronounced "of course $t$").  For example, traditional programs might
+    manipulate values of type $!\Int$, denoting that they used integers without observing the
+    substructural constraints. He then allowed the weakening and contraction rules, but only in the
+    case that the type being weakened or contracted was of the form $!t$.
+  </p>
+
+  $$
+  \frac{\Gamma \vdash e : t_2}
+       {\Gamma, x : !t_1 \vdash e : t_2}
+  (!W)
+  \quad
+  \frac{\Gamma, x : !t_1, x : !t_1 \vdash e : t_2}
+       {\Gamma, x : !t_1 \vdash e : t_2}
+  (!C)
+  $$
+
+  <p>
+    This leaves the question of how values of type $!t$ are introduced and eliminated.  The
+    elimination rule is straightforward.  Intuitively, a value of type $!t$ can be used any number
+    of times.  1 is a number, so we can transform $!t$ values into $t$ values.  To understand the
+    introduction rule, we think about the meaning of the derivation $\Gamma \vdash e : t$ in a
+    linear type system.  Intuitively, this means that each of the resources in $\Gamma$ is used once
+    in constructing a value of type $t$.  But, if $t$ is type $!t'$, for some $t'$, then the
+    resources in $\Gamma$ may be used many times.  So, we must assure that each of the resources in
+    $\Gamma$ is of the form $!u$ for some type $u$.
+  </p>
+
+  $$
+  \frac{!\Gamma \vdash e : t}
+       {!\Gamma \vdash !e : !t}
+  (!I)
+  \quad
+  \frac{\Gamma_1 \vdash e_1 : !t_1 \quad
+        \Gamma_2, x : t_1 \vdash e_2 : t_2}
+       {\Gamma_1, \Gamma_2 \vdash \Let{!x}{e_1}{e_2} : t_2}
+  (!E)
+  $$
+
+  <p>
+    The notation $!\Gamma$ means that, for each assumption $x : t \in \Gamma$, $t$ is of the form
+    $!u$ for some type $u$.
+  </p>
+
+</div>
+
+<div class="box">
+
+  <h2>Typing rules in full</h2>
+
+  <table class="bordered">
+    <tr>
+      <td>Rule</td>
+      <td>Name</td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{~}{x : t \vdash x : t}$$
+      </td>
+      <td>
+        (var)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma, x : t \vdash e : u}
+               {\Gamma \vdash \backslash x : t \to e : t \lolli u}$$
+      </td>
+      <td>
+        ($\multimap$I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma_1 \vdash e_1 : t \lolli u \quad
+                \Gamma_2 \vdash e_2 : t}
+               {\Gamma_1, \Gamma_2 \vdash e_1 \, e_2 : u}$$
+      </td>
+      <td>
+        ($\multimap$E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma_1 \vdash e_1 : t_1 \quad
+                \Gamma_2 \vdash e_2 : t_2}
+               {\Gamma_1, \Gamma_2 \vdash (e_1, e_2) : t_1 \otimes t_2}$$
+      </td>
+      <td>
+        ($\otimes$I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma_1 \vdash e_1 : t_1 \otimes t_2 \quad
+                \Gamma_2, x_1 : t_1, x_2 : t_2 \vdash e_2 : t}
+               {\Gamma_1, \Gamma_2 \vdash \Let{(x_1,x_2)}{e_1}{e_2} : t}$$
+      </td>
+      <td>
+        ($\otimes$E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e_1 : t_1 \quad
+                \Gamma \vdash e_2 : t_2}
+               {\Gamma \vdash \langle e_1, e_2 \rangle : t_1 \With t_2}$$
+      </td>
+      <td>
+        (&amp;I)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t_1 \With t_2}
+               {\Gamma \vdash \Fst e : t_1}$$
+      </td>
+      <td>
+        (&amp;E<sub>1</sub>)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t_1 \With t_2}
+               {\Gamma \vdash \Snd e : t_2}$$
+      </td>
+      <td>
+        (&amp;E<sub>2</sub>)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t_1}
+               {\Gamma \vdash \Inl e : t_1 \oplus t_2}$$
+      </td>
+      <td>
+        ($\oplus$I<sub>1</sub>)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t_2}
+               {\Gamma \vdash \Inr e : t_1 \oplus t_2}$$
+      </td>
+      <td>
+        ($\oplus$I<sub>2</sub>)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma_1 \vdash e : t_1 \oplus t_2 \quad
+                \Gamma_2, x_1 : t_1 \vdash e_1 : t \quad
+                \Gamma_2, x_2 : t_2 \vdash e_2 : t}
+               {\Gamma_1,\Gamma_2 \vdash \CCase e {x_1} {e_1} {x_2} {e_2} : t}$$
+      </td>
+      <td>
+        ($\oplus$E)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{!\Gamma \vdash e : t}
+               {!\Gamma \vdash !e : !t}$$
+      </td>
+      <td>
+        (!I)
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan=2>
+        <em>
+          The notation $!\Gamma$ means that, for every $x : t \in \Gamma$, $t$ is of the form $!u$ for some type $u$.
+        </em>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma \vdash e : t_2}
+               {\Gamma, x : !t_1 \vdash e : t_2}$$
+      </td>
+      <td>
+        (!W)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma, x : !t_1, x : !t_1 \vdash e : t_2}
+               {\Gamma, x : !t_1 \vdash e : t_2}$$
+      </td>
+      <td>
+        (!C)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        $$\frac{\Gamma_1 \vdash e_1 : !t_1 \quad
+                \Gamma_2, x : t_1 \vdash e_2 : t_2}
+               {\Gamma_1, \Gamma_2 \vdash \Let{!x}{e_1}{e_2} : t_2}$$
+      </td>
+      <td>
+        (!E)
+      </td>
+    </tr>
+
+  </table>
+
+</div>
+
+</body>
+
+</html>
