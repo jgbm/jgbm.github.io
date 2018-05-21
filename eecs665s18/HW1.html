@@ -1,0 +1,233 @@
+<html>
+<head>
+<title>EECS 665 &mdash; Spring 2018 &mdash; Homework 1</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topbox">
+
+  <h1>eecs 665: compiler construction<br>homework 1</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Essentials</h2>
+
+  <table>
+    <tbody>
+      <tr>
+        <td><strong>Code distribution</strong></td>
+        <td><a href="HW1.zip">HW1.zip</a></td>
+      </tr>
+      <tr>
+        <td><strong>Due date</strong></td>
+        <td>Monday, February 26, 11:59 PM</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Overview</h2>
+
+  <p>
+    Your task in this homework is to write a simulator for the core x86 instruction set, following
+    the specification given in the <a href="../lect/02 X86lite.pdf">core X86 lecture</a>. At the
+    high level, this will take the form of a function <code>step</code> which, given
+    a <code>Machine</code> value representing the current state of the machine, produces a
+    new <code>Machine</code> value representing the next state of the machine.
+  </p>
+
+  <p>
+    To do so, you will have to:
+
+    <ol>
+
+      <li> Fetch the next instruction to execute (that is, the instruction pointed to by RIP), and
+        increment the instruction pointer.
+      </li>
+
+      <li>Retrieve operands from memory, if necessary.</li>
+
+      <li>Perform the instruction.</li>
+
+      <li>Update memory and the flags with the results of the instruction, as appropriate.</li>
+
+    </ol>
+
+  </p>
+
+  <p>
+    You may find it helpful to structure your solution accordingly, defining helper functions for
+    moving Int64 values to and from memory, getting from or updating operands, and performing
+    individual operations.
+  </p>
+
+  <h2>Included files</h2>
+
+  <table class="bordered">
+    <tbody>
+      <tr>
+        <td><tt>Machine.hs</tt></td>
+        <td>Definition of the simulator machine, and various helper functions</td>
+      </tr>
+      <tr>
+        <td><tt>RunAsm.hs, SimAsm.hs</tt></td>
+        <td>Top-level drivers for running assembly code</td>
+      </tr>
+      <tr>
+        <td><tt>Simulator.hs</tt></td>
+        <td>Your core x86 simulator goes here</td>
+      </tr>
+      <tr>
+        <td><tt>Text.hs,X86.hs</tt></td>
+        <td>Core x86 Haskell specification and support</td>
+      </tr>
+      <tr>
+        <td><tt>expr42,fact5</tt></td>
+        <td>Sample machines</td>
+      </tr>
+      <tr>
+        <td><tt>runtime.c,runtimef.c</tt></td>
+        <td>Runtime support for running assembly</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Hints</h2>
+
+  <p>
+    You do not need to perform any error checking---you may assume that instructions have the right
+    number of operands, memory addresses are in range, and so forth.  You do not need to represent
+    the more arcane restrictions of x86---such as the limitation that at most one operand to may be
+    indirect, or the limitations on indirection in the <code>imul</code> instruction.
+  </p>
+
+  <p>
+    You may assume that the shift instructions
+    (<code>shl</code>, <code>shr</code>, <code>sar</code>) never set the overflow flag.  (In real
+    x86, 1-bit shifts may set the overflow flag.)
+  </p>
+
+  <p>
+    Haskell provides functions <code>shiftL</code> and <code>shiftR</code> that do left and right
+    arithmetic shifts.  To get a right logical shift, it suffices to convert a
+    signed <code>Int64</code> value to it unsigned <code>Word64</code> equivalent, shift that value,
+    and then convert back to <code>Int64</code>.  The generic <code>fromIntegral</code> function can
+    do both conversions, so long as the result of the conversion is specified (in the types).
+  </p>
+
+</div>
+
+</body>
+
+</html>

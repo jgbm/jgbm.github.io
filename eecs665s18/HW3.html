@@ -1,0 +1,270 @@
+<html>
+<head>
+<title>EECS 665 &mdash; Spring 2018 &mdash; Homework 3</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topbox">
+
+  <h1>eecs 665: compiler construction<br>homework 3</h1>
+
+</div>
+
+
+<div class="box">
+
+  <h2>Essentials</h2>
+
+  <table>
+    <tbody>
+      <tr>
+        <td><strong>Code distribution</strong></td>
+        <td><a href="https://ittc.ku.edu/~garrett/eecs665s18/asgn/HW3.zip">HW3.zip</a></td>
+      </tr>
+      <tr>
+        <td><strong>Due date</strong></td>
+        <td>Thursday, May 3, 11:59 PM</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Overview</h2>
+
+  <p>
+    Your task in this homework is to write a compiler from a simple imperative language to LLVMlite.
+    You will do this by implementing the <code>compileFunction</code> function in the
+    provided <code>Compiler.hs</code> file.  In implementing this function, you should support all
+    cases of the imperative language <b>except for structure access and update</b>.  The LLVM you
+    generate must be accepted by Clang, and must produce equivalent results to that given by the
+    provided <code>Clike/Interp.hs</code> module.
+  </p>
+
+  <p>
+    <b>If you think you are having problems resulting from the provided LLVM printing functions
+      (i.e., valid LLVM programs are producing invalid output), please contact me promptly.</b>
+  </p>
+
+  <p>
+    The detailed description below is based on my approach to
+    implementing <code>compileFunction</code>.  It is intended to help you solve the problem;
+    however <i>you do not have to follow my approach</i>.  So long as your code produces equivalent
+    results to the provided interpreter, you will receive full credit.
+  </p>
+
+  <h2>Clike: A Simple Imperative Language</h2>
+
+  <p>
+    The source language for your compiler is Clike, a simple imperative language.  Its syntax is
+    given formally in <code>Clike/Language.hs</code>; this is an informal overview of the language
+    and its intended semantics.
+  </p>
+
+  <p>
+    Clike programs consist of a sequence of function definitions, each of which contains a return
+    type, a list of (typed) parameters, and a sequence of statements.  Statements consist of
+    variable declarations (<code>int i</code>), expressions, conditionals (<code>if</code>), loops
+    (<code>while</code>), and returns (<code>return</code>).  Additionally, Clike
+    includes <code>break</code> and <code>continue</code> statements; this should be interpreted as
+    they are in C or Java.  (Clike does not have labels, so we also do not have
+    multi-level <code>break</code>s or <code>continue</code>s).  Expressions consist of the expected
+    binary and unary operators and assignments (<code>x = e</code> and, if you're doing the extra
+    credit, <code>x.l.j = v</code>).  Assignments evaluate to the assigned value.
+  </p>
+
+  <p>
+    Types in Clike include 64-bit integers (<code>int</code>) and, if you're doing the extra credit,
+    structures (<code>struct { int x, int y }</code>).  Clike does <i>not</i> include named types.
+  </p>
+
+  <p>
+    The <code>samples</code> directory in the homework distribution includes several example Clike
+    programs.
+  </p>
+
+  <p>
+    You should assume (and do not need to verify) the following invariants for Clike programs:
+
+    <ul>
+      <li>Variables are declared before their first use</li>
+      <li>Variables are written before they are read</li>
+      <li><code>break</code> and <code>continue</code> only occur inside loops</li>
+      <li>Types align (for example, if a function is declared <code>int</code>, it will not attempt
+        to return a <code>struct</code>)</li>
+      <li>All functions have <code>return</code> statements</li>
+      <li>The left-hand sides of assignments are all well-formed (so you don't have anything
+      like <code>x + 4 = 5;</code>.
+    </ul>
+  </p>
+
+  <h2>Compiling Clike</h2>
+
+  <p>
+    The new complexity in compiling Clike is in handling statements.  My approach was to compile
+    each Clike statement into its own LLVM block (or set of blocks).  This does result in generating
+    more blocks than needed, but is necessary to handle compound statements like conditionals and
+    loops.
+  </p>
+
+  <p>
+    In support of this, my <code>compileStatement</code> function takes not just the statement to
+    compile, but also the label of the next block to execute.  This means that statements must be
+    compiled from last to first, rather than from first to last.  Look at the
+    provided <code>compileStatements</code> function for an example of how this works.
+  </p>
+
+  <p>
+    A further complexity is the implementation of <code>break</code> and <code>continue</code>.
+    Here, my approach is similar: <code>compileStatment</code> also takes as arguments the labels
+    for the enclosing loop header and exit.  <code>break</code> and <code>continue</code> are
+    compiled as jumps to those labels.  On the other hand, the implementation of <code>while</code>
+    is responsible for providing these labels when compiling the body.
+  </p>
+
+  <p>
+    Of course, you will need to generate fresh names and labels regularly while compiling Clike.
+    This is why each of the <code>compile<i>X</i></code> functions takes an <code>Int</code>
+    argument and returns and <code>Int</code> in its result.
+  </p>
+
+  <h2>Extra credit: Compiling structures</h2>
+
+  <p>
+    For significant extra credit, also support structures.  The "easy" part of this is supporting
+    structure declaration, access, and update.  These can be mapped relatively directly to LLVM.
+    The hard part of this is supporting structures in function calls and returns.  Here, you will
+    need to manually adjust function definitions to take struct pointers, implement structure
+    returns by passing struct pointers, and implement copying before function calls to assure
+    call-by-value conventions.  See the <a href="03 LLVMlite.pdf">notes</a> for more discussion of
+    structures and calling conventions.
+  </p>
+
+</div>
+
+</body>
+
+</html>
