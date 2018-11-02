@@ -123,7 +123,7 @@ function toggle(blck) {
 function toggleAll() {
   var papers = ["blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
                 "conflate", "variants", "propositions", "oversem", "cpgv",
-                "thesis", "instances", "hackage"];
+                "thesis", "instances", "hackage", "rose", "tears"]
   var len = papers.length;
   for (i = 0; i < len; i++) {
     toggle(papers[i]);
@@ -210,6 +210,73 @@ function toggleAll() {
 
 <div class="box" id="research">
  <h2>publications</h2>
+
+ <p onclick='toggle("rose")' class="paper">
+   <span id="rose-closed" class="close">&#9655;</span>
+   <span id="rose-open" class="open">&#9661;</span>
+
+   J. Garrett Morris and James McKinna. "Abstracting Extensible Data Types; Or, Rows By Any Other
+   Name." <i>Proc. ACM Program. Lang.</i>, 3, POPL (January 2019). <i>To appear</i>
+ </p>
+
+ <div id="rose">
+   <p class="abstract">
+     We present a novel typed language for extensible data types, generalizing and abstracting
+     existing systems of row types and row polymorphism. Extensible data types are a powerful
+     addition to traditional functional programming languages, capturing ideas from OOP-like record
+     extension and polymorphism to modular compositional interpreters. We introduce row theories, a
+     monoidal generalization of row types, giving a general account of record concatenation and
+     projection (dually, variant injection and branching). We realize them via qualified types,
+     abstracting the interpretation of records and variants over different row theories. Our
+     approach naturally types terms untypable in other systems of extensible data types, while
+     maintaining strong metatheoretic properties, such as coherence and principal types. Evidence
+     for type qualifiers has computational content, determining the implementation of record and
+     variant operations; we demonstrate this in giving a modular translation from our calculus,
+     instantiated with various row theories, to polymorphic &lambda;-calculus.
+   </p>
+
+   <p>
+     A prepublication draft is available in <a href="pubs/morris-popl2019-rows.pdf">PDF</a>.
+   </p>
+ </div>
+
+
+ <p onclick='toggle("tears")' class="paper">
+   <span id="tears-closed" class="close">&#9655;</span>
+   <span id="tears-open" class="open">&#9661;</span>
+
+   Simon Fowler, Sam Lindley, J. Garrett Morris, and Sára Decova. "Exceptional Asynchronous Session
+   Types: Session Types without Tiers."<i> Proc. ACM Program. Lang.</i>, 3, POPL (January
+   2019). <i>To appear</i>
+ </p>
+
+ <div id="tears">
+   <p class="abstract">
+     Session types statically guarantee that communication complies with a protocol. However, most
+     accounts of session typing do not account for failure, which means they are of limited use in
+     real applications&mdash;especially distributed applications&mdash;where failure is pervasive.
+   </p>
+
+   <p class="abstract">
+     We present the first formal integration of asynchronous session types with exception handling
+     in a functional programming language. We define a core calculus which satisfies preservation
+     and progress properties, is deadlock free, confluent, and terminating.
+   </p>
+
+   <p class="abstract">
+     We provide the first implementation of session types with exception handling for a
+     fully-fledged functional programming language, by extending the Links web programming language;
+     our implementation draws on existing work on effect handlers. We illustrate our approach
+     through a running example of two-factor authentication, and a larger example of a session-based
+     chat application where communication occurs over session-typed channels and disconnections are
+     handled gracefully.
+   </p>
+
+   <p>
+     A prepublication draft is available in <a href="pubs/fowler-popl2019-sessions.pdf">PDF</a>.
+   </p>
+ </div>
+
 
  <p onclick='toggle("blame-root")' class="paper">
    <span id="blame-root-closed" class="close">&#9655;</span>
