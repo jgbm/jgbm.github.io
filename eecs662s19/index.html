@@ -1,0 +1,284 @@
+<html>
+<head>
+<title>EECS 662 &mdash; Spring 2019 &mdash; J. Garrett Morris</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      noErrors: {
+        disabled: true
+      },
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+</head>
+
+<body>
+
+<div class="topbox">
+
+  <h1>eecs 662: programming languages<br>spring 2019</h1>
+
+  <div style="font-family:tahoma; font-size:11pt; float:right; text-align: right; position: relative; top:-20px">
+    <a href="#essentials">essentials</a> | <a href="#announcements">announcements</a> | <a href="#homework">homework</a> | <a href="#schedule">schedule</a>
+  </div>
+
+</div>
+
+<div id="essentials" class="box">
+
+  <h2>essentials</h2>
+
+  <table>
+    <tbody>
+      <tr class="odd">
+        <td align="left"><strong>Instructor</strong></td>
+        <td align="left"><a href="../index.html">J. Garrett Morris</a></td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Email</strong></td>
+        <td align="left"><a href="mailto:garrettm@ku.edu">garrettm@ku.edu</a></td>
+      </tr>
+      <tr class="odd">
+        <td align="left"><strong>Office</strong></td>
+        <td align="left">Eaton 2028</td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Office hours</strong></td>
+        <td align="left">TH 2:20-4:00 PM, <i>and by appointment</i></td>
+      </tr>
+      <tr class="odd">
+        <td align="left"><strong>Course website</strong></td>
+        <td align="left"><a href="http://ittc.ku.edu/~garrett/eecs662fs19/" class="uri">http://ittc.ku.edu/~garrett/eecs662s19/</a></td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Lectures</strong></td>
+        <td align="left">TH 1:00-2:15, Learned 1136
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="box">
+
+  <h2>syllabus</h2>
+
+  <p>
+    The syllabus is available <a href="Syllabus.pdf">here</a>.  The high-level
+    objectives for this course are that students should be able to:
+  </p>
+
+  <ul>
+    <li>Define the abstract syntax of programming languages</li>
+    <li>Define the semantics of a programming language over its abstract syntax</li>
+    <li>Implement a language interpreter given its abstract syntax and definition</li>
+    <li>Distinguish among common characteristics that describe programming languages, such as
+    functional vs imperative, call-by-value vs call-by-nam.</li>
+    <li>Identify the semantics and semantic consequences of computational effects</li>
+    <li>Identify the syntax and semantics of programming languages features for modularity</li>
+  </ul>
+
+</div>
+
+<div id="announcements" class="box">
+
+  <h2>announcements</h2>
+
+  <table>
+    <tr>
+      <td>
+
+      </td>
+
+      <td>
+
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div id="homework" class="box">
+
+  <h2>homework</h2>
+
+  <p>
+    You will need to log in with your KU ID to access homework assignments and solutions.
+  </p>
+
+  <table>
+    <tr>
+      <td><strong>Number</strong></td>
+      <td><strong>Due date</strong></td>
+      <td><strong>Assignment</strong></td>
+      <td><strong>Sample solutions</strong></td>
+    </tr>
+
+    <tr>
+      <td>0</td>
+      <td>2/5</td>
+      <td><a href="https://ittc.ku.edu/~garrett/eecs662s19/asgn/HW0.hs">HW0.hs</a></td>
+    </tr>
+
+  </table>
+</div>
+
+<div id="schedule" class="box">
+
+  <h2>schedule</h2>
+
+  <table>
+    <tr>
+      <td><strong>date</strong></td>
+      <td><strong>topics</strong></td>
+      <td><strong>notes</strong></td>
+    </tr>
+
+    <tr>
+      <td>1/22</td>
+      <td>
+        Introduction and administrivia<br>
+        Why study programming languages?
+      </td>
+    </tr>
+
+    <tr>
+      <td>1/24</td>
+      <td>
+        Syntax and semantics (informally)<br>
+        Concrete and abstract syntax<br>
+        Arithmetic language (syntax)
+      </td>
+      <td>
+        <a href="notes/day2.pdf">day2.pdf</a>
+        <a href="code/Arith0.hs">Arith0.hs</a>
+      </td>
+    </tr>
+
+  </table>
+
+</div>
+
+</body>
+
+</html>
