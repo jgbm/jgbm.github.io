@@ -123,7 +123,7 @@ function toggle(blck) {
 function toggleAll() {
   var papers = ["blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
                 "conflate", "variants", "propositions", "oversem", "cpgv",
-                "thesis", "instances", "hackage", "rose", "tears"]
+                "thesis", "instances", "hackage", "rose", "tears", "races"]
   var len = papers.length;
   for (i = 0; i < len; i++) {
     toggle(papers[i]);
@@ -210,6 +210,34 @@ function toggleAll() {
 
 <div class="box" id="research">
  <h2>publications</h2>
+
+
+ <p onclick='toggle("races")' class="paper">
+   <span id="races-closed" class="close">&#9655;</span>
+   <span id="races-open" class="open">&#9661;</span>
+
+   Wen Kokke, J. Garrett Morris, and Philip Wadler. "Towards Races in Linear Logic".  To appear
+   in <i>COORDINATION '19</i>
+ </p>
+
+ <div id="races">
+   <p class="abstract">
+     Process calculi based in logic, such as &pi;DILL and CP, provide a foundation for deadlock-free
+     concurrent programming, but exclude non- determinism and races. HCP is a reformulation of CP
+     which addresses a fundamental shortcoming: the fundamental operator for parallel com- position
+     from the &pi;-calculus does not correspond to any rule of linear logic, and therefore not to any
+     term construct in CP.  We introduce HCP<sup>&ndash;</sup><sub>ND</sub> , which extends HCP with a
+     novel account of non- determinism. Our approach draws on bounded linear logic to provide a
+     strongly-typed account of standard process calculus expressions of non-determinism. We show
+     that our extension is expressive enough to capture many uses of non-determinism in untyped
+     calculi, such as non- deterministic choice, while preserving HCP's meta-theoretic properties,
+     including deadlock freedom.
+   </p>
+
+   <p>
+     The author's version is available in <a href="pubs/kokke-coord19-races.pdf">PDF</a>.
+   </p>
+ </div>
 
  <p onclick='toggle("rose")' class="paper">
    <span id="rose-closed" class="close">&#9655;</span>
