@@ -1,0 +1,287 @@
+<html>
+<head>
+<title>EECS 762 &mdash; Fall 2019 &mdash; J. Garrett Morris</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      noErrors: {
+        disabled: true
+      },
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+</head>
+
+<body>
+
+<div class="topbox">
+
+  <h1>eecs 762: programming languages foundations i<br>fall 2019</h1>
+
+  <div style="font-family:tahoma; font-size:11pt; float:right; text-align: right; position: relative; top:-20px">
+    <a href="#essentials">essentials</a> | <a href="#announcements">announcements</a> | <a href="#homework">homework</a> | <a href="#schedule">schedule</a>
+  </div>
+
+</div>
+
+<div id="essentials" class="box">
+
+  <h2>essentials</h2>
+
+  <table>
+    <tbody>
+      <tr class="odd">
+        <td align="left"><strong>Instructor</strong></td>
+        <td align="left"><a href="../index.html">J. Garrett Morris</a></td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Email</strong></td>
+        <td align="left"><a href="mailto:garrettm@ku.edu">garrettm@ku.edu</a></td>
+      </tr>
+      <tr class="odd">
+        <td align="left"><strong>Office</strong></td>
+        <td align="left">Eaton 2028</td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Office hours</strong></td>
+        <td align="left">WF 10&mdash;11 PM, and by appointment</td>
+      </tr>
+      <tr class="odd">
+        <td align="left"><strong>Course website</strong></td>
+        <td align="left"><a href="https://ittc.ku.edu/~garrett/eecs762f19/" class="uri">https://ittc.ku.edu/~garrett/eecs762f19/</a></td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Lectures</strong></td>
+        <td align="left">MWF 9:00&mdash;9:50 AM, Learned Hall 1136</td>
+      </tr>
+      <tr class="odd">
+        <td align="left"><strong>Textbook</strong></td>
+        <td align="left">Aaron Stump, <i>Programming Language Foundations</i></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="box">
+
+  <h2>syllabus</h2>
+
+  <p>
+    This course is an introduction to modern approaches to the semantics of programming languages.
+    The course will introduce denotational, axiomatic, and operational approaches to defining the
+    semantics of simple programming languages.  It will also introduce the mathematical techniques
+    necessary for using these approaches, including the study of domains and continuous functions
+    and of proof systems and logics.  Finally, we will discuss the &lambda;-calculus, a simple model
+    of computation that underlies modern functional programming languages, and its connections to
+    logic and proof theory.
+  </p>
+
+  <p>
+    The syllabus is available <a href="Syllabus.pdf">here</a>.  The syllabus spells out the details
+    of grading, expectations, and so forth.
+  </p>
+
+</div>
+
+<div id="announcements" class="box">
+
+  <h2>announcements</h2>
+
+  <table>
+<!--
+    <tr>
+      <td>
+        8/20
+      </td>
+
+      <td>
+        Welcome to EECS 762!  Homework 1, including TeX sources, is posted.
+      </td>
+    </tr>
+-->
+  </table>
+</div>
+
+<div id="homework" class="box">
+
+  <h2>homework</h2>
+
+  <p>
+    You will need to log in with your KU username to access homework assignments and solutions.
+  </p>
+
+  <table>
+    <tr>
+      <td><strong>Number</strong></td>
+      <td><strong>Due date</strong></td>
+      <td><strong>Assignment</strong></td>
+      <td><strong>Sample solutions</strong></td>
+    </tr>
+
+    <tr id="hw1">
+      <td>1</td>
+      <td>Monday, September 9, 9:00 AM</td>
+      <td>
+        <a href="https://ittc.ku.edu/~garrett/eecs762f19/asgn/HW1.pdf">[pdf]</a>
+        <a href="https://ittc.ku.edu/~garrett/eecs762f19/asgn/HW1.tex">[tex]</a>
+      </td>
+    </tr>
+
+  </table>
+</div>
+
+<div id="schedule" class="box">
+
+  <h2>schedule</h2>
+
+  <table>
+    <tr>
+      <td><strong>date</strong></td>
+      <td><strong>topics</strong></td>
+      <td><strong>reading</strong></td>
+      <td><strong>notes</strong></td>
+    </tr>
+
+    <tr>
+      <td>8/20</td>
+      <td>
+        Introductions <br>
+        Course objectives <br>
+        Mathematical preliminaries
+      </td>
+      <td>
+        "Mathematical background" appendix
+      </td>
+      <td>
+        <a href="#hw1">Homework 1 out</a>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+
+</html>
