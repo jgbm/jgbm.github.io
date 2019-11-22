@@ -1,0 +1,437 @@
+<html>
+<head>
+<title>Notes on recursion</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+p.exercise {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+code, pre {
+  background-color: ghostwhite;
+}
+
+code {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+pre {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+</head>
+
+<body>
+
+<div class="topbox">
+
+  <h1>Notes on recursion</h1>
+
+</div>
+
+<div class="box">
+
+  <h2>Introduction</h2>
+
+  <p>
+    These notes give an overview of <i>fixed points</i>, a core programming language features used
+    to explain recursive definition.
+  </p>
+
+  <h2>Approximating recursive functions</h2>
+
+  <p>
+    One way we can attempt to understand what a recursive definition means is to consider
+    a <i>series of approximations</i> to the definition.  For example, consider the standard
+    definition of the factorial function, as expressed in our &lambda;-calculus:
+  </p>
+
+  <pre>fact = &lambda; n. if n = 0 then 1 else n * fact (n - 1)</pre>
+
+  <p>
+    We want to construct a series of approximations to the <code>fact</code> function.  Each
+    approximation will be able to do one more recursive call than the approximation before it.  We
+    can start with the version that makes no recursive calls:
+  </p>
+
+  <pre>fact<sub>0</sub> = &lambda; n. if n = 0 then 1 else <font color="red">error</font></pre>
+
+  <p>
+    This approximates the <code>fact</code> function when it makes no recursive calls; I have
+    used <code><font color="red">error</font></code> to indicate cases that we have not yet
+    approximated.  We could replace <code><font color="red">error</font></code> with any integer
+    value; the point is simply to indicate that, whatever value we choose, it is not a correct
+    approximation of the result of <code>fact</code>.
+  </p>
+
+  <p>
+    The next version of <code>fact</code> that we can approximate is the version that makes one (or
+    fewer) recursive calls.  This version will rely on the previous approxmation to handle the
+    recursion:
+  </p>
+
+  <pre>fact<sub>1</sub> = &lambda; n. if n = 0 then 1 else n * fact<sub>0</sub> (n - 1)</pre>
+
+  <p>
+    Observe two things about this code.  First: <code>fact<sub>1</sub></code> handles both the cases
+    with 0 and 1 recursive calls.  Second: none of our definitions so far use recursion.  Other than
+    how to implement <code>error</code> (really, anything will do), there are no mysteries about how
+    any of these functions work.
+  </p>
+
+  <p>
+    We can continue in the same vein, building deeper and deeper approximations of
+    the <code>fact</code> function:
+  </p>
+
+  <pre>fact<sub>n+1</sub> = &lambda; n. if n = 0 then 1 else n * fact<sub>n</sub> (n - 1)</pre>
+
+  <p>
+    Now, we can observe that, for any program we can write, there is a value of <i>n</i> large
+    enough that <code>fact<sub>n</sub></code> is indistinguishable from the recursive definition
+    of <code>fact</code>.  For example, if the largest argument we ever pass to <code>fact</code> is
+    256, then <code>fact<sub>256</sub></code> is a good enough approximation.  Of course, so
+    is <code>fact<sub>257</sub></code>, or <code>fact<sub>1024</sub></code>, and so forth.
+  </p>
+
+  <p>
+    However, this is a little unsatisfactory&mdash;we would like our formal understanding
+    of <code>fact</code> to match our intuitive understanding, and our intuitive understanding works
+    for all inputs, not just inputs up to some pre-defined threshold.  To get a more satisfying
+    understanding, we have to introduce a little bit of mathematics.
+  </p>
+
+  <h2>Fixed points</h2>
+
+  <p>
+    The key idea we need to steal from mathematics is that of a <i>fixed point</i>.  The short
+    version is that, for some function $f(x)$, $c$ is a fixed point of $f$ iff $f(c) = c$.  Not
+    every function has a fixed point; for example, the there is no integer fixed point for the
+    function $f(x) = x + 1$.  On the other hand, many functions do have fixed points; for example,
+    $0$ is the fixed point of the sine function.
+  </p>
+
+  <p>
+    How can this help us?  Well, we can start by describing our series of appoximations
+    to <code>fact</code> themselves as a function; that is, we want a function <code>factStep</code>
+    such that <code>factStep fact<sub>n</sub></code> gives <code>fact<sub>n+1</sub></code>.  This is
+    not too hard to do.
+  </p>
+
+  <pre>factStep = &lambda; f. &lambda; n. if n = 0 then 1 else n * f (n - 1)</pre>
+
+  <p>
+    You should be able to satisfy yourself that <code>factStep fact<sub>0</sub></code>
+    is <code>fact<sub>1</sub></code>, <code>factStep (factStep fact<sub>0</sub>)</code>
+    is <code>fact<sub>2</sub></code>, and so forth.  The question we then have to ask is:
+    does <code>factStep</code> have a fixed point?  That is, is there a
+    function <code>fact<sub>&omega;</sub></code> such that <code>factStep
+    fact<sub>&omega;</sub></code> is <code>fact<sub>&omega;</sub></code>?  Thanks to the
+    <a href=https://en.wikipedia.org/wiki/Kleene_fixed-point_theorem><i>Kleene fixed-point
+    theorems</i></a>, one of the more significant results in the mathematics of computation, we know
+    that, not only does this function have a fixed point, but it is exactly the one obtained by
+    iterating the function.  That is to say, <code>fact<sub>&omega;</sub></code> is exactly the
+    result of <code>factStep (factStep (factStep ... (factStep fact<sub>0</sub>)))</code>.
+  </p>
+
+  <p>
+    Now, suppose that <code>fact</code> is defined by iterating <code>factStep</code>.  How
+    would <code>fact 3</code> behave?  Well, because <code>fact</code> is the fixed point
+    of <code>factStep</code>, we know that <code>face</code> is equal to <code>factStep fact</code>.
+    So <code>fact 3</code> should be equal to <code>factStep fact 3</code>.  We can substitute into
+    the definition of <code>factStep</code>, getting <code>if isz 3 then 1 else 3 * fact (3 -
+    1)</code>, and so forth.  Evaluating, we get to <code>3 * fact 2</code>, and we have gotten to
+    the next recursive call, as we expect.
+  </p>
+
+  <h2>Generalizing fixed point construction</h2>
+
+  <p>
+    Hopefully, you found this brief journey into the mathematics of fixed points interesting, even
+    if perhaps not entirely understandable.  What is important, however, is that it has given us a
+    mechanical way of explaining recursion.  That is, rather than considering recursive definitions,
+    such as the one given for <code>fact</code> earlier, we can define recursion using fixed points
+    of step functions, such as <code>factStep</code>.  That is to say, we want to introduce an
+    explicit fixed point construct <code>fix</code> to our &lambda;-calculus.  Then, we can
+    factorial by
+  </p>
+
+  <pre>
+let factStep = &lambda; f. &lambda; n. if n = 0 then 1 else n * f (n - 1) in
+let fact = fix factStep in
+  (fact 3, fact 5)
+</pre>
+
+  <p>
+    And, the same construct can be used to define arbitrary other recursive functions.  For example,
+    the Fibonacci numbers
+  </p>
+
+  <pre>
+let fibStep = &lambda; f. &lambda; n.
+  if isz n then 0
+  else if isz (n - 1) then 1
+  else f (n - 1) + f (n - 2) in
+let fib = fix fibStep in
+  (fib 3, fib 5)
+</pre>
+
+  <p>
+    In fact, you could even define the type checking and evaluation functions we write in class
+    using fixed points (albeit, in a slightly more complicated &lambda;-calculus that we have built
+    so far).  Evaluation might begin as follows:
+  </p>
+
+  <pre>
+let evalStep = &lambda; eval. &lambda; t.
+  case t of
+    Const x -> VInt x
+  | Plus t1 t2 ->
+      let VInt v1 = eval e1 in
+      let VInt v2 = eval e2 in
+        VInt (v1 + v2)
+  ... in
+let eval = fix evalStep in
+  ...</pre>
+
+  <p>
+    <code>evalStep</code> is more complicated than <code>factStep</code> or <code>fibStep</code>,
+    but the basic idea is the same: <code>evalStep</code> computes the next iteration of the
+    evaluation function from the previous one.  So, the fixed point of <code>evalStep</code> will be
+    the recursive evaluation function.  (You may recognize <code>evalStep</code> as being similar to
+    the <a href="Lcst3.hs">generic evaluation function</a> we built in class recently.  This should
+    not be surprising; there, as here, our concern was the structure of recursion.)
+  </p>
+
+  <h2>Formalizing <code>fix</code></h2>
+
+  <p>
+    To finish our discussion of fixed points, we want to introduce typing and evaluation rules for
+    the <code>fix</code> term.  We can make a first attempt based on translating the intuitive idea
+    of a fixed point; that is, that if expression <code>t</code> is a stepping function (of
+    type <code>T -> T</code>), then <code>fix t</code> should be the result of iterating that
+    function (of type <code>T</code>):
+  </p>
+
+  <script type="math/tex; mode=display">
+    \frac{\Gamma \vdash t : T \to T}
+         {\Gamma \vdash \mathtt{fix} \, t : T}
+    \qquad \qquad
+    \frac{t \, (\mathtt{fix} \, t) \Downarrow v}
+         {\mathtt{fix} \, t \Downarrow v}
+  </script>
+
+  <p>
+    If you check the definitions earlier in this file, you should see that they are accepted by this
+    typing rule.  The evaluation rule seems to capture the intuition of fixed points.  And, if our
+    &lambda;-calculus were a <i>call-by-name</i> calculus, like Haskell, we would be done.  (In
+    fact, you can observe that this is all you need in Haskell; look at the definitions
+    in <a href="Fix.hs">Fix.hs</a>).
+  </p>
+
+  <p>
+    However, our &lambda;-calculus is <i>call-by-value</i> instead.  And that means to compute the
+    result of an application (like <code>t (fix t)</code>), we need to evaluate both the function
+    (<code>t</code>) <i>and the argument</i> (<code>fix t</code>).  However, this seems to leave us
+    back where we started: to determine the value of <code>fix t</code>, we need to already have the
+    value of <code>fix t</code>.
+  </p>
+
+  <p>
+    We can find our way out of this nest by making another observation.  All of the values for which
+    we have wanted fixed points are themselves functions.  How does this help?  It means that we can
+    assume that the result of <code>fix t</code> will be applied to at least one more argument, and
+    so we can delay the evaluation of the <code>fix t</code> until we see that argument.
+    Concretely, instead of the equation
+  </p>
+
+  <script type="math/tex; mode=display">
+    \mathtt{fix}\,t = t \, (\mathtt{fix}\,t)
+  </script>
+
+  <p>
+    we will have the equation
+  </p>
+
+  <script type="math/tex; mode=display">
+    \mathtt{fix}\,t\,x = t \, (\mathtt{fix}\,t) \, x
+  </script>
+
+  <p>
+    or, equivalently,
+  </p>
+
+  <script type="math/tex; mode=display">
+    \mathtt{fix}\,t = \lambda x. t \, (\mathtt{fix}\,e) \, x
+  </script>
+
+  <p>
+    Hopefully you can see how this fixes the problem: because functions are themselves values, the
+    evalutation of <code>fix t</code> stops immediately.  On the other hand, when applied to its
+    next argument, it will evaluate as before.
+  </p>
+
+  <p>
+    We can update our typing and evaluation rules to reflect the restriction of fixed points to
+    functions, as follows.
+  </p>
+
+  <script type="math/tex; mode=display">
+    \frac{\Gamma \vdash t : (T_1 \to T_2) \to (T_1 \to T_2)}
+         {\Gamma \vdash \mathtt{fix}\, t : T_1 \to T_2}
+    \qquad \qquad
+    \frac{ }
+         {\mathtt{fix}\, t \Downarrow \lambda x. t \, (\mathtt{fix}\,t) \, x}
+  </script>
+
+  <p>
+    And now we have the final (for now) account of recursion in our &lambda;-calculus.  Because we
+    have limited recursion to functions, it is not quite as expressive as it is in Haskell.  For
+    example, we cannot write the infinite streams of names used in homework 2.  But, for most
+    practical purposes, this is not a significant restriction.
+  </p>
+
+  <h2>Conclusion</h2>
+
+  <p>
+    The study of recursion is one of the more intricate parts of programming language theory.  These
+    notes have given you an introduction to one way of describing and reasoning about recursion.
+    There is still plenty to come.  For example, while we have a way to talk about recursively
+    defined <i>values</i>, we have equally come to rely on recursively defined <i>types</i>.  We
+    will return to these topics later in the course.
+  </p>
+
+</div>
+
+</body>
+
+</html>
