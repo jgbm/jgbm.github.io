@@ -1,0 +1,353 @@
+<html>
+<head>
+<title>EECS 210 &mdash; Spring 2020 &mdash; J. Garrett Morris</title>
+
+<style type="text/css">
+
+.topBox {
+  margin-left: 200px;
+  margin-top: 40px;
+  padding: 20px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.box {
+  margin-left: 200px;
+  margin-top: 20px;
+  padding: 10px 45px;
+  max-width: 700px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+@media (max-width: 800px) {
+
+  .topBox {
+     margin-left: 20px;
+  }
+
+  .box {
+     margin-left: 20px;
+  }
+}
+
+h1 {
+  font-family: Tahoma;
+  font-size: 16pt;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: Tahoma;
+  font-size: 14pt;
+  font-weight: normal;
+  margin-left: -20px;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+p.paper {
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 20px;
+}
+
+td {
+  font-family: Tahoma;
+  font-size: 11pt;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+strong {
+  text-transform: lowercase;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+li {
+  font-family: Tahoma;
+  font-size: 11pt;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: black;
+  text-decoration: none;
+}
+
+table.bordered {
+  border-collapse: collapse
+}
+
+table.bordered td {
+  padding: 5px 10px;
+  border: 1px dotted black
+}
+
+</style>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      noErrors: {
+        disabled: true
+      },
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$','$'] ],
+      displayMath: [ ['$$','$$'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+
+</head>
+
+<body>
+
+<div class="topbox">
+
+  <h1>eecs 210: discrete mathematics<br>spring 2020</h1>
+
+  <div style="font-family:tahoma; font-size:11pt; float:right; text-align: right; position: relative; top:-20px">
+    <a href="#essentials">essentials</a> | <a href="#intro">introduction</a> | <a href="#homework">homework</a> | <a href="#schedule">schedule</a>
+  </div>
+
+</div>
+
+<div id="essentials" class="box">
+
+  <h2>essentials</h2>
+
+  <table>
+    <tbody>
+      <tr class="odd">
+        <td align="left"><strong>Instructor</strong></td>
+        <td align="left"><a href="../index.html">J. Garrett Morris</a></td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Email</strong></td>
+        <td align="left"><a href="mailto:garrettm@ku.edu">garrettm@ku.edu</a></td>
+      </tr>
+      <tr class="odd">
+        <td align="left"><strong>Office</strong></td>
+        <td align="left">Eaton 2028</td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Office hours</strong></td>
+        <td align="left">TH 2:20-5:00 PM, <i>and by appointment</i></td>
+      </tr>
+      <tr class="odd">
+        <td align="left"><strong>Course website</strong></td>
+        <td align="left"><a href="https://ittc.ku.edu/~garrett/eecs210s20/" class="uri">https://ittc.ku.edu/~garrett/eecs210s20/</a><br><a href="https://piazza.com/ku/spring2020/eecs662" class="uri">https://piazza.com/ku/spring2020/eecs210</a></td>
+      </tr>
+      <tr class="even">
+        <td align="left"><strong>Lectures</strong></td>
+        <td align="left">TH 9:30-10:45, Learned 1136
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="intro" class="box">
+
+  <h2>introduction</h2>
+
+  <p>
+    The syllabus is available <a href="Syllabus.pdf">here</a>.
+  </p>
+
+  <p>
+    Edsger Dijkstra (1972 recipient of the Turing Award) has said that "computer science is no more
+    about computers than astronomy is about telescopes".  This course will introduce you to the
+    concepts and intellectual tools needed to separate (the ideas of) computer science from any
+    particular choice of (that is to say, restriction to) particular machines and the ways they are
+    operated.
+  </p>
+
+  <p>
+    We will frame these concepts in <i>formal mathematics</i>.  (Although, at this point, it might
+    be more correct to say that the foundations of mathematics lie in formal computer science.)  If
+    we want to talk about how long program <i>X</i> takes to run on machine <i>M</i> with data
+    set <i>A</i>, we can rely on empirical measurement and observation.  However, we will need
+    something more than observation to validate claims about how long program <i>X</i> would take
+    on an arbitrary machine or for arbitrary input data.  This course, then, interleaves an
+    introduction to mathematical reasoning with a survey of the basic objects, notations, and
+    techniques used in computer science.
+  </p>
+
+  <p>
+    By mathematical reasoning, I mean <i>proof</i>.  You should not find this intimidating.  You may
+    have think of proofs as a kind of rarified accomplishment produced by brilliant young
+    theoreticians.  And, some of you will be brilliant young theoreticians.  But a proof is really
+    just any believable mathematical argument---it's the advanced version of "showing your work".
+    Proofs are the language of mathematics, and much of computer science; my own work is full of
+    theorems and proofs.  And, just as how in high-school algebra or calculus you learn standard
+    approaches and useful tricks for solving probles, we'll discover that there are standard
+    approaches and useful tricks for constructing proofs in computer science or mathematics.
+  </p>
+
+  <p>
+    We'll also learn about a collection of (formal) objects and ideas that will provide the
+    foundation for much of what you'll learn in the rest of your CS education.  We'll learn about
+    sets, relations, and functions, which will serve as the foundations for our formal
+    representations, and are closely connected to how we describe computation abstractly.  We'll
+    learn about combinatorics (which is a big word for counting) and probability, which lie at the
+    foundation of many ideas in cryptography and data science.  And, we'll learn about graphs and
+    trees, which we can use to represent things from physical networks to interacting software
+    components to programming language syntax.
+  </p>
+
+  <p>
+    Hopefully you're excited by what I've said so far, and eager to see how these ideas play out for
+    their own sake.  But I realize that many of you are future software engineers and systems
+    architects, not future theoreticians.  Why should you take this course?  First, many of the
+    ideas we'll begin to explore are relevant to practice.  Logic underlies the development of new
+    programming languages and new approaches to verifying programs in existing languages.  For
+    example, Amazon uses a tool called TLA+, based in formal logic, to assure that key components of
+    AWS won't crash or misbehave under load.  Combinatorics and probability underlie public-key
+    infrastructures, like RSA or elliptical-curve cryptography.  These in turn guarantee everything
+    from e-commerce purchases to the blockchains.  Trees appear in many areas of computer science,
+    from programming language compilers to geographic information systems to video game renderers.
+  </p>
+
+  <p>
+    I believe that the ideas of theoretical computer science are remarkable for both their beauty
+    and their practicality.  I hope by the end of this course, you'll agree.  Welcome aboard!
+  </p>
+
+</div>
+
+<div id="homework" class="box">
+
+  <h2>homework</h2>
+
+  <p>
+    You will need to log in with your KU ID to access homework assignments and solutions.
+  </p>
+
+  <table>
+    <tr>
+      <td><strong>Number</strong></td>
+      <td><strong>Due date</strong></td>
+      <td><strong>Assignment</strong></td>
+      <td><strong>Sample solutions</strong></td>
+    </tr>
+
+    <tr id="hw1">
+      <td>1</td>
+      <td>Tuesday, January 28, 9:30 AM</td>
+      <td><a href="https://ittc.ku.edu/~garrett/eecs210s20/asgn/HW1.pdf">HW1.pdf</a></td>
+    </tr>
+
+    <tr id="hw2">
+      <td>2</td>
+      <td>Thursday, February 6, 9:30 AM</td>
+      <td><a href="https://ittc.ku.edu/~garrett/eecs210s20/asgn/HW2.pdf">HW2.pdf</a></td>
+    </tr>
+
+    <tr id="hw3">
+      <td>3</td>
+      <td>Tuesday, February 11, 9:30 AM</td>
+      <td><a href="https://ittc.ku.edu/~garrett/eecs210s20/asgn/HW3.pdf">HW3.pdf</a></td>
+    </tr>
+
+  </table>
+</div>
+
+<div id="schedule" class="box">
+
+  <h2>schedule</h2>
+
+  <table>
+
+  <tr>
+    <td><strong>date</strong></td>
+    <td><strong>topics</strong></td>
+    <td><strong>reading</strong></td>
+    <td><strong>notes</strong></td>
+  </tr>
+
+  <tr>
+    <td>1/21</td>
+    <td>
+      Administrivia and organization<br>
+      Logic
+    </td>
+    <td>
+      Rosen 1.1&mdash;1.3
+    </td>
+    <td>
+      <a href="#hw1">Homework 1 out</a>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+
+  <tr>
+    <td>1/23</td>
+    <td>
+      <i>No class&mdash;instructor away
+    </td>
+  </tr>
+
+  <tr>
+    <td>1/28</td>
+    <td>
+      Quantifiers
+    </td>
+    <td>
+      Rosen 1.4&mdash;1.5
+    </td>
+  </tr>
+
+  <tr>
+    <td>1/30</td>
+    <td>
+      Logic in practice: program verification in Dafny
+    </td>
+    <td />
+    <td>
+      <a href="#hw2">Homework 2 out</a> <br>
+      Due on <i>Thursday 2/6</i>.
+    </td>
+  </tr>
+
+  </table>
+</div>
+
+</body>
+
+</html>

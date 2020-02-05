@@ -1,0 +1,3 @@
+AuthName "KU usernames"
+AuthType CAS
+Require user j858m939 palexand
