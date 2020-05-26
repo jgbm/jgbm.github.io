@@ -2,56 +2,103 @@
 <head>
 <title>J. Garrett Morris</title>
 
+<link rel="stylesheet" href="https://use.typekit.net/hgl6iue.css">
+
 <style type="text/css">
 
+body {
+  background-color: #fff4e6;
+  color: #1a001a;
+}
+
 .topBox {
-  margin-left: 200px;
-  margin-top: 40px;
-  padding: 20px 45px;
-  max-width: 500px;
-  outline-style: solid;
-  outline-width: 1px;
+  margin: 40px;
+  max-width: 1200px;
 }
 
 .box {
-  margin-left: 200px;
-  margin-top: 20px;
-  padding: 10px 45px;
-  max-width: 500px;
-  outline-style: solid;
-  outline-width: 1px;
-}
-
-@media (max-width: 800px) {
-
-  .topBox {
-     margin-left: 20px;
-  }
-
-  .box {
-     margin-left: 20px;
-  }
+  margin: 20px;
+  margin-left: 100px;
+  margin-right: 60px;
+  max-width: 1100px;
 }
 
 h1 {
-  font-family: Tahoma;
-  font-size: 16pt;
-  font-weight: normal;
+  margin-left: 30px;
+  font-family: austin-pen, Tahoma, sans-serif;
+  font-weight: 400;
+  font-size: 36pt;
+  font-style: normal;
+  color: #000033;
 }
 
+h1::after {
+  content: "";
+  display:block;
+  margin-left: -30px;
+  margin-top: -39px;
+  border-top: 1.5px solid;
+}
+
+.subhead {
+  display: block;
+  float: right;
+  margin-top: -30px;
+  align: right;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 23pt;
+}
+
+
 h2 {
-  font-family: Tahoma;
-  font-size: 14pt;
-  font-weight: normal;
-  margin-left: -20px;
+  font-family: austin-pen, Tahoma, sans-serif;
+  font-weight: 400;
+  font-size: 28pt;
+  font-style: normal;
+  margin-left: -10px;
+  text-transform: capitalize;
+}
+
+h2::after {
+  content: "";
+  display:block;
+  margin-left: -10px;
+  margin-top: -28px;
+  border-top: .75px solid;
+}
+
+
+h3 {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18pt;
 }
 
 p {
-  font-family: Tahoma;
-  font-size: 11pt;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+em {
+  font-style: italic;
+  font-size: 16pt;
+}
+
+ul.inline {
+  margin-top: -10px;
+  margin-bottom: -13px;
+}
+
+li {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
 }
 
 p.paper {
+  margin-left: 10px;
   cursor: pointer;
 }
 
@@ -60,21 +107,16 @@ p.paper:hover {
 }
 
 p.abstract {
-  margin-left: 20px;
+  margin-left: 30px;
 }
 
 td {
-  font-family: Tahoma;
-  font-size: 11pt;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
   padding-right: 20px;
   padding-bottom: 5px;
   vertical-align: top;
 }
-
-td > strong {
-  text-transform: lowercase;
-}
-
 
 span.open {
   margin-left: -20px;
@@ -86,18 +128,13 @@ span.close {
   display:none;
 }
 
-li {
-  font-family: Tahoma;
-  font-size: 11pt;
-}
-
 a {
-  color: black;
+  color: #000033;
   text-decoration: underline;
 }
 
 a.invisible {
-  color: black;
+  color: #000033;
   text-decoration: none;
 }
 
@@ -138,31 +175,53 @@ function toggleAll() {
 <body onload='toggleAll();'>
 
 <div class="topBox">
-  <h1>j garrett morris</h1>
-  <div style="font-family:tahoma; font-size:11pt; float:right; text-align: right; position: relative; top: -35px">
-    <a href="#about">about</a> | <a href="#teaching">teaching</a> | <a href="#research">publications</a> | <a href="#contact">contact</a>
+  <h1>J Garrett Morris</h1>
+  <div class="subhead">
+    <a class="invisible" href="https://cs.uiowa.edu">The University of Iowa</a>
   </div>
 </div>
 
 <div class="box" id="about">
-  <h2>about me</h2>
+  <h2>introduction</h2>
   <p>
-    My research centers on type systems for functional programming languages; in
-    particular:
+    <em>I study the foundations of programming:</em> how we construct programs and
+    how we reason about them.  My thesis is that advances in type systems empower programmers to
+    create better-written, better-understood programs:
   </p>
-  <ul>
-    <li>How type system features, like substructural and session types, strengthen type safety
-      guarantees;
-    <li>How class system features, like instances chains and functional dependencies, provide more
-      expressive abstractions; and,
-    <li>How overloading mechanisms contribute to writing simple, correct code.
+  <ul class="inline">
+    <li>
+      <em>More precise type systems better characterize program behavior.</em> For example, I have
+      studied the use of substructural type systems to guarantee lock freedom in concurrent
+      programs.
+    </li>
+    <li>
+      <em>More expressive type systems enable powerful, generic abstractions.</em>  For example, I have
+      studied the use of qualified types to capture a uniform description of a variety of methods
+      for composing records, variants, and program modules.
+    </li>
   </ul>
+  <p>
+    <em>These advances form a virtuous cycle.</em>  More precise types enable better abstractions, while
+    expressive abstractions make precise type systems easy to use.
+  </p>
 
   <p>
-    Before my current post, I was a researcher in
-    the <a href="http://wcms.inf.ed.ac.uk/lfcs/">Laboratory for Foundations of Computer Science</a>
-    at the <a href="http://www.ed.ac.uk/home">University of Edinburgh</a>.  I worked
-    with <a href="http://homepages.inf.ed.ac.uk/wadler/">Phil Wadler</a>
+    <em>I am always looking for good students.</em>  If you have a background in functional
+    programming, an interest in the theory and implementation of type systems in modern functional
+    languages, and want to work with me at UI, please get in touch.
+  </p>
+
+  <p>
+    From Fall 2020, I will be an assistant professor in
+    the <a href="https://cs.uiowa.edu">Department of Computer Science</a> at
+    the <a href="https://www.uiowa.edu">University of Iowa</a>.  I work in
+    the <a href="http://clc.cs.uiowa.edu/site/index.shtml">Computational Logic Center</a>
+    with <a href="http://homepage.cs.uiowa.edu/~comarhaider/">Omar
+    Chowdury</a>, <a href="http://homepage.cs.uiowa.edu/~astump/">Aaron Stump,
+    and <a href="http://homepage.cs.uiowa.edu/~tinelli">Cesare Tinelli</a>.  Before my current post,
+    I was a researcher in the <a href="http://wcms.inf.ed.ac.uk/lfcs/">Laboratory for Foundations of
+    Computer Science</a> at the <a href="http://www.ed.ac.uk/home">University of Edinburgh</a>.  I
+    worked with <a href="http://homepages.inf.ed.ac.uk/wadler/">Phil Wadler</a>
     and <a href="http://homepages.inf.ed.ac.uk/slindley/">Sam Lindley</a> on
     the <a href="http://groups.inf.ed.ac.uk/abcd">ABCD</a> project, which studies the role of
     session types in safe concurrent and distributed programming, and contributed to the design and
@@ -181,6 +240,14 @@ function toggleAll() {
 
 <div class="box" id="teaching">
   <h2>teaching</h2>
+
+  <h3>At the University of Iowa</h3>
+
+  <p>
+    CS:3820 (Programming languages): Fall 2020
+  </p>
+
+  <h3>At the University of Kansas</h3>
 
   <p>
     EECS 210 (Discrete mathematics): <a href="eecs210s20/index.html">Spring 2020</a>
@@ -794,27 +861,31 @@ function toggleAll() {
 </div>
 
 <div class="box" id="contact">
-  <h2>contact information</h2>
+  <h2>contact</h2>
 
   <table>
     <tr>
-      <td><strong>email</strong></td>
+      <td>Electronic mail:</td>
       <td>
-        <a href="mailto:jgbm@acm.org">jgbm@acm.org</a>
+        garrett-morris@uiowa.edu
       </td>
     </tr>
     <tr>
-      <td><strong>postal mail</strong></td>
+      <td>DBLP:</td>
       <td>
-        2028 Eaton Hall <br>
-        1520 W 15th St <br>
-        Lawrence, KS 66045 <br>
+        <a href="https://dblp.uni-trier.de/pers/hd/m/Morris:J=_Garrett">J. Garrett Morris</a>
       </td>
     </tr>
     <tr>
-      <td><strong>telephone</strong></td>
+      <td>Google scholar:</td>
       <td>
-        (785) 864-8825
+        <a href="https://scholar.google.com/citations?user=PZIdxNgAAAAJ&hl=en">PZIdxNgAAAAJ</a>
+      </td>
+    </tr>
+    <tr>
+      <td>OrcID:</td>
+      <td>
+        <a href="https://orcid.org/0000-0002-3992-1080">0000-0002-3992-1080</a>
       </td>
     </tr>
   </table>
