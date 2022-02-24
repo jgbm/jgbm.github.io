@@ -82,6 +82,10 @@ p {
   font-size: 14pt;
 }
 
+#about p, #about li, p.abstract {
+  line-height: 1.4
+}
+
 em {
   font-style: italic;
   font-size: 16pt;
@@ -161,7 +165,7 @@ function toggleAll() {
   var papers = ["blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
                 "conflate", "variants", "propositions", "oversem", "cpgv",
                 "thesis", "instances", "hackage", "rose", "tears", "races",
-                "partialdata", "career"]
+                "partialdata", "career", "separating"]
   var len = papers.length;
   for (i = 0; i < len; i++) {
     toggle(papers[i]);
@@ -248,10 +252,13 @@ function toggleAll() {
   <h3>At the University of Iowa</h3>
 
   <p>
+    CS:5850 (Semantics): Spring 2022
+
+  <p>
     CS:4980 (Functional algorithms): Spring 2021
 
   <p>
-    CS:3820 (Programming languages): Fall 2020
+    CS:3820 (Programming languages): Fall 2020, Fall 2021
   </p>
 
   <h3>At the University of Kansas</h3>
@@ -276,6 +283,19 @@ function toggleAll() {
 
 <div class="box" id="research">
  <h2>publications</h2>
+
+ <p onclick='toggle("separating")' class="paper">
+   <span id="separating-closed" class="close">&#9655;</span>
+   <span id="separating-open" class="open">&#9661;</span>
+
+   Simon Fowler, Wen Kokke, Ornela Dardha, Sam Lindley, and J. Garrett Morris. "Separating Sessions Smoothly".  CONCUR '21.
+ </p>
+
+ <div id="separating">
+   <p class="abstract">
+     This paper introduces Hypersequent GV (HGV), a modular and extensible core calculus for functional programming with session types that enjoys deadlock freedom, confluence, and strong normalisation. HGV exploits hyper-environments, which are collections of type environments, to ensure that structural congruence is type preserving. As a consequence we obtain a tight operational correspondence between HGV and HCP, a hypersequent-based process-calculus interpretation of classical linear logic. Our translations from HGV to HCP and vice-versa both preserve and reflect reduction. HGV scales smoothly to support Girard's Mix rule, a crucial ingredient for channel forwarding and exceptions.
+   </p>
+ </div>
 
  <p onclick='toggle("partialdata")' class="paper">
    <span id="partialdata-closed" class="close">&#9655;</span>
