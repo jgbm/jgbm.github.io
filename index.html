@@ -165,7 +165,7 @@ function toggleAll() {
   var papers = ["blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
                 "conflate", "variants", "propositions", "oversem", "cpgv",
                 "thesis", "instances", "hackage", "rose", "tears", "races",
-                "partialdata", "career", "separating"]
+                "partialdata", "career", "separating", "pip"]
   var len = papers.length;
   for (i = 0; i < len; i++) {
     toggle(papers[i]);
@@ -257,7 +257,7 @@ function toggleAll() {
     CS:4980 (Functional algorithms): Spring 2021
 
   <p>
-    CS:3820 (Programming languages): Fall 2020, Fall 2021
+    CS:3820 (Programming languages): Fall 2020, Fall 2021, Fall 2022
   </p>
 
   <h3>At the University of Kansas</h3>
@@ -282,6 +282,37 @@ function toggleAll() {
 
 <div class="box" id="research">
  <h2>publications</h2>
+
+ <p onclick='toggle("pip")' class="paper">
+  <span id="pip-closed" class="close">&#9655;</span>
+  <span id="pip-open" class="open">&#9661;</span>
+
+  Apoorv Ingle, Alex Hubers, and J. Garrett Morris. "Partial Type Constructors in Practice".  Haskell '21.
+</p>
+
+<div id="pip">
+  <p class="abstract">
+    Type constructors in functional programming languages are total: a Haskell
+    programmer can equally readily construct lists of any element type. In
+    practice, however, not all applications of type constructors are equally
+    sensible: collections may only make sense for orderable elements, or
+    embedded DSLs might only make sense for serializable return types. Jones et
+    al. proposed a theory of partial type constructors, which guarantees that
+    type applications are sensible, and extends higher-order abstractions to
+    apply equally well to partial and total type constructors. This paper
+    evaluates the practicality of partial type constructors, in terms of both
+    language design and implementation. We extend GHC, the most widely used
+    Haskell compiler, with support for partial type constructors, and test our
+    extension on the compiler itself and its libraries. We show that introducing
+    partial type constructors has a minimal impact on most code, but raises
+    important questions in language and library design
+  </p>
+
+  <p>
+    The published version is available in <a href="pubs/ingle-hs2022-partiality.pdf">PDF</a>.
+  </p>
+</div>
+
 
  <p onclick='toggle("separating")' class="paper">
    <span id="separating-closed" class="close">&#9655;</span>
