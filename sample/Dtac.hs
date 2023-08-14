@@ -12,8 +12,8 @@ instance (Functor f, Functor g) => Functor (f :+: g)
 data Fix e = Fix (e (Fix e))
 
 instance (Show (f e), Show (g e)) => Show ((f :+: g) e) where
-  show (Inl x) = "l" ++ show x
-  show (Inr x) = "r" ++ show x
+  show (Inl x) = show x
+  show (Inr x) = show x
 
 instance Show (e (Fix e)) => Show (Fix e) where
   show (Fix x) = show x
@@ -170,15 +170,31 @@ et (Times x y) r = r x * r y
 
 cases cs = f where f (Fix e) = cs e f
 
-evalOne :: Fix (Const :+: Plus) -> Int
-evalOne = cases (ec ? ep)
+const_ i = Fix (inj (Const i))
+plus_ e1 e2 = Fix (inj (Plus e1 e2))
+times_ e1 e2 = Fix (inj (Times e1 e2))
+
+type E1 = Fix (Const :+: (Plus :+: Times))
+type E2 = Fix ((Const :+: Plus) :+: Times)
+
+-- evalOne :: E1 -> Int
+-- evalOne = cases ((ec ? et) ? ep)
+--
+-- evalTwo :: E2 -> Int
+-- evalTwo = cases ((ec ? et) ? ep)
+
 
 --------------------------------------------------------------------------------
 
 data Double e = Double e
 
+
+recursively f (Fix e) = ((f ? Fix) . fmap (recursively f)) e
+
+
 desugar e = cases ((\(Double e) r -> Fix (inj (Plus (r e) (r e)))) ? (const . Fix . fmap desugar)) e
+desugar' e = recursively (\(Double e) -> plus_ e e)
 
 -- Types, but not usable.
-evalTwo :: Fix (Const :+: Const) -> Int
-evalTwo = cases (ec ? ec2)
+-- evalTwo :: Fix (Const :+: Const) -> Int
+-- evalTwo = cases (ec ? ec2)
