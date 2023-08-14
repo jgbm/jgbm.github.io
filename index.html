@@ -162,7 +162,7 @@ function toggle(blck) {
 }
 
 function toggleAll() {
-  var papers = ["blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
+  var papers = ["higher", "divide", "blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
                 "conflate", "variants", "propositions", "oversem", "cpgv",
                 "thesis", "instances", "hackage", "rose", "tears", "races",
                 "partialdata", "career", "separating", "pip"]
@@ -254,10 +254,10 @@ function toggleAll() {
     CS:5850 (Semantics): Spring 2022
 
   <p>
-    CS:4980 (Functional algorithms): Spring 2021
+    CS:4980 (Functional algorithms): Spring 2021, Spring 2023
 
   <p>
-    CS:3820 (Programming languages): Fall 2020, Fall 2021, Fall 2022
+    CS:3820 (Programming languages): Fall 2020, Fall 2021, Fall 2022, Fall 2023
   </p>
 
   <h3>At the University of Kansas</h3>
@@ -282,6 +282,64 @@ function toggleAll() {
 
 <div class="box" id="research">
  <h2>publications</h2>
+
+ <p onclick='toggle("higher")' class="paper">
+  <span id="higher-closed" class="close">&#9655;</span>
+  <span id="higher-open" class="open">&#9661;</span>
+
+  Alex Hubers and J. Garrett Morris, "Generic Programming with Extensible Data Types; Or, Making Ad Hoc Extensible Data Types Less Ad Hoc".  To appear in ICFP '23.
+ </p>
+
+ <div id="higher">
+  <p class="abstract">
+    We present a novel approach to generic programming over extensible data
+    types. Row types capture the structure of records and variants, and can be
+    used to express record and variant subtyping, record extension, and modular
+    composition of case branches. We extend row typing to capture generic
+    programming over rows themselves, capturing patterns including lifting
+    operations to records and variations from their component types, and the
+    duality between cases blocks over variants and records of labeled functions,
+    without placing specific requirements on the fields or constructors present
+    in the records and variants. We formalize our approach in System R𝜔, an
+    extension of F𝜔 with row types, and give a denotational semantics for
+    (stratified) R𝜔 in Agda.
+  </p>
+  <p>
+    The preprint is available in <a href="pubs/hubers-icfp2023-higher.pdf">PDF</a>.
+  </p>
+ </div>
+
+
+ <p onclick='toggle("divide")' class="paper">
+  <span id="divide-closed" class="close">&#9655;</span>
+  <span id="divide-open" class="open">&#9661;</span>
+
+  Pedro Abreu, Benjamin Delaware, Alex Hubers, Christa Jenkins, J. Garrett Morris, and Aaron Stump. "A Type-Based Approach to Divide-and-Conquer Recursion in Coq".  POPL '23.
+ </p>
+
+ <div id="divide">
+  <p class="abstract">
+    This paper proposes a new approach to writing and verifying
+    divide-and-conquer programs in Coq. Extending the rich line of previous work
+    on algebraic approaches to recursion schemes, we present an algebraic
+    approach to divide-and-conquer recursion: recursions are represented as a
+    form of algebra, and from outer recursions, one may initiate inner
+    recursions that can construct data upon which the outer recursions may
+    legally recurse. Termination is enforced entirely by the typing discipline
+    of our recursion schemes. Despite this, our approach requires little from
+    the underlying type system, and can be implemented in System Fω plus a
+    limited form of positive-recursive types. Our implementation of the method
+    in Coq does not rely on structural recursion or on dependent types. The
+    method is demonstrated on several examples, including mergesort, quicksort,
+    Harper’s regular-expression matcher, and others. An indexed version is also
+    derived, implementing a form of divide-and-conquer induction that can be
+    used to reason about functions defined via our method.
+  </p>
+
+  <p>This paper is open access in the <a href="https://dl.acm.org/doi/10.1145/3571196">ACM DL</a>.
+ </div>
+
+
 
  <p onclick='toggle("pip")' class="paper">
   <span id="pip-closed" class="close">&#9655;</span>
