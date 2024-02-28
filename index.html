@@ -162,7 +162,7 @@ function toggle(blck) {
 }
 
 function toggleAll() {
-  var papers = ["higher", "divide", "blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
+  var papers = ["handling", "higher", "divide", "blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
                 "conflate", "variants", "propositions", "oversem", "cpgv",
                 "thesis", "instances", "hackage", "rose", "tears", "races",
                 "partialdata", "career", "separating", "pip"]
@@ -251,10 +251,12 @@ function toggleAll() {
   <h3>At the University of Iowa</h3>
 
   <p>
-    CS:5850 (Semantics): Spring 2022
+    CS:5850 (Semantics): Spring 2022, Spring 2024
+  </p>    
 
   <p>
     CS:4980 (Functional algorithms): Spring 2021, Spring 2023
+  </p>    
 
   <p>
     CS:3820 (Programming languages): Fall 2020, Fall 2021, Fall 2022, Fall 2023
@@ -283,11 +285,34 @@ function toggleAll() {
 <div class="box" id="research">
  <h2>publications</h2>
 
+ <p onclick='toggle("handling")' class="paper">
+   <span id="handling-closed" class="close">&#9655;</span>
+   <span id="handling-open" class="open">&#9661;</span>
+  
+   Wenhao Tang, Daniel Hillerström, Sam Lindley, J. Garrett Morris, "Soundly Handling Linearity". POPL '24.
+ </p>
+
+ <div id="handling">
+   <p class="abstract">
+     We propose a novel approach to soundly combining linear types with multi-shot effect handlers. Linear type systems statically ensure that resources such as file handles and communication channels are used exactly once. Effect handlers provide a rich modular programming abstraction for implementing features ranging from exceptions to concurrency to backtracking. Whereas conventional linear type systems bake in the assumption that continuations are invoked exactly once, effect handlers allow continuations to be discarded (e.g. for exceptions) or invoked more than once (e.g. for backtracking). This mismatch leads to soundness bugs in existing systems such as the programming language Links, which combines linearity (for session types) with effect handlers. We introduce control-flow linearity as a means to ensure that continuations are used in accordance with the linearity of any resources they capture, ruling out such soundness bugs. 
+   </p>
+
+   <p class="abstract">
+     We formalise the notion of control-flow linearity in a System F-style core calculus F<sub>eff</sub><sup>∘</sup> equipped with linear types, an effect type system, and effect handlers. We define a linearity-aware semantics in order to formally prove that F<sub>eff</sub><sup>∘</sup> preserves the integrity of linear values in the sense that no linear value is discarded or duplicated. In order to show that control-flow linearity can be made practical, we adapt <span style="font-variant: small-caps">Links</span> based on the design of F<sub>eff</sub><sup>∘</sup>, in doing so fixing a long-standing soundness bug. 
+   </p>
+
+   <p class="abstract">
+     Finally, to better expose the potential of control-flow linearity, we define an ML-style core calculus Q<sub>eff</sub><sup>∘</sup>, based on qualified types, which requires no programmer provided annotations, and instead relies entirely on type inference to infer control-flow linearity. Both linearity and effects are captured by qualified types. Q<sub>eff</sub><sup>∘</sup> overcomes a number of practical limitations of F<sub>eff</sub><sup>∘</sup>, supporting abstraction over linearity, linearity dependencies between type variables, and a much more fine-grained notion of control-flow linearity.
+   </p>
+
+   <p>This paper is open access in the <a href="https://dl.acm.org/doi/10.1145/3632896">ACM DL</a>.
+ </div>
+
  <p onclick='toggle("higher")' class="paper">
   <span id="higher-closed" class="close">&#9655;</span>
   <span id="higher-open" class="open">&#9661;</span>
 
-  Alex Hubers and J. Garrett Morris, "Generic Programming with Extensible Data Types; Or, Making Ad Hoc Extensible Data Types Less Ad Hoc".  To appear in ICFP '23.
+  Alex Hubers and J. Garrett Morris, "Generic Programming with Extensible Data Types; Or, Making Ad Hoc Extensible Data Types Less Ad Hoc". ICFP '23.
  </p>
 
  <div id="higher">
@@ -304,9 +329,7 @@ function toggleAll() {
     extension of F𝜔 with row types, and give a denotational semantics for
     (stratified) R𝜔 in Agda.
   </p>
-  <p>
-    The preprint is available in <a href="pubs/hubers-icfp2023-higher.pdf">PDF</a>.
-  </p>
+  <p>This paper is open access in the <a href="https://dl.acm.org/doi/10.1145/3607843">ACM DL</a>.
  </div>
 
 
@@ -338,8 +361,6 @@ function toggleAll() {
 
   <p>This paper is open access in the <a href="https://dl.acm.org/doi/10.1145/3571196">ACM DL</a>.
  </div>
-
-
 
  <p onclick='toggle("pip")' class="paper">
   <span id="pip-closed" class="close">&#9655;</span>
