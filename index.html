@@ -166,7 +166,7 @@ function toggleAll() {
   var papers = ["handling", "higher", "divide", "blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
                 "conflate", "variants", "propositions", "oversem", "cpgv",
                 "thesis", "instances", "hackage", "rose", "tears", "races",
-                "partialdata", "career", "separating", "pip"]
+                "partialdata", "career", "separating", "pip", "nest-lamp"]
   var len = papers.length;
   for (i = 0; i < len; i++) {
     toggle(papers[i]);
@@ -208,12 +208,6 @@ function toggleAll() {
   <p>
     <em>These advances form a virtuous cycle.</em>  More precise types enable better abstractions, while
     expressive abstractions make precise type systems easy to use.
-  </p>
-
-  <p>
-    <em>I am currently hiring a post-doctoral scholar</em> to work on the
-    foundations of type classes and type families in Haskell. See <a
-    href="postdoc.html">here</a> for details.
   </p>
 
   <p>
@@ -1048,6 +1042,49 @@ function toggleAll() {
 
     <p>
       This is NSF award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2044815">#2044815</a>; progress will be recounted <a href="projects/2044815/">here</a>.
+    </p>
+  </div>
+
+  <p onclick='toggle("nest-lamp")' class="paper">
+    <span id="nest-lamp-closed" class="close">&#9655;</span>
+    <span id="nest-lamp-open" class="open">&#9661;</span>
+      "A New Semantics for Type-Level Programming in Haskell", Principle Investigator.  National Science Foundation.  2024&ndash;2027.
+  </p>
+
+  <div id="nest-lamp">
+
+    <p class="abstract">
+      The project sits at the intersection of two important goals in practical
+      and correct software development.  The first is precisely and formally
+      capturing the requirements of programs and program components: we do not
+      want a program to rely on comparing functions for equality, or adding
+      arbitrary integers to pointers.  The second is modular and extensible
+      program construction: program components must be developed independently,
+      and changes internal to one component should not cause cascading changes
+      to other components.  This project's novelties are: a new foundation for
+      extensible descriptions of program properties and invariants, subsuming
+      multiple competing and complementary features used in current languages;
+      its impementation; and its metatheory.  The project's impacts are:
+      regularizing and extending features for specifying program properties in
+      existing languages; simplifying their implementation; and making these
+      features practical for adoption in other languages.
+    </p>
+
+    <p class="abstract">
+      The primary focus of this project is the programming language Haskell.
+      Haskell has an advanced type system with several features for modular and
+      extensible specification of program properties, most prominently type
+      classes and type families.  These features have evolved mostly
+      independently, with different approaches to their specification and
+      implementation.  The result, for both programmers and implementers, is a
+      constellation of features with frequently surprising interactions and
+      limitations.  This project develops a new core language for Haskell, with
+      a single feature that captures both type classes and type families.  It
+      will simplify Haskell implementations and make the existing features of
+      Haskell more regular and more expressive.  It will enable new features of
+      Haskell, closing the gaps between type families and type classes. And, it
+      will make it easier for other languages to adopt features from Haskell, by
+      giving them a simpler underlying semantics.
     </p>
   </div>
 
