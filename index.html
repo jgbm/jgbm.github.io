@@ -241,47 +241,108 @@ function toggleAll() {
   </p>
 
   <p>
-    Flip ahead to
-    my <a href="#teaching">teaching</a>, <a href="#research">publications</a>, <a href="#grants">grants</a>,
-    or <a href="#contact">contact information.</a>
+    Flip ahead to my <a href="#grants">sponsored projects</a>, <a href="#research">publications</a>, 
+    (archival information on) <a href="#teaching">courses I've taught</a>, or <a href="#contact">my 
+    contact information.</a>
 </div>
 
-<div class="box" id="teaching">
-  <h2>teaching</h2>
+<div class="box" id="grants">
+  <h2>sponsored projects</h2>
 
-  <h3>At the University of Iowa</h3>
-
-  <p>
-    CS:5850 (Semantics): Spring 2022, Spring 2024
-  </p>    
-
-  <p>
-    CS:4980 (Functional algorithms): Spring 2021, Spring 2023
-  </p>    
-
-  <p>
-    CS:3820 (Programming languages): Fall 2020, Fall 2021, Fall 2022, Fall 2023
+  <p onclick='toggle("nest-lamp")' class="paper">
+    <span id="nest-lamp-closed" class="close">&#9655;</span>
+    <span id="nest-lamp-open" class="open">&#9661;</span>
+      "A New Semantics for Type-Level Programming in Haskell", Principle Investigator.  National Science Foundation.  2024&ndash;2027.
   </p>
 
-  <h3>At the University of Kansas</h3>
+  <div id="nest-lamp">
 
-  <p>
-    EECS 210 (Discrete mathematics): <a href="eecs210s20/index.html">Spring 2020</a>
+    <p class="abstract">
+      The project sits at the intersection of two important goals in practical
+      and correct software development.  The first is precisely and formally
+      capturing the requirements of programs and program components: we do not
+      want a program to rely on comparing functions for equality, or adding
+      arbitrary integers to pointers.  The second is modular and extensible
+      program construction: program components must be developed independently,
+      and changes internal to one component should not cause cascading changes
+      to other components.  This project's novelties are: a new foundation for
+      extensible descriptions of program properties and invariants, subsuming
+      multiple competing and complementary features used in current languages;
+      its impementation; and its metatheory.  The project's impacts are:
+      regularizing and extending features for specifying program properties in
+      existing languages; simplifying their implementation; and making these
+      features practical for adoption in other languages.
+    </p>
+
+    <p class="abstract">
+      The primary focus of this project is the programming language Haskell.
+      Haskell has an advanced type system with several features for modular and
+      extensible specification of program properties, most prominently type
+      classes and type families.  These features have evolved mostly
+      independently, with different approaches to their specification and
+      implementation.  The result, for both programmers and implementers, is a
+      constellation of features with frequently surprising interactions and
+      limitations.  This project develops a new core language for Haskell, with
+      a single feature that captures both type classes and type families.  It
+      will simplify Haskell implementations and make the existing features of
+      Haskell more regular and more expressive.  It will enable new features of
+      Haskell, closing the gaps between type families and type classes. And, it
+      will make it easier for other languages to adopt features from Haskell, by
+      giving them a simpler underlying semantics.
+    </p>
+
+    <p>
+      This is NSF award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2345580">#2345580</a>; 
+      progress will be recounted <a href="projects/2345580/">here</a>.
+    </p>
+  </div>
+
+
+  <p onclick='toggle("career")' class="paper">
+   <span id="career-closed" class="close">&#9655;</span>
+   <span id="career-open" class="open">&#9661;</span>
+     "CAREER: Extensibility in Theory and Practice", Principle Investigator.  National Science Foundation.  2021&ndash;2026.
   </p>
 
-  <p>
-    EECS 662 (Programming languages): <a href="eecs662f17/index.html">Fall 2017</a>, <a href="eecs662s19/index.html">Spring 2019</a>, <a href="eecs662s20/index.html">Spring 2020</a>
-  </p>
+  <div id="career">
+    <p class="abstract">
+      Modern software engineering relies on large ecosystems of independent
+      software components and libraries. This poses two challenges for the
+      design of programming languages and language tooling, both of which are
+      addressed by this project. First, languages must support developing
+      independent components, including identifying and abstracting reusable
+      components from existing applications. Second, languages must provide
+      expressive specification mechanisms to ensure that components are used
+      correctly and that components do not have unintended interactions. The
+      project's novelties are new programming language features for modular
+      specification and implementation of program data and behavior, at all
+      level of the software stack from user-facing applications to operating
+      system components and hardware support. The project's impacts are
+      improvements in both software reliability and programmer productivity, as
+      the project enables language tooling to automatically help programmers
+      identify and correctly use software components and libraries.
+    </p>
 
-  <p>
-    EECS 665 (Compilers): <a href="eecs665s18/index.html">Spring 2018</a>
-  </p>
+    <p class="abstract">
+      The project has two primary themes. The first is modularity and reuse in
+      high-level functional programs. The project develops extensible types for
+      data and computational effects, supporting high-level abstractions
+      including overloading, generic programming, and extensible effect
+      handlers. The second is modularity and reuse in low-level and systems
+      programs. The project develops extensible bit-level specifications of data
+      structures and their layout, targeting applications including operating
+      system kernels and hardware interfaces. Each of these themes will only
+      have impact if the resulting language features have comparable performance
+      with existing approaches. The project uses linear typing and compile-type
+      specialization to offset runtime costs traditionally associated with
+      generic and extensible programming techniques.
+    </p>
 
-  <p>
-    EECS 762 (Semantics): <a href="eecs762f18/index.html">Fall 2018</a>, <a href="eecs762f19/index.html">Fall 2019</a>
-  </p>
+    <p>
+      This is NSF award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2044815">#2044815</a>; progress will be recounted <a href="projects/2044815/">here</a>.
+    </p>
+  </div>
 </div>
-
 
 <div class="box" id="research">
  <h2>publications</h2>
@@ -997,97 +1058,40 @@ function toggleAll() {
      Please see each paper for the location of the definitive version.</small></p>
 </div>
 
-<div class="box" id="grants">
-  <h2>sponsored projects</h2>
+<div class="box" id="teaching">
+  <h2>teaching</h2>
 
-  <p onclick='toggle("career")' class="paper">
-   <span id="career-closed" class="close">&#9655;</span>
-   <span id="career-open" class="open">&#9661;</span>
-     "CAREER: Extensibility in Theory and Practice", Principle Investigator.  National Science Foundation.  2021&ndash;2026.
+  <h3>At the University of Iowa</h3>
+
+  <p>
+    CS:5850 (Semantics): Spring 2022, Spring 2024
+  </p>    
+
+  <p>
+    CS:4980 (Functional algorithms): Spring 2021, Spring 2023
+  </p>    
+
+  <p>
+    CS:3820 (Programming languages): Fall 2020, Fall 2021, Fall 2022, Fall 2023
   </p>
 
-  <div id="career">
-    <p class="abstract">
-      Modern software engineering relies on large ecosystems of independent
-      software components and libraries. This poses two challenges for the
-      design of programming languages and language tooling, both of which are
-      addressed by this project. First, languages must support developing
-      independent components, including identifying and abstracting reusable
-      components from existing applications. Second, languages must provide
-      expressive specification mechanisms to ensure that components are used
-      correctly and that components do not have unintended interactions. The
-      project's novelties are new programming language features for modular
-      specification and implementation of program data and behavior, at all
-      level of the software stack from user-facing applications to operating
-      system components and hardware support. The project's impacts are
-      improvements in both software reliability and programmer productivity, as
-      the project enables language tooling to automatically help programmers
-      identify and correctly use software components and libraries.
-    </p>
+  <h3>At the University of Kansas</h3>
 
-    <p class="abstract">
-      The project has two primary themes. The first is modularity and reuse in
-      high-level functional programs. The project develops extensible types for
-      data and computational effects, supporting high-level abstractions
-      including overloading, generic programming, and extensible effect
-      handlers. The second is modularity and reuse in low-level and systems
-      programs. The project develops extensible bit-level specifications of data
-      structures and their layout, targeting applications including operating
-      system kernels and hardware interfaces. Each of these themes will only
-      have impact if the resulting language features have comparable performance
-      with existing approaches. The project uses linear typing and compile-type
-      specialization to offset runtime costs traditionally associated with
-      generic and extensible programming techniques.
-    </p>
-
-    <p>
-      This is NSF award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2044815">#2044815</a>; progress will be recounted <a href="projects/2044815/">here</a>.
-    </p>
-  </div>
-
-  <p onclick='toggle("nest-lamp")' class="paper">
-    <span id="nest-lamp-closed" class="close">&#9655;</span>
-    <span id="nest-lamp-open" class="open">&#9661;</span>
-      "A New Semantics for Type-Level Programming in Haskell", Principle Investigator.  National Science Foundation.  2024&ndash;2027.
+  <p>
+    EECS 210 (Discrete mathematics): <a href="eecs210s20/index.html">Spring 2020</a>
   </p>
 
-  <div id="nest-lamp">
+  <p>
+    EECS 662 (Programming languages): <a href="eecs662f17/index.html">Fall 2017</a>, <a href="eecs662s19/index.html">Spring 2019</a>, <a href="eecs662s20/index.html">Spring 2020</a>
+  </p>
 
-    <p class="abstract">
-      The project sits at the intersection of two important goals in practical
-      and correct software development.  The first is precisely and formally
-      capturing the requirements of programs and program components: we do not
-      want a program to rely on comparing functions for equality, or adding
-      arbitrary integers to pointers.  The second is modular and extensible
-      program construction: program components must be developed independently,
-      and changes internal to one component should not cause cascading changes
-      to other components.  This project's novelties are: a new foundation for
-      extensible descriptions of program properties and invariants, subsuming
-      multiple competing and complementary features used in current languages;
-      its impementation; and its metatheory.  The project's impacts are:
-      regularizing and extending features for specifying program properties in
-      existing languages; simplifying their implementation; and making these
-      features practical for adoption in other languages.
-    </p>
+  <p>
+    EECS 665 (Compilers): <a href="eecs665s18/index.html">Spring 2018</a>
+  </p>
 
-    <p class="abstract">
-      The primary focus of this project is the programming language Haskell.
-      Haskell has an advanced type system with several features for modular and
-      extensible specification of program properties, most prominently type
-      classes and type families.  These features have evolved mostly
-      independently, with different approaches to their specification and
-      implementation.  The result, for both programmers and implementers, is a
-      constellation of features with frequently surprising interactions and
-      limitations.  This project develops a new core language for Haskell, with
-      a single feature that captures both type classes and type families.  It
-      will simplify Haskell implementations and make the existing features of
-      Haskell more regular and more expressive.  It will enable new features of
-      Haskell, closing the gaps between type families and type classes. And, it
-      will make it easier for other languages to adopt features from Haskell, by
-      giving them a simpler underlying semantics.
-    </p>
-  </div>
-
+  <p>
+    EECS 762 (Semantics): <a href="eecs762f18/index.html">Fall 2018</a>, <a href="eecs762f19/index.html">Fall 2019</a>
+  </p>
 </div>
 
 <div class="box" id="contact">

@@ -24,11 +24,11 @@ body {
 }
 
 h1 {
-  margin-left: 30px;
-  font-family: austin-pen, Tahoma, sans-serif;
+  margin-left: 24px;
+  font-family: goudy-old-style, Times New Roman, serif;
   font-weight: 400;
   font-size: 36pt;
-  font-style: normal;
+  font-style: italic;
   color: #000033;
 }
 
@@ -36,7 +36,7 @@ h1::after {
   content: "";
   display:block;
   margin-left: -30px;
-  margin-top: -39px;
+  margin-top: -0px;
   border-top: 1.5px solid;
 }
 
@@ -144,9 +144,36 @@ a.invisible {
 
 </style>
 
+<script type="text/javascript">
+
+  function toggle(blck) {
+    var el = document.getElementById(blck);
+    var closed = document.getElementById(blck + "-closed");
+    var open = document.getElementById(blck + "-open");
+    if (window.getComputedStyle(el, null).display == "none") {
+      el.style.display = "block";
+      closed.style.display = "none";
+      open.style.display = "inline-block";
+    } else {
+      el.style.display = "none";
+      closed.style.display = "inline-block";
+      open.style.display = "none";
+    }
+  }
+  
+  function toggleAll() {
+    var papers = ["handling", "higher", "romega-artifact"];
+    var len = papers.length;
+    for (i = 0; i < len; i++) {
+      toggle(papers[i]);
+    }
+  }
+
+</script> 
+
 </head>
 
-<body>
+<body onload="toggleAll()">
 
 <div class="topBox">
   <h1>Extensibility in Theory and Practice</h1>
@@ -200,6 +227,10 @@ a.invisible {
   </p>
 
   <p>
+    <a href="http://homepage.cs.uiowa.edu/~ahubers/">Alex Hubers</a>, graduate research assistant
+  </p>
+
+  <p>
     <a href="http://homepage.cs.uiowa.edu/~aningle/">Apoorv Ingle</a>, graduate research assistant
   </p>
 </div>
@@ -207,18 +238,81 @@ a.invisible {
 <div class="box">
   <h2>publications</h2>
 
-  <p>
-    Coming soon...
+  <p onclick='toggle("handling")' class="paper">
+    <span id="handling-closed" class="close">&#9655;</span>
+    <span id="handling-open" class="open">&#9661;</span>
+   
+    Wenhao Tang, Daniel Hillerström, Sam Lindley, J. Garrett Morris, "Soundly Handling Linearity". POPL '24.
   </p>
-
+ 
+  <div id="handling">
+    <p class="abstract">
+      We propose a novel approach to soundly combining linear types with multi-shot effect handlers. Linear type systems statically ensure that resources such as file handles and communication channels are used exactly once. Effect handlers provide a rich modular programming abstraction for implementing features ranging from exceptions to concurrency to backtracking. Whereas conventional linear type systems bake in the assumption that continuations are invoked exactly once, effect handlers allow continuations to be discarded (e.g. for exceptions) or invoked more than once (e.g. for backtracking). This mismatch leads to soundness bugs in existing systems such as the programming language Links, which combines linearity (for session types) with effect handlers. We introduce control-flow linearity as a means to ensure that continuations are used in accordance with the linearity of any resources they capture, ruling out such soundness bugs. 
+    </p>
+ 
+    <p class="abstract">
+      We formalise the notion of control-flow linearity in a System F-style core calculus F<sub>eff</sub><sup>∘</sup> equipped with linear types, an effect type system, and effect handlers. We define a linearity-aware semantics in order to formally prove that F<sub>eff</sub><sup>∘</sup> preserves the integrity of linear values in the sense that no linear value is discarded or duplicated. In order to show that control-flow linearity can be made practical, we adapt <span style="font-variant: small-caps">Links</span> based on the design of F<sub>eff</sub><sup>∘</sup>, in doing so fixing a long-standing soundness bug. 
+    </p>
+ 
+    <p class="abstract">
+      Finally, to better expose the potential of control-flow linearity, we define an ML-style core calculus Q<sub>eff</sub><sup>∘</sup>, based on qualified types, which requires no programmer provided annotations, and instead relies entirely on type inference to infer control-flow linearity. Both linearity and effects are captured by qualified types. Q<sub>eff</sub><sup>∘</sup> overcomes a number of practical limitations of F<sub>eff</sub><sup>∘</sup>, supporting abstraction over linearity, linearity dependencies between type variables, and a much more fine-grained notion of control-flow linearity.
+    </p>
+ 
+    <p>This paper is open access in the <a href="https://dl.acm.org/doi/10.1145/3632896">ACM DL</a>.
+  </div>
+ 
+  <p onclick='toggle("higher")' class="paper">
+   <span id="higher-closed" class="close">&#9655;</span>
+   <span id="higher-open" class="open">&#9661;</span>
+ 
+   Alex Hubers and J. Garrett Morris, "Generic Programming with Extensible Data Types; Or, Making Ad Hoc Extensible Data Types Less Ad Hoc". ICFP '23.
+  </p>
+ 
+  <div id="higher">
+   <p class="abstract">
+     We present a novel approach to generic programming over extensible data
+     types. Row types capture the structure of records and variants, and can be
+     used to express record and variant subtyping, record extension, and modular
+     composition of case branches. We extend row typing to capture generic
+     programming over rows themselves, capturing patterns including lifting
+     operations to records and variations from their component types, and the
+     duality between cases blocks over variants and records of labeled functions,
+     without placing specific requirements on the fields or constructors present
+     in the records and variants. We formalize our approach in System R𝜔, an
+     extension of F𝜔 with row types, and give a denotational semantics for
+     (stratified) R𝜔 in Agda.
+   </p>
+   <p>This paper is open access in the <a href="https://dl.acm.org/doi/10.1145/3607843">ACM DL</a>.
+  </div>
+ 
 </div>
 
 <div class="box">
   <h2>artifacts</h2>
 
-  <p>
-    Coming soon...
+  <p onclick='toggle("romega-artifact")' class="paper">
+    <span id="romega-artifact-closed" class="close">&#9655;</span>
+    <span id="romega-artifact-open" class="open">&#9661;</span>
+  
+    Alex Hubers and J. Garrett Morris, Rω formalization as of ICFP'23.
   </p>
+ 
+  <div id="romega-artifact">
+    <p class="abstract">
+      Our artifact is an Agda library. The development consists principally of the following components:
+    </p>
+
+    <ul class="abstract">
+      <li>An intrinsic mechanization of Rω.</li>
+      <li>A formalization of the Index Calculus.</li>
+      <li>A Denotation of Rω into the Index Calculus.</li>
+    </ul>
+
+    <p>
+      A snapshot of this development is available on <a href="https://github.com/IaFP/ROmega-ICFP23-artifact">GitHub</a>
+    </p>
+  </div>
+
 </div>
 
 </body>

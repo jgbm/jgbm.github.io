@@ -1,0 +1,232 @@
+<html>
+<head>
+<title>SHF: SMALL: A New Semantics for Type-Level Programming in Haskell [CCF-2345580]</title>
+
+<link rel="stylesheet" href="https://use.typekit.net/hgl6iue.css">
+
+<style type="text/css">
+
+body {
+  background-color: #fff4e6;
+  color: #1a001a;
+}
+
+.topBox {
+  margin: 40px;
+  max-width: 1200px;
+}
+
+.box {
+  margin: 20px;
+  margin-left: 100px;
+  margin-right: 60px;
+  max-width: 1100px;
+}
+
+h1 {
+  margin-left: 24px;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-size: 36pt;
+  font-style: italic;
+  color: #000033;
+}
+
+h1::after {
+  content: "";
+  display:block;
+  margin-left: -30px;
+  margin-top: -0px;
+  border-top: 1.5px solid;
+}
+
+.subhead {
+  display: block;
+  float: right;
+  margin-top: -30px;
+  align: right;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 23pt;
+}
+
+
+h2 {
+  font-family: austin-pen, Tahoma, sans-serif;
+  font-weight: 400;
+  font-size: 28pt;
+  font-style: normal;
+  margin-left: -10px;
+  text-transform: capitalize;
+}
+
+h2::after {
+  content: "";
+  display:block;
+  margin-left: -10px;
+  margin-top: -28px;
+  border-top: .75px solid;
+}
+
+
+h3 {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18pt;
+}
+
+p {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+#about p, #about li, p.abstract {
+  line-height: 1.4
+}
+
+em {
+  font-style: italic;
+  font-size: 16pt;
+}
+
+ul.inline {
+  margin-top: -10px;
+  margin-bottom: -13px;
+}
+
+li {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+p.paper {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 30px;
+}
+
+td {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  vertical-align: top;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+a {
+  color: #000033;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: #000033;
+  text-decoration: none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topBox">
+  <h1>A New Semantics for Type-Level Programming in Haskell</h1>
+  <div class="subhead">
+    <a class="invisible" href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2345580">CCF-2345580</a>
+  </div>
+</div>
+
+<div class="box">
+  <h2>abstract</h2>
+
+  <p>
+    The project sits at the intersection of two important goals in practical and
+    correct software development. The first is precisely and formally capturing
+    the requirements of programs and program components: one does not want a
+    program to rely on comparing functions for equality or adding arbitrary
+    integers to pointers. The second is modular and extensible program
+    construction: program components must be developed independently and changes
+    internal to one component should not cause cascading changes to other
+    components. This project's novelties are: a new foundation for extensible
+    descriptions of program properties and invariants, subsuming multiple
+    competing and complementary features used in current languages; its
+    implementation; and its metatheory. The project's impacts are: regularizing
+    and extending features for specifying program properties in existing
+    languages; simplifying their implementation; and making these features
+    practical for adoption in other languages.
+  </p>
+
+  <p>
+    The primary focus of this project is the programming language Haskell.
+    Haskell has an advanced type system with several features for modular and
+    extensible specification of program properties, most prominently type
+    classes and type families. These features have evolved mostly independently,
+    with different approaches to their specification and implementation. The
+    result, for both programmers and implementers, is a constellation of
+    features with frequently surprising interactions and limitations. This
+    project develops a new core language for Haskell, with a single feature that
+    captures both type classes and type families. It will simplify Haskell
+    implementations and make the existing features of Haskell more regular and
+    more expressive. It will enable new features of Haskell, closing the gaps
+    between type families and type classes. And, it will make it easier for
+    other languages to adopt features from Haskell, by giving them a simpler
+    underlying semantics.
+  </p>
+</div>
+
+<div class="box">
+  <h2>personnel</h2>
+
+  <p>
+    <a href="../../index.html">J. Garrett Morris</a>, principal investigator
+  </p>
+
+  <p>
+    <a href="https://uiowa.marmamorphism.com/">Andrew Marmaduke</a>, postdoctoral scholar
+  </p>
+
+  <p>
+    <a href="http://homepage.cs.uiowa.edu/~aningle/">Apoorv Ingle</a>, graduate research assistant
+  </p>
+
+</div>
+
+<div class="box">
+  <h2>publications</h2>
+
+  <p>
+    Coming soon...
+  </p>
+
+</div>
+
+<div class="box">
+  <h2>artifacts</h2>
+
+  <p>
+    Coming soon...
+  </p>
+</div>
+
+</body>
+
+</html>
