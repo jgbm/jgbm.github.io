@@ -1,0 +1,254 @@
+<html>
+<head>
+<title>Integrating Formal Methods into the Foundational Undergraduate Curriculum [CCF-2422176]</title>
+
+<link rel="stylesheet" href="https://use.typekit.net/hgl6iue.css">
+
+<style type="text/css">
+
+body {
+  background-color: #fff4e6;
+  color: #1a001a;
+}
+
+.topBox {
+  margin: 40px;
+  max-width: 1200px;
+}
+
+.box {
+  margin: 20px;
+  margin-left: 100px;
+  margin-right: 60px;
+  max-width: 1100px;
+}
+
+h1 {
+  margin-left: 24px;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-size: 36pt;
+  font-style: italic;
+  color: #000033;
+}
+
+h1::after {
+  content: "";
+  display:block;
+  margin-left: -30px;
+  margin-top: -0px;
+  border-top: 1.5px solid;
+}
+
+.subhead {
+  display: block;
+  float: right;
+  margin-top: -30px;
+  align: right;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 23pt;
+}
+
+
+h2 {
+  font-family: austin-pen, Tahoma, sans-serif;
+  font-weight: 400;
+  font-size: 28pt;
+  font-style: normal;
+  margin-left: -10px;
+  text-transform: capitalize;
+}
+
+h2::after {
+  content: "";
+  display:block;
+  margin-left: -10px;
+  margin-top: -28px;
+  border-top: .75px solid;
+}
+
+
+h3 {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18pt;
+}
+
+p {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+#about p, #about li, p.abstract {
+  line-height: 1.4
+}
+
+em {
+  font-style: italic;
+  font-size: 16pt;
+}
+
+ul.inline {
+  margin-top: -10px;
+  margin-bottom: -13px;
+}
+
+li {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+p.paper {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 30px;
+}
+
+td {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  vertical-align: top;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+a {
+  color: #000033;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: #000033;
+  text-decoration: none;
+}
+
+</style>
+
+<script type="text/javascript">
+
+  function toggle(blck) {
+    var el = document.getElementById(blck);
+    var closed = document.getElementById(blck + "-closed");
+    var open = document.getElementById(blck + "-open");
+    if (window.getComputedStyle(el, null).display == "none") {
+      el.style.display = "block";
+      closed.style.display = "none";
+      open.style.display = "inline-block";
+    } else {
+      el.style.display = "none";
+      closed.style.display = "inline-block";
+      open.style.display = "none";
+    }
+  }
+
+  function toggleAll() {
+    var papers = ["handling", "higher", "romega-artifact"];
+    var len = papers.length;
+    for (i = 0; i < len; i++) {
+      toggle(papers[i]);
+    }
+  }
+
+</script>
+
+</head>
+
+<body onload="toggleAll()">
+
+<div class="topBox">
+  <h1>Integrating Formal Methods into the Foundational Undergraduate Curriculum</h1>
+  <div class="subhead">
+    <a class="invisible" href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2044815">CCF-2044815</a>
+  </div>
+</div>
+
+<div class="box" id="about">
+  <h2>abstract</h2>
+
+  <p>
+    Mathematics and computer science are inextricably linked. However, it is
+    well-known among educators and education researchers that undergraduate
+    computer scientists often do not appreciate the relevance of mathematics to
+    their discipline. This disconnect adversely affects students, especially as
+    they progress from concrete, practical introductory courses centered on
+    programming to theoretical upper-level courses rooted in abstract
+    mathematics. Researchers have observed that student performance in the
+    classroom and retention within the major falter when these connections are
+    not established. This project's impact is to address these concerns by
+    developing pedagogy that (a) unites the mathematical foundations and
+    practice of computer science together in a way that all undergraduates can
+    appreciate and directly apply in their future endeavors and (b) is adoptable
+    by as many institutions as possible, especially those with limited room to
+    expand their curriculum.
+  </p>
+
+  <p>
+    To accomplish these goals, the investigators develop, deploy, and evaluate
+    new pedagogy that integrates formal methods techniques within the existing
+    undergraduate computer science curriculum. Specifically, this pedagogy
+    introduces program reasoning, an activity all computer scientists perform,
+    as the primary vehicle for studying the mathematical foundations of
+    computing in the contexts of introductory programming, discrete mathematics,
+    and algorithms courses. Such pedagogy bridges the gap between mathematics
+    and computer science for all undergraduate computer scientists and makes
+    relevant formal methods for a new generation of programmers. Additionally,
+    the project promotes the relevance of formal methods to undergraduate
+    computer science educators, as exemplified by this pedagogy, through a
+    series of workshops at the regional and national levels.
+  </p>
+
+</div>
+
+<div class="box">
+  <h2>personnel</h2>
+
+  <p>
+    <a href="../../index.html">J. Garrett Morris</a>, principal investigator
+  </p>
+
+  <p>
+    <a href="http://compepi.cs.uiowa.edu">Alberto Maria Segre</a>, co-principal investigator
+  </p>
+
+</div>
+
+<div class="box">
+  <h2>publications</h2>
+
+  <p>
+    Coming soon...
+  </p>
+</div>
+
+<div class="box">
+  <h2>artifacts</h2>
+
+  <p>
+    Coming soon...
+  </p>
+
+</div>
+
+</body>
+
+</html>

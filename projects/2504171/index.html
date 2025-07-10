@@ -1,0 +1,242 @@
+<html>
+<head>
+<title>Extensible LCF-style Theorem Proving with Dependent Rows [CCF-2504171]</title>
+
+<link rel="stylesheet" href="https://use.typekit.net/hgl6iue.css">
+
+<style type="text/css">
+
+body {
+  background-color: #fff4e6;
+  color: #1a001a;
+}
+
+.topBox {
+  margin: 40px;
+  max-width: 1200px;
+}
+
+.box {
+  margin: 20px;
+  margin-left: 100px;
+  margin-right: 60px;
+  max-width: 1100px;
+}
+
+h1 {
+  margin-left: 24px;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-size: 36pt;
+  font-style: italic;
+  color: #000033;
+}
+
+h1::after {
+  content: "";
+  display:block;
+  margin-left: -30px;
+  margin-top: -0px;
+  border-top: 1.5px solid;
+}
+
+.subhead {
+  display: block;
+  float: right;
+  margin-top: -30px;
+  align: right;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 23pt;
+}
+
+
+h2 {
+  font-family: austin-pen, Tahoma, sans-serif;
+  font-weight: 400;
+  font-size: 28pt;
+  font-style: normal;
+  margin-left: -10px;
+  text-transform: capitalize;
+}
+
+h2::after {
+  content: "";
+  display:block;
+  margin-left: -10px;
+  margin-top: -28px;
+  border-top: .75px solid;
+}
+
+
+h3 {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18pt;
+}
+
+p {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+#about p, #about li, p.abstract {
+  line-height: 1.4
+}
+
+em {
+  font-style: italic;
+  font-size: 16pt;
+}
+
+ul.inline {
+  margin-top: -10px;
+  margin-bottom: -13px;
+}
+
+li {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+p.paper {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.abstract {
+  margin-left: 30px;
+}
+
+td {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  vertical-align: top;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+a {
+  color: #000033;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: #000033;
+  text-decoration: none;
+}
+
+</style>
+
+<script type="text/javascript">
+
+  function toggle(blck) {
+    var el = document.getElementById(blck);
+    var closed = document.getElementById(blck + "-closed");
+    var open = document.getElementById(blck + "-open");
+    if (window.getComputedStyle(el, null).display == "none") {
+      el.style.display = "block";
+      closed.style.display = "none";
+      open.style.display = "inline-block";
+    } else {
+      el.style.display = "none";
+      closed.style.display = "inline-block";
+      open.style.display = "none";
+    }
+  }
+
+  function toggleAll() {
+    var papers = ["handling", "higher", "romega-artifact"];
+    var len = papers.length;
+    for (i = 0; i < len; i++) {
+      toggle(papers[i]);
+    }
+  }
+
+</script>
+
+</head>
+
+<body onload="toggleAll()">
+
+<div class="topBox">
+  <h1>Extensible LCF-style Theorem Proving with Dependent Rows</h1>
+  <div class="subhead">
+    <a class="invisible" href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2504171">CCF-2504171</a>
+  </div>
+</div>
+
+<div class="box" id="about">
+  <h2>abstract</h2>
+
+  <p>
+    This project develops new foundations for machine-verified proof in
+    programming languages and mathematics. Formalized libraries of mathematics
+    enable increased confidence in the correctness of proven results,
+    large-scale collaboration on future results, and a database of relevant
+    facts for automated reasoning. However, reuse of formalized proofs and proof
+    components is made difficult by language limitations within theorem provers
+    and incompatible choices between theorem provers. The project's novelty is a
+    new foundational technique based on type theory, with formal tools for proof
+    modularity and reuse at its core. The project's impacts are increased
+    sharing among formalization efforts and a basis for more effectively
+    exploring new proof theoretic foundations for mechanized theorem proving.
+  </p>
+
+  <p>
+    The project's core contribution is a new impredicative dependent row type
+    theory. Impredicativity captures expressive features of modern dependently
+    typed languages, like induction-recursion, without further extension. Proof
+    reuse is enabled by row types, used to describe extensible variants and
+    extensible dependent records. Both object logics and constructs within them
+    will be expressed extensible, automatically extending proof terms over
+    simpler objects in smaller logics to apply to more complex terms in larger
+    logics. For example, constructive proofs on groups can automatically be used
+    as classical proofs on fields.
+  </p>
+</div>
+
+<div class="box">
+  <h2>personnel</h2>
+
+  <p>
+    <a href="../../index.html">J. Garrett Morris</a>, principal investigator
+  </p>
+</div>
+
+<div class="box">
+  <h2>publications</h2>
+
+  <p>
+    Coming soon...
+  </p>
+</div>
+
+<div class="box">
+  <h2>artifacts</h2>
+
+  <p>
+    Coming soon...
+  </p>
+
+</div>
+
+</body>
+
+</html>

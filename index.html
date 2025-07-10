@@ -163,7 +163,8 @@ function toggle(blck) {
 }
 
 function toggleAll() {
-  var papers = ["handling", "higher", "divide", "blame-root", "cons-tf", "mixed", "bobw", "bananas", "gvhs",
+  var papers = ["drow", "fmitf", "handling", "higher", "divide", "blame-root",
+                "cons-tf", "mixed", "bobw", "bananas", "gvhs",
                 "conflate", "variants", "propositions", "oversem", "cpgv",
                 "thesis", "instances", "hackage", "rose", "tears", "races",
                 "partialdata", "career", "separating", "pip", "nest-lamp"]
@@ -241,18 +242,106 @@ function toggleAll() {
   </p>
 
   <p>
-    Flip ahead to my <a href="#grants">sponsored projects</a>, <a href="#research">publications</a>, 
-    (archival information on) <a href="#teaching">courses I've taught</a>, or <a href="#contact">my 
+    Flip ahead to my <a href="#grants">sponsored projects</a>, <a href="#research">publications</a>,
+    (archival information on) <a href="#teaching">courses I've taught</a>, or <a href="#contact">my
     contact information.</a>
+  </p>
 </div>
 
 <div class="box" id="grants">
   <h2>sponsored projects</h2>
 
+  <p onclick='toggle("drow")' class="paper">
+    <span id="drow-closed" class="close">&#9655;</span>
+    <span id="drow-open" class="open">&#9661;</span>
+      <em>Extensible LCF-style Theorem Proving with Dependent Rows</em>, Principle Investigator.  National Science Foundation.  2025&ndash;2029.
+  </p>
+
+  <div id="drow">
+    <p class="abstract">
+      This project develops new foundations for machine-verified proof in
+      programming languages and mathematics. Formalized libraries of mathematics
+      enable increased confidence in the correctness of proven results,
+      large-scale collaboration on future results, and a database of relevant
+      facts for automated reasoning. However, reuse of formalized proofs and
+      proof components is made difficult by language limitations within theorem
+      provers and incompatible choices between theorem provers. The project's
+      novelty is a new foundational technique based on type theory, with formal
+      tools for proof modularity and reuse at its core. The project's impacts
+      are increased sharing among formalization efforts and a basis for more
+      effectively exploring new proof theoretic foundations for mechanized
+      theorem proving.
+    </p>
+
+    <p class="abstract">
+      The project's core contribution is a new impredicative dependent row type
+      theory. Impredicativity captures expressive features of modern dependently
+      typed languages, like induction-recursion, without further extension.
+      Proof reuse is enabled by row types, used to describe extensible variants
+      and extensible dependent records. Both object logics and constructs within
+      them will be expressed extensible, automatically extending proof terms
+      over simpler objects in smaller logics to apply to more complex terms in
+      larger logics. For example, constructive proofs on groups can
+      automatically be used as classical proofs on fields.
+    </p>
+
+    <p>
+      This is NSF award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2504171">#2422176</a>;
+      progress will be recounted <a href="projects/2504171/">here</a>.
+    </p>
+  </div>
+
+
+
+  <p onclick='toggle("fmitf")' class="paper">
+    <span id="fmitf-closed" class="close">&#9655;</span>
+    <span id="fmitf-open" class="open">&#9661;</span>
+      <em>Integrating Formal Methods into the Foundational Undergraduate Curriculum</em>, Principle Investigator.  National Science Foundation.  2024&ndash;2027.
+  </p>
+
+  <div id="fmitf">
+    <p class="abstract">
+      Mathematics and computer science are inextricably linked. However, it is
+      well-known among educators and education researchers that undergraduate
+      computer scientists often do not appreciate the relevance of mathematics
+      to their discipline. This disconnect adversely affects students,
+      especially as they progress from concrete, practical introductory courses
+      centered on programming to theoretical upper-level courses rooted in
+      abstract mathematics. Researchers have observed that student performance
+      in the classroom and retention within the major falter when these
+      connections are not established. This project's impact is to address these
+      concerns by developing pedagogy that (a) unites the mathematical
+      foundations and practice of computer science together in a way that all
+      undergraduates can appreciate and directly apply in their future endeavors
+      and (b) is adoptable by as many institutions as possible, especially those
+      with limited room to expand their curriculum.
+    </p>
+
+    <p class="abstract">
+      To accomplish these goals, the investigators develop, deploy, and evaluate
+      new pedagogy that integrates formal methods techniques within the existing
+      undergraduate computer science curriculum. Specifically, this pedagogy
+      introduces program reasoning, an activity all computer scientists perform,
+      as the primary vehicle for studying the mathematical foundations of
+      computing in the contexts of introductory programming, discrete
+      mathematics, and algorithms courses. Such pedagogy bridges the gap between
+      mathematics and computer science for all undergraduate computer scientists
+      and makes relevant formal methods for a new generation of programmers.
+      Additionally, the project promotes the relevance of formal methods to
+      undergraduate computer science educators, as exemplified by this pedagogy,
+      through a series of workshops at the regional and national levels.
+    </p>
+
+    <p>
+      This is NSF award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2422176">#2422176</a>;
+      progress will be recounted <a href="projects/2422176/">here</a>.
+    </p>
+  </div>
+
   <p onclick='toggle("nest-lamp")' class="paper">
     <span id="nest-lamp-closed" class="close">&#9655;</span>
     <span id="nest-lamp-open" class="open">&#9661;</span>
-      "A New Semantics for Type-Level Programming in Haskell", Principle Investigator.  National Science Foundation.  2024&ndash;2027.
+      <em>A New Semantics for Type-Level Programming in Haskell</em>, Principle Investigator.  National Science Foundation.  2024&ndash;2027.
   </p>
 
   <div id="nest-lamp">
@@ -292,7 +381,7 @@ function toggleAll() {
     </p>
 
     <p>
-      This is NSF award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2345580">#2345580</a>; 
+      This is NSF award <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2345580">#2345580</a>;
       progress will be recounted <a href="projects/2345580/">here</a>.
     </p>
   </div>
@@ -301,7 +390,7 @@ function toggleAll() {
   <p onclick='toggle("career")' class="paper">
    <span id="career-closed" class="close">&#9655;</span>
    <span id="career-open" class="open">&#9661;</span>
-     "CAREER: Extensibility in Theory and Practice", Principle Investigator.  National Science Foundation.  2021&ndash;2026.
+     <em>Extensibility in Theory and Practice</em>, Principle Investigator.  National Science Foundation.  2021&ndash;2026.
   </p>
 
   <div id="career">
@@ -350,17 +439,17 @@ function toggleAll() {
  <p onclick='toggle("handling")' class="paper">
    <span id="handling-closed" class="close">&#9655;</span>
    <span id="handling-open" class="open">&#9661;</span>
-  
+
    Wenhao Tang, Daniel Hillerström, Sam Lindley, J. Garrett Morris, "Soundly Handling Linearity". POPL '24.
  </p>
 
  <div id="handling">
    <p class="abstract">
-     We propose a novel approach to soundly combining linear types with multi-shot effect handlers. Linear type systems statically ensure that resources such as file handles and communication channels are used exactly once. Effect handlers provide a rich modular programming abstraction for implementing features ranging from exceptions to concurrency to backtracking. Whereas conventional linear type systems bake in the assumption that continuations are invoked exactly once, effect handlers allow continuations to be discarded (e.g. for exceptions) or invoked more than once (e.g. for backtracking). This mismatch leads to soundness bugs in existing systems such as the programming language Links, which combines linearity (for session types) with effect handlers. We introduce control-flow linearity as a means to ensure that continuations are used in accordance with the linearity of any resources they capture, ruling out such soundness bugs. 
+     We propose a novel approach to soundly combining linear types with multi-shot effect handlers. Linear type systems statically ensure that resources such as file handles and communication channels are used exactly once. Effect handlers provide a rich modular programming abstraction for implementing features ranging from exceptions to concurrency to backtracking. Whereas conventional linear type systems bake in the assumption that continuations are invoked exactly once, effect handlers allow continuations to be discarded (e.g. for exceptions) or invoked more than once (e.g. for backtracking). This mismatch leads to soundness bugs in existing systems such as the programming language Links, which combines linearity (for session types) with effect handlers. We introduce control-flow linearity as a means to ensure that continuations are used in accordance with the linearity of any resources they capture, ruling out such soundness bugs.
    </p>
 
    <p class="abstract">
-     We formalise the notion of control-flow linearity in a System F-style core calculus F<sub>eff</sub><sup>∘</sup> equipped with linear types, an effect type system, and effect handlers. We define a linearity-aware semantics in order to formally prove that F<sub>eff</sub><sup>∘</sup> preserves the integrity of linear values in the sense that no linear value is discarded or duplicated. In order to show that control-flow linearity can be made practical, we adapt <span style="font-variant: small-caps">Links</span> based on the design of F<sub>eff</sub><sup>∘</sup>, in doing so fixing a long-standing soundness bug. 
+     We formalise the notion of control-flow linearity in a System F-style core calculus F<sub>eff</sub><sup>∘</sup> equipped with linear types, an effect type system, and effect handlers. We define a linearity-aware semantics in order to formally prove that F<sub>eff</sub><sup>∘</sup> preserves the integrity of linear values in the sense that no linear value is discarded or duplicated. In order to show that control-flow linearity can be made practical, we adapt <span style="font-variant: small-caps">Links</span> based on the design of F<sub>eff</sub><sup>∘</sup>, in doing so fixing a long-standing soundness bug.
    </p>
 
    <p class="abstract">
@@ -1065,11 +1154,11 @@ function toggleAll() {
 
   <p>
     CS:5850 (Semantics): Spring 2022, Spring 2024
-  </p>    
+  </p>
 
   <p>
     CS:4980 (Functional algorithms): Spring 2021, Spring 2023
-  </p>    
+  </p>
 
   <p>
     CS:3820 (Programming languages): Fall 2020, Fall 2021, Fall 2022, Fall 2023
