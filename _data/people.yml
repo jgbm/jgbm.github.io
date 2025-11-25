@@ -1,0 +1,28 @@
+garrett:
+  name: "J. Garrett Morris"
+  link: https://jgbm.github.io
+  status: me
+
+andrew:
+  name: "Andrew Marmaduke"
+  link: https://marmamorphism.com/
+
+apoorv:
+  name: "Apoorv Ingle"
+  link: https://homepage.cs.uiowa.edu/~aningle/
+
+alex:
+  name: "Alex Hubers"
+  link: https://homepage.cs.uiowa.edu/~ahubers/
+
+jason:
+  name: "Jason Veenendaal"
+
+tristan:
+  name: "Tristan MacKinlay"
+  link: https://www.tristanmackinlay.com/
+
+alberto:
+  name: "Alberto Maria Segre"
+  link: https://pisa.cs.uiowa.edu/compepi/
+  status: external

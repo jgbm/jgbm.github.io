@@ -1,0 +1,214 @@
+body {
+  background-color: #fff4e6;
+  color: #1a001a;
+}
+
+.topBox {
+  margin: 40px;
+  max-width: 1200px;
+}
+
+.box {
+  margin: 20px;
+  margin-left: 100px;
+  margin-right: 60px;
+  max-width: 1100px;
+}
+
+.head {
+  margin-left: 30px;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-size: 36pt;
+  font-style: italic;
+  color: #000033;
+}
+
+.head::after {
+  content: "";
+  display:block;
+  margin-left: -30px;
+  margin-top: -0px;
+  border-top: 1.5px solid;
+}
+
+div.subhead {
+  display: block;
+  float: right;
+  margin-top: -18px;
+  align: right;
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 23pt;
+}
+
+h1 {
+  font-family: austin-pen, Tahoma, sans-serif;
+  font-weight: 400;
+  font-size: 28pt;
+  font-style: normal;
+  margin-left: -10px;
+  text-transform: capitalize;
+}
+
+h1::after {
+  content: "";
+  display:block;
+  margin-left: -10px;
+  margin-top: -28px;
+  border-top: .75px solid;
+}
+
+
+h2 {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18pt;
+}
+
+p {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+p, li {
+  line-height: 1.4
+}
+
+em {
+  font-style: italic;
+  font-size: 16pt;
+}
+
+ul.inline {
+  margin-top: -10px;
+  margin-bottom: -13px;
+}
+
+li {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+}
+
+p.paper {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+p.paper:hover {
+  text-decoration: underline;
+}
+
+p.title {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+p.title:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+
+.abstract p {
+  margin-left: 30px;
+}
+
+p.abstract {
+  margin-left: 30px;
+}
+
+td {
+  font-family: goudy-old-style, Times New Roman, serif;
+  font-size: 14pt;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  vertical-align: top;
+}
+
+span.open {
+  margin-left: -20px;
+  display:inline-block;
+}
+
+span.close {
+  margin-left: -20px;
+  display:none;
+}
+
+a {
+  color: #000033;
+  text-decoration: underline;
+}
+
+a.invisible {
+  color: #000033;
+  text-decoration: none;
+}
+
+/* accordion nonsense */
+
+.expands input {
+  display: none;
+}
+
+.expands #content {
+  display: none;
+}
+
+.expands .title label::before {
+  content: "\2767";
+  display: inline-block;
+  margin-left: -20px;
+}
+
+.expands > input[name="collapse"]:checked ~ .title label::before {
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+.expands .title label {
+  cursor: pointer;
+}
+
+.expands > input[name="collapse"]:checked ~ #content {
+  display: block;
+}
+
+/* another accordion */
+
+.twoversions input {
+  display: none;
+}
+
+.twoversions #short {
+  display: block;
+}
+
+.twoversions #long {
+  display: none;
+}
+
+.twoversions > input[name="collapse"]:checked ~ #short {
+  display: none;
+}
+
+.twoversions > input[name="collapse"]:checked ~ #long {
+  display: block;
+}
+
+.twoversions label {
+  cursor: pointer;
+}
+
+.twoversions label:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.twoversion label::after {
+  content: "\2767";
+  display: inline-block;
+}

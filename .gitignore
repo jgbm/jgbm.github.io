@@ -1,4 +1,6 @@
-**/soln/**
-**/asgn/**
-**/quiz/**
-*.ps1
+_site
+.sass-cache
+.jekyll-cachez
+.jekyll-metadata
+vendor
+Gemfile.lock

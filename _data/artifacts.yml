@@ -1,0 +1,35 @@
+romega_icfp23:
+  authors: Alex Hubers and J. Garrett Morris
+  title: R&omega; formalization as of ICFP 23
+  description: |-
+    This artifact is an Agda library. The development consists principally of the following components:
+
+    * An intrinsic mechanization of R&omega;
+    * A formalization of the index calculus; and,
+    * A denotation of R&omega; into the index calculus.
+
+    A snapshot of this development is available on [GitHub](https://github.com/IowaFP/ROmega-ICFP23-artifact)
+
+rosi:
+  authors: J. Garrett Morris
+  title: "Rosi: an implementation of Rose"
+  description: |-
+    This is an implementation of the Rose type system, including:
+
+    * A novel approach to type inference with first-class polymorphism;
+    * A predicate solver that captures some cases of improvement for row types; and,
+    * A type-erasing interpreter
+
+    The development is open source, on [GitHub](https://github.com/IowaFP/Rosi)
+
+systemfd-lean:
+  authors: Apoorv Ingle and Andrew Marmaduke
+  title: System FD formalization in Lean4
+  description: |-
+    This is a mechanized development of the metatheory of System FD in the Lean4 interactive theorem prover.
+    The development includes:
+
+    * The metatheory of System FD itself, including type soundness;
+    * Translations from a Haskell-like surface language to System FD.
+
+    The development is open source, on [GitHub](https://github.com/IowaFP/systemfd-lean)

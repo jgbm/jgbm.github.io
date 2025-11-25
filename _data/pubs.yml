@@ -1,0 +1,474 @@
+handling:
+  authors: Wenhao Tang, Daniel Hillerström, Sam Lindley, J. Garrett Morris
+  title: Soundly Handling Linearity
+  venue: POPL '24
+  abstract: |-
+    We propose a novel approach to soundly combining linear types with multi-shot effect handlers. Linear type systems statically ensure that resources such as file handles and communication channels are used exactly once. Effect handlers provide a rich modular programming abstraction for implementing features ranging from exceptions to concurrency to backtracking. Whereas conventional linear type systems bake in the assumption that continuations are invoked exactly once, effect handlers allow continuations to be discarded (e.g. for exceptions) or invoked more than once (e.g. for backtracking). This mismatch leads to soundness bugs in existing systems such as the programming language Links, which combines linearity (for session types) with effect handlers. We introduce control-flow linearity as a means to ensure that continuations are used in accordance with the linearity of any resources they capture, ruling out such soundness bugs.
+
+    We formalise the notion of control-flow linearity in a System F-style core calculus F<sub>eff</sub><sup>∘</sup> equipped with linear types, an effect type system, and effect handlers. We define a linearity-aware semantics in order to formally prove that F<sub>eff</sub><sup>∘</sup> preserves the integrity of linear values in the sense that no linear value is discarded or duplicated. In order to show that control-flow linearity can be made practical, we adapt <span style="font-variant: small-caps">Links</span> based on the design of F<sub>eff</sub><sup>∘</sup>, in doing so fixing a long-standing soundness bug.
+
+    Finally, to better expose the potential of control-flow linearity, we define an ML-style core calculus Q<sub>eff</sub><sup>∘</sup>, based on qualified types, which requires no programmer provided annotations, and instead relies entirely on type inference to infer control-flow linearity. Both linearity and effects are captured by qualified types. Q<sub>eff</sub><sup>∘</sup> overcomes a number of practical limitations of F<sub>eff</sub><sup>∘</sup>, supporting abstraction over linearity, linearity dependencies between type variables, and a much more fine-grained notion of control-flow linearity.
+  link: This paper is open access in the [ACM DL](https://dl.acm.org/doi/10.1145/3632896)
+
+higher:
+  authors: Alex Hubers and J. Garrett Morris
+  title: Generic Programming with Extensible Data Types; Or, Making Ad Hoc Extensible Data Types Less Ad Hoc
+  venue: ICFP '23
+  abstract: |-
+    We present a novel approach to generic programming over extensible data
+    types. Row types capture the structure of records and variants, and can be
+    used to express record and variant subtyping, record extension, and modular
+    composition of case branches. We extend row typing to capture generic
+    programming over rows themselves, capturing patterns including lifting
+    operations to records and variations from their component types, and the
+    duality between cases blocks over variants and records of labeled functions,
+    without placing specific requirements on the fields or constructors present
+    in the records and variants. We formalize our approach in System R𝜔, an
+    extension of F𝜔 with row types, and give a denotational semantics for
+    (stratified) R𝜔 in Agda.
+  link: This paper is open access in the [ACM DL](https://dl.acm.org/doi/10.1145/3607843)
+
+divide:
+  authors: Pedro Abreu, Benjamin Delaware, Alex Hubers, Christa Jenkins, J. Garrett Morris, and Aaron Stump
+  title: A Type-Based Approach to Divide-and-Conquer Recursion in Coq
+  venue: POPL '23
+  abstract: |-
+    This paper proposes a new approach to writing and verifying
+    divide-and-conquer programs in Coq. Extending the rich line of previous work
+    on algebraic approaches to recursion schemes, we present an algebraic
+    approach to divide-and-conquer recursion: recursions are represented as a
+    form of algebra, and from outer recursions, one may initiate inner
+    recursions that can construct data upon which the outer recursions may
+    legally recurse. Termination is enforced entirely by the typing discipline
+    of our recursion schemes. Despite this, our approach requires little from
+    the underlying type system, and can be implemented in System Fω plus a
+    limited form of positive-recursive types. Our implementation of the method
+    in Coq does not rely on structural recursion or on dependent types. The
+    method is demonstrated on several examples, including mergesort, quicksort,
+    Harper’s regular-expression matcher, and others. An indexed version is also
+    derived, implementing a form of divide-and-conquer induction that can be
+    used to reason about functions defined via our method.
+  link: This paper is open access in the [ACM DL](https://dl.acm.org/doi/10.1145/3571196)
+
+pip:
+  authors: Apoorv Ingle, Alex Hubers, and J. Garrett Morris
+  title: Partial Type Constructors in Practice
+  venue: Haskell '21
+  abstract: |-
+    Type constructors in functional programming languages are total: a Haskell
+    programmer can equally readily construct lists of any element type. In
+    practice, however, not all applications of type constructors are equally
+    sensible: collections may only make sense for orderable elements, or
+    embedded DSLs might only make sense for serializable return types. Jones et
+    al. proposed a theory of partial type constructors, which guarantees that
+    type applications are sensible, and extends higher-order abstractions to
+    apply equally well to partial and total type constructors. This paper
+    evaluates the practicality of partial type constructors, in terms of both
+    language design and implementation. We extend GHC, the most widely used
+    Haskell compiler, with support for partial type constructors, and test our
+    extension on the compiler itself and its libraries. We show that introducing
+    partial type constructors has a minimal impact on most code, but raises
+    important questions in language and library design
+  link: This paper is open access in the [ACM DL](https://dl.acm.org/doi/10.1145/3546189.3549923)
+
+separating:
+  authors: Simon Fowler, Wen Kokke, Ornela Dardha, Sam Lindley, and J. Garrett Morris
+  title: Separating Sessions Smoothly
+  venue: CONCUR '21
+  abstract: |-
+    This paper introduces Hypersequent GV (HGV), a modular and extensible core calculus for functional programming with session types that enjoys deadlock freedom, confluence, and strong normalisation. HGV exploits hyper-environments, which are collections of type environments, to ensure that structural congruence is type preserving. As a consequence we obtain a tight operational correspondence between HGV and HCP, a hypersequent-based process-calculus interpretation of classical linear logic. Our translations from HGV to HCP and vice-versa both preserve and reflect reduction. HGV scales smoothly to support Girard's Mix rule, a crucial ingredient for channel forwarding and exceptions.
+  link: This paper is open access from [LIPIcs](https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.CONCUR.2021.36)
+
+partialdata:
+  authors: Mark Jones, J. Garrett Morris, and Richard Eisenberg
+  title: Partial Type Constructors; Or, Making ad hoc datatypes less ad hoc
+  venue: POPL '20
+  abstract: |-
+    Functional programming languages assume that type constructors are total. Yet functional programmers know
+    better: counterexamples range from container types that make limiting assumptions about their contents
+    (e.g., requiring computable equality or ordering functions) to type families with defining equations only over
+    certain choices of arguments. We present a language design and formal theory of partial type constructors,
+    capturing the domains of type constructors using qualified types. Our design is both simple and expressive:
+    we support partial datatypes as first-class citizens (including as instances of parametric abstractions, such as
+    the Haskell Functor and Monad classes), and show a simple type elaboration algorithm that avoids placing
+    undue annotation burden on programmers. We show that our type system rejects ill-defined types and can be
+    compiled to a semantic model based on System F. Finally, we have conducted an experimental analysis of a
+    body of Haskell code, using a proof-of-concept implementation of our system; while there are cases where
+    our system requires additional annotations, these cases are rarely encountered in practical Haskell code.
+  link: This paper is open access from the [ACM DL](https://dl.acm.org/doi/10.1145/3371108)
+
+races:
+  authors: Wen Kokke, J. Garrett Morris, and Philip Wadler
+  title: Towards Races in Linear Logic
+  venue: COORDINATION '19
+  abstract: |-
+    Process calculi based in logic, such as &pi;DILL and CP, provide a foundation for deadlock-free
+    concurrent programming, but exclude non- determinism and races. HCP is a reformulation of CP
+    which addresses a fundamental shortcoming: the fundamental operator for parallel com- position
+    from the &pi;-calculus does not correspond to any rule of linear logic, and therefore not to any
+    term construct in CP.  We introduce HCP<sup>&ndash;</sup><sub>ND</sub> , which extends HCP with a
+    novel account of non- determinism. Our approach draws on bounded linear logic to provide a
+    strongly-typed account of standard process calculus expressions of non-determinism. We show
+    that our extension is expressive enough to capture many uses of non-determinism in untyped
+    calculi, such as non- deterministic choice, while preserving HCP's meta-theoretic properties,
+    including deadlock freedom.
+  link: This paper is open access from [SpringerLink](https://link.springer.com/chapter/10.1007/978-3-030-22397-7_3).
+
+rose:
+  authors: J. Garrett Morris and James McKinna
+  title: Abstracting Extensible Data Types; Or, Rows By Any Other Name
+  venue: POPL '19
+  abstract: |-
+    We present a novel typed language for extensible data types, generalizing and abstracting
+    existing systems of row types and row polymorphism. Extensible data types are a powerful
+    addition to traditional functional programming languages, capturing ideas from OOP-like record
+    extension and polymorphism to modular compositional interpreters. We introduce row theories, a
+    monoidal generalization of row types, giving a general account of record concatenation and
+    projection (dually, variant injection and branching). We realize them via qualified types,
+    abstracting the interpretation of records and variants over different row theories. Our
+    approach naturally types terms untypable in other systems of extensible data types, while
+    maintaining strong metatheoretic properties, such as coherence and principal types. Evidence
+    for type qualifiers has computational content, determining the implementation of record and
+    variant operations; we demonstrate this in giving a modular translation from our calculus,
+    instantiated with various row theories, to polymorphic &lambda;-calculus.
+  link: This paper is open access from the [ACM DL](https://dl.acm.org/doi/10.1145/3290325)
+
+tears:
+  authors: Simon Fowler, Sam Lindley, J. Garrett Morris, and S&aacute;ra Decova
+  title: "Exceptional Asynchronous Session Types: Session Types without Tiers"
+  venue: POPL '19
+  abstract: |-
+    Session types statically guarantee that communication complies with a protocol. However, most
+    accounts of session typing do not account for failure, which means they are of limited use in
+    real applications&mdash;especially distributed applications&mdash;where failure is pervasive.
+
+    We present the first formal integration of asynchronous session types with exception handling
+    in a functional programming language. We define a core calculus which satisfies preservation
+    and progress properties, is deadlock free, confluent, and terminating.
+
+    We provide the first implementation of session types with exception handling for a
+    fully-fledged functional programming language, by extending the Links web programming language;
+    our implementation draws on existing work on effect handlers. We illustrate our approach
+    through a running example of two-factor authentication, and a larger example of a session-based
+    chat application where communication occurs over session-typed channels and disconnections are
+    handled gracefully.
+  link: This paper is open access from the [ACM DL](https://dl.acm.org/doi/10.1145/3290341), and the extended version is available in [PDF](pubs/fowler-popl2019-sessions-extended.pdf)
+
+blame-root:
+  authors: Jack Williams, J. Garrett Morris and Philip Wadler
+  title: "The Root Cause of Blame: Contracts for Intersection and Union Types"
+  venue: OOPSLA '18
+  abstract: |-
+    Gradual typing has emerged as the tonic for programmers wanting a mixture of static and dynamic
+    typing, hoping to achieve the best of both. Sound gradual typing is the most potent brew,
+    providing static type- checking and dynamic assertions. Contracts provide a lightweight form of
+    gradual typing as they do not provide static checking but can be implemented as a library,
+    rather than demanding language level support.
+
+    Intersection and union types are well suited to dynamic languages&colon; intersection encodes
+    overloaded functions; union encodes uncertain data arising from branching code. We extend the
+    untyped lambda calculus with contracts for monitoring higher-order intersection and union
+    types, giving a uniform treatment to both.  Each operator requires a single reduction rule that
+    does not depend on the constituent types, or the context of the operator, unlike existing work.
+
+    We present a new method for defining contract satisfaction based on blame behaviour. A value
+    positively satisfies a type if, when monitored against that type in any context, never elicits
+    positive blame. A continuation negatively satisfies a type if, when monitored against that type
+    using any value, never elicits negative blame.
+
+    We supplement our definition of satisfaction with a serious of monitoring properties that
+    satisfying values and continuations should have. Each type has a positive property for values
+    and a negative property for continuations, ensuring that contracts reflect the types they
+    represent.
+  link: This paper is open access the [ACM DL](https://dl.acm.org/doi/10.1145/3276504)
+
+cons-tf:
+  authors: J. Garrett Morris and Richard A. Eisenberg
+  title: Constrained Type Families
+  venue: ICFP '17
+  abstract: |-
+    We present an approach to support partiality in type-level computation without compromising
+    expressiveness or type safety. Existing frameworks for type-level computation either require
+    totality or implicitly assume it. For example, type families in Haskell provide a powerful,
+    modular means of defining type-level computation. However, their current design implicitly
+    assumes that type families are total, introducing nonsensical types and significantly
+    complicating the metatheory of type families and their extensions. We propose an alternative
+    design, using qualified types to pair type-level computations with predicates that capture
+    their domains. Our approach naturally captures the intuitive partiality of type families,
+    simplifying their metatheory. As evidence, we present the first complete proof of consistency
+    for a language with closed type families.
+  link: |-
+    The conference version [PDF](pubs/morris-icfp2017-families-extended.pdf) and
+    extended editions [PDF](pubs/morris-icfp2017-families-extended.pdf) are
+    available. Note that these contain updated affiliation information, and so
+    should be preferred to the [ACM DL](https://dl.acm.org/doi/10.1145/3110286) version.
+
+mixed:
+  authors: Jack Williams, J. Garrett Morris, Philip Wadler, and Jakub Zalewski
+  title: "Mixed Messages: Measuring Conformance and Non-Interference in TypeScript"
+  venue: ECOOP '17
+  abstract: |-
+    TypeScript participates in the recent trend among programming languages to support gradual
+    typing. The DefinitelyTyped Repository for TypeScript supplies type definitions for over 2000
+    popular JavaScript libraries. However, there is no guarantee that implementations conform to
+    their corresponding declarations.
+
+    We present a practical evaluation of gradual typing for TypeScript. We have developed a tool,
+    based on the polymorphic blame calculus, for monitoring JavaScript libraries and TypeScript
+    clients against the TypeScript definition. We apply our tool, TypeScript TNG, to those
+    libraries in the DefinitelyTyped Repository which had adequate test code to use. Of the 122
+    libraries we checked, 59 had cases where either the library or its tests failed to conform to
+    the declaration.
+
+    Gradual typing should satisfy non-interference. Monitoring a program should never change its
+    behaviour except, to raise a type error should a value not conform to its declared
+    type. However, our experience also suggests serious technical concerns with the use of the
+    JavaScript proxy mechanism for enforcing contracts. Of the 122 libraries we checked, 22 had
+    cases where the library or its tests violated non-interference.
+  link: This paper is open access from [LIPIcs](https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ECOOP.2017.28)
+
+bobw:
+  authors: J. Garrett Morris
+  title: "The Best of Both Worlds: Linear Functional Programming Without Compromise"
+  venue: ICFP '16
+  abstract: |-
+    We present a linear functional calculus with both the safety guarantees expressible with linear
+    types and the rich language of combinators and composition provided by functional programming.
+    Unlike previous combinations of linear typing and functional programming, we compromise neither
+    the linear side (for example, our linear values are first-class citizens of the language) nor
+    the functional side (for example, we do not require duplicate definitions of compositions for
+    linear and unrestricted functions).  To do so, we must generalize abstraction and application
+    to encompass both linear and unrestricted functions.  We capture the typing of the generalized
+    constructs with a novel use of qualified types.  Our system maintains the metatheoretic
+    properties of the theory of qualified types, including principal types and decidable type
+    inference.  Finally, we give a formal basis for our claims of expressiveness, by showing that
+    evaluation respects linearity, and that our language is a conservative extension of existing
+    functional calculi.
+  link: |-
+    The extended edition is available in [PDF](pubs/morris-icfp2016-linearity-extended.pdf).
+    Note that this version fixes several inadvertent omissions and typographical errors, and so
+    should be preferred to the [ACM DL](http://dl.acm.org/citation.cfm?id=2951925) version.
+
+bananas:
+  authors: Sam Lindley and J. Garrett Morris
+  title: "Talking Bananas: Structural Recursion for Session Types"
+  venue: ICFP '16
+  abstract: |-
+    Session types provide static guarantees that concurrent programs respect communication
+    protocols.  We give a novel account of recursive session types in the context of GV, a small
+    concurrent extension of the linear &#955;-calculus.  We extend GV with recursive types and
+    catamorphisms, following the initial algebra semantics of recursion, and show that doing so
+    naturally gives rise to recursive session types.  We show that this principled approach to
+    recursion resolves long-standing problems in the treatment of duality for recursive session
+    types.
+
+    We characterize the expressiveness of GV concurrency by giving a CPS translation to
+    (non-concurrent) &lambda;-calculus and proving that reduction in GV is simulated by full
+    reduction in &lambda;-calculus. This shows that GV remains terminating in the presence of
+    positive recursive types, and that such arguments extend to other extensions of GV, such as
+    polymorphism or non-linear types, by appeal to normalization results for sequential
+    &lambda;-calculi.  We also show that GV remains deadlock free and deterministic in the presence
+    of recursive types.
+
+    Finally, we extend CP, a session-typed process calculus based on linear logic, with recursive
+    types, and show that doing so preserves the connection between reduction in GV and cut
+    elimination in CP.
+  link: |-
+    This paper is available in [PDF](pubs/lindley-icfp2016-bananas.pdf) or from
+    the [ACM DL](https://dl.acm.org/doi/10.1145/2951913.2951921)
+
+gvhs:
+  authors: Sam Lindley and J. Garrett Morris
+  title: Embedding Session Types in Haskell
+  venue: Haskell '16
+  abstract: |-
+    We present a novel embedding of session-typed concurrency in Haskell.
+
+    We extend an existing HOAS embedding of the linear &lambda;-calculus with a set of core
+    session-typed primitives, using indexed type families to express the constraints of the session
+    typing discipline.
+
+    We give two interpretations of our embedding, one in terms of GHC's built-in concurrency and
+    another in terms of purely functional continuations.
+
+    Our safety guarantees, including deadlock freedom, are assured statically and introduce no
+    additional runtime overhead.
+  link: |-
+    This paper is available in the [ACM DL](https://dl.acm.org/doi/10.1145/2976002.2976018) and in
+    [PDF](pubs/lindley-hs2016-gvhs.pdf). The source code is archived on [GitHub](https://github.com/jgbm/gvinhs)
+
+conflate:
+  authors: Robert Atkey, Sam Lindley, and J. Garrett Morris
+  title: Conflation Confers Concurrency
+  venue: 'LNCS 9600 "A List of Successes That Can Change the World: Essays Dedicated to Philip Wadler on the Occasion of His 60th Birthday"'
+  abstract: |-
+    Session types provide a static guarantee that concurrent programs respect communication
+    protocols.  Recent work has explored a correspondence between proof rules and cut reduction in
+    linear logic and typing and evaluation of process calculi. This paper considers two approaches
+    to extend logically-founded process calculi. First, we consider extensions of the process
+    calculus to more closely resemble &#960;-calculus. Second, inspired by denotational models of
+    process calculi, we consider conflating dual types. Most interestingly, we observe that these
+    approaches coincide&colon; conflating the multiplicatives (&#8855; and &#x214B;) allows processes to
+    share multiple channels; conflating the additives (&#8853; and &) provides
+    nondeterminism; and conflating the exponentials (! and ?) yields access points, a
+    rendezvous mechanism for initiating session typed communication.  Access points are
+    particularly expressive&colon; for example, they are sufficient to encode concurrent state and
+    general recursion.
+  link: Available from [Springer](http://link.springer.com/chapter/10.1007%2F978-3-319-30936-1_2) or in [PDF](pubs/atkey-wf2016-conflate.pdf)
+
+variants:
+  authors: J. Garrett Morris
+  title: Variations on Variants
+  venue: Haskell '15
+  abstract: |-
+    Extensible variants improve the modularity and expressiveness of programming languages&colon; they
+    allow program functionality to be decomposed into independent blocks, and allow seamless
+    extension of existing code with both new cases of existing data types and new operations over
+    those data types.
+
+    This paper considers three approaches to providing extensible variants in Haskell.  Row typing
+    is a long understood mechanism for typing extensible records and variants, but its adoption
+    would require extension of Haskell's core type system.  Alternatively, we might hope to encode
+    extensible variants in terms of existing mechanisms, such as type classes.  We describe an
+    encoding of extensible variants using instance chains, a proposed extension of the class
+    system.  Unlike many previous encodings of extensible variants, ours does not require the
+    definition of a new type class for each function that consumes variants.  Finally, we translate
+    our encoding to use closed type families, an existing feature of GHC.  Doing so demonstrates
+    the interpretation of instances chains and functional dependencies in closed type families.
+
+    One concern with encodings like ours is how completely they match the encoded system.  We
+    compare the expressiveness of our encodings with each other and with systems based on row
+    types.  We find that, while equivalent terms are typable in each system, both encodings require
+    explicit type annotations to resolve ambiguities in typing not present in row type systems, and
+    the type family implementation retains more constraints in principal types than does the
+    instance chain implementation.  We propose a general mechanism to guide the instantiation of
+    ambiguous type variables, show that it eliminates the need for type annotations in our
+    encodings, and discuss conditions under which it preserves coherence.
+  link: |-
+    This paper is available from the [ACM DL](https://dl.acm.org/doi/10.1145/2804302.2804320) or
+    in [PDF](https://dl.acm.org/doi/10.1145/2804302.2804320). Sample code is available [here](sample/Dtac.hs)
+
+propositions:
+  authors: Sam Lindley and J. Garrett Morris
+  title: A Semantics for Propositions as Sessions
+  venue: ESOP 2015
+  abstract: |-
+    Session types provide a static guarantee that concurrent programs respect communication
+    protocols. Recently, Caires, Pfenning, and Toninho, and Wadler, have developed a correspondence
+    between propositions of linear logic and session typed &#960;-calculus processes.
+
+    We relate the cut-elimination semantics of this approach to an operational semantics for
+    session-typed concurrency in a functional language.
+
+    We begin by presenting a variant of Wadler's session-typed core functional language, GV. We
+    give a small-step operational semantics for GV. We develop a suitable notion of deadlock, based
+    on existing approaches for capturing deadlock in &#960;-calculus, and show that all well-typed
+    GV programs are deadlock-free, deterministic, and terminating.
+
+    We relate GV to linear logic by giving translations between GV and CP, a process calculus with
+    a type system and semantics based on classical linear logic.  We prove that both directions of
+    our translation preserve reduction; previous translations from GV to CP, in contrast, failed to
+    preserve &#946;-reduction.
+
+    Furthermore, to demonstrate the modularity of our approach, we define two extensions of GV
+    which preserve deadlock-freedom, determinism, and termination.
+  link: |-
+    Available from [Springer](https://link.springer.com/chapter/10.1007/978-3-662-46669-8_23) or
+    in [PDF](pubs/lindley-esop15-propositions.pdf)
+
+oversem:
+  authors: J. Garrett Morris
+  title: A Simple Semantics of Haskell Overloading
+  venue: Haskell '14
+  abstract: |-
+    As originally proposed, type classes provide overloading and ad-hoc definition, but can still
+    be understood (and implemented) in terms of strictly parametric calculi.  This is not true of
+    subsequent extensions of type classes.  Functional dependencies and equality constraints allow
+    the satisfiability of predicates to refine typing; this means that the interpretations of
+    equivalent qualified types may not be interconvertible.  Overlapping instances and instance
+    chains allow predicates to be satisfied without determining the implementations of their
+    associated class methods, introducing truly non-parametric behavior.  We propose a new approach
+    to the semantics of type classes, interpreting polymorphic expressions by the behavior of each
+    of their ground instances, but without requiring that those behaviors be parametrically
+    determined.  We argue that this approach both matches the intuitive meanings of qualified types
+    and accurately models the behavior of programs.
+  link: Available from the [ACM DL](https://dl.acm.org/doi/10.1145/2633357.2633364) or [PDF](pubs/morris-haskell14-oversem.pdf)
+
+cpgv:
+  authors: Sam Lindley and J. Garrett Morris
+  title: Sessions as Propositions
+  venue: PLACES '14
+  abstract: |-
+    Recently, Wadler presented a continuation-passing translation from a session-typed functional
+    language, GV, to a process calculus based on classical linear logic, CP. However, this
+    translation is one-way&colon; CP is more expressive than GV. We propose an extension of GV, called
+    HGV, and give translations showing that it is as expressive as CP. The new translations shed
+    light both on the original translation from GV to CP, and on the limitations in expressiveness
+    of GV.
+  link: Available on [arXiv](http://arxiv.org/abs/1406.3479).
+
+#  <p onclick='toggle("thesis")' class="paper">
+#    <span id="thesis-closed" class="close">&#9655;</span>
+#    <span id="thesis-open" class="open">&#9661;</span>
+#    J. Garrett Morris. <i>Type Classes and Instance Chains: A Relational Approach.</i> PhD thesis,
+#    Portland State University, 2013.
+#  </p>
+
+#  <div id="thesis">
+#    <p class="abstract">
+#      Type classes, first proposed during the design of the Haskell programming language, extend
+#      standard type systems to support overloaded functions. Since their introduction, type classes
+#      have been used to address a range of problems, from typing ordering and arithmetic operators to
+#      describing heterogeneous lists and limited subtyping. However, while type class programming is
+#      useful for a variety of practical problems, its wider use is limited by the inexpressiveness
+#      and hidden complexity of current mechanisms. We propose two improvements to existing class
+#      systems. First, we introduce several novel language features, instance chains and explicit
+#      failure, that increase the expressiveness of type classes while providing more direct
+#      expression of current idioms. To validate these features, we have built an implementation of
+#      these features, demonstrating their use in a practical setting and their integration with type
+#      reconstruction for a Hindley-Milner type system.  Second, we define a set-based semantics for
+#      type classes that provides a sound basis for reasoning about type class systems, their
+#      implementations, and the meanings of programs that use them.
+#    </p>
+
+#    <p>Available in <a href="pubs/morris-dissertation.pdf">PDF</a>.</p>
+#  </div>
+
+instances:
+  authors: J. Garrett Morris and Mark P. Jones
+  title: "Instance Chains: Type Class Programming Without Overlapping Instances"
+  venue: ICFP '10
+  abstract: |-
+    Type classes have found a wide variety of uses in Haskell programs, from simple overloading of
+    operators (such as equality or ordering) to complex invariants used to implement type-safe
+    heterogeneous lists or limited subtyping.  Unfortunately, many of the richer uses of type
+    classes require extensions to the class system that have been incompletely described in the
+    research literature and are not universally accepted within the Haskell community.
+
+    This paper describes a new type class system, implemented in a prototype tool
+    called <tt>ilab</tt>, that simplifies and enhances Haskell-style type-class programming.
+    In <tt>ilab</tt>, we replace overlapping instances with a new feature, <i>instance chains</i>,
+    allowing explicit alternation and failure in instance declarations.  We describe a technique
+    for ascribing semantics to type class systems, relating classes, instances, and class
+    constraints (such as kind signatures or functional dependencies) directly to a set-theoretic
+    model of relations on types.  Finally, we give a semantics for <tt>ilab</tt> and describe its
+    implementation.
+  link: Available from the [ACM DL](https://dl.acm.org/doi/10.1145/1932681.1863596) or in [PDF](pubs/morris-icfp2010-instances.pdf)
+
+hackage:
+  authors: J. Garrett Morris
+  title: "Experience Report: Using Hackage to Inform Language Design"
+  venue: Haskell '10
+  abstract: |-
+    Hackage, an online repository of Haskell applications and libraries, provides a hub for
+    programmers to both release code to and use code from the larger Haskell community.  We suggest
+    that Hackage can also serve as a valuable resource for language designers&colon; by providing a large
+    collection of code written by different programmers and in different styles, it allows language
+    designers to see not just how features could be used theoretically, but how they are (and are
+    not) used in practice.
+
+    We were able to make such a use of Hackage during the design of the class system for a new
+    Haskell-like programming language.  In this paper, we sketch our language design problem, and
+    how we used Hackage to help answer it.  We describe our methodology in some detail, including
+    both ways that it was and was not effective, and summarize our results.
+  link: Available from the [ACM DL](https://dl.acm.org/doi/10.1145/2088456.1863531) or in [PDF](pubs/morris-hw2010-hackage.pdf)

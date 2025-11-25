@@ -1,0 +1,89 @@
+---
+layout: default
+---
+
+<h1>abstract</h1>
+
+{{ page.abstract | markdownify }}
+
+{% if page.people %}
+
+  <h1>personnel</h1>
+
+  {% for person in page.people %}
+
+    {% assign details = site.data.people[person.tag] %}
+
+    <p>
+      {% if details.link %}
+        <a href="{{details.link}}">{{details.name}}</a>,
+      {% else %}
+        {{details.name}},
+      {% endif %}
+      {{person.role}}
+    </p>
+
+  {% endfor %}
+
+{% endif %}
+
+
+{% if page.pubs %}
+
+  <h1>publications</h1>
+
+  {% for tag in page.pubs %}
+
+    {% assign paper = site.data.pubs[tag] %}
+
+    <section class="expands">
+      <input type="checkbox" name="collapse" id="{{ tag }}" />
+
+      <p class="title">
+        <label for="{{ tag }}">
+          {{ paper.authors }}.
+          "{{ paper.title }}".
+          In <i>{{paper.venue}}</i>.
+        </label>
+      </p>
+
+      <div id="content">
+        <section class="abstract">
+          {{ paper.abstract | markdownify }}
+        </section>
+
+        {{ paper.link | markdownify }}
+
+      </div>
+    </section>
+
+  {% endfor %}
+
+{% endif %}
+
+{% if page.artifacts %}
+
+  <h1>artifacts</h1>
+
+  {% for tag in page.artifacts %}
+
+    {% assign artifact = site.data.artifacts[tag] %}
+
+    <section class="expands">
+      <input type="checkbox" name="collapse" id="{{ tag }}" />
+
+      <p class="title">
+        <label for="{{ tag }}">
+          {{ artifact.authors }}.
+          {{ artifact.title }}.
+        </label>
+      </p>
+
+      <div id="content">
+        {{ artifact.description | markdownify }}
+      </div>
+    </section>
+
+  {% endfor %}
+
+{% endif %}
