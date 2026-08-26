@@ -5,14 +5,14 @@ body {
 
 .topBox {
   margin: 40px;
-  max-width: 1200px;
+  max-width: 800px;
 }
 
 .box {
   margin: 20px;
   margin-left: 100px;
   margin-right: 60px;
-  max-width: 1100px;
+  max-width: 700px;
 }
 
 .head {
@@ -26,7 +26,7 @@ body {
 
 .head::after {
   content: "";
-  display:block;
+  display: block;
   margin-left: -30px;
   margin-top: -0px;
   border-top: 1.5px solid;
@@ -49,12 +49,12 @@ h1 {
   font-size: 28pt;
   font-style: normal;
   margin-left: -10px;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
 }
 
 h1::after {
   content: "";
-  display:block;
+  display: block;
   margin-left: -10px;
   margin-top: -28px;
   border-top: .75px solid;
@@ -73,13 +73,18 @@ p {
   font-size: 14pt;
 }
 
-p, li {
+p,
+li {
   line-height: 1.4
 }
 
 em {
   font-style: italic;
   font-size: 16pt;
+}
+
+.blog em {
+  font-size: 15pt;
 }
 
 ul.inline {
@@ -130,12 +135,12 @@ td {
 
 span.open {
   margin-left: -20px;
-  display:inline-block;
+  display: inline-block;
 }
 
 span.close {
   margin-left: -20px;
-  display:none;
+  display: none;
 }
 
 a {
@@ -146,6 +151,17 @@ a {
 a.invisible {
   color: #000033;
   text-decoration: none;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, "Cascadia Mono", "Roboto Mono", "DejaVu Sans Mono", "Liberation Mono", Menlo, Monaco, "Consolas", "Source Code Pro", monospace;
+  font-size: 12pt;
+}
+
+pre {
+  border: 1pt solid black;
+  padding: 10px;
+  background-color: white;
 }
 
 /* accordion nonsense */
@@ -164,7 +180,7 @@ a.invisible {
   margin-left: -20px;
 }
 
-.expands > input[name="collapse"]:checked ~ .title label::before {
+.expands>input[name="collapse"]:checked~.title label::before {
   transform: rotate(90deg);
   transform-origin: center;
 }
@@ -173,7 +189,7 @@ a.invisible {
   cursor: pointer;
 }
 
-.expands > input[name="collapse"]:checked ~ #content {
+.expands>input[name="collapse"]:checked~#content {
   display: block;
 }
 
@@ -191,11 +207,11 @@ a.invisible {
   display: none;
 }
 
-.twoversions > input[name="collapse"]:checked ~ #short {
+.twoversions>input[name="collapse"]:checked~#short {
   display: none;
 }
 
-.twoversions > input[name="collapse"]:checked ~ #long {
+.twoversions>input[name="collapse"]:checked~#long {
   display: block;
 }
 

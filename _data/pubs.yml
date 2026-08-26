@@ -1,13 +1,58 @@
+atia:
+  authors: J. Garrett Morris
+  title: Another Type Inference Algorithm for First-Class Implicit Polymorphism
+  venue: ICFP '26
+  abstract: |-
+    We propose yet another approach to type inference with first-class implicit
+    polymorphism, based on the interleaving of an Algorithm M-style
+    constraint-generating elaboration of terms and a solver for the generated
+    constraints. The novelty of our approach is that types include explicit
+    syntactic representations of unknown polymorphic types during type
+    inference. Solving unification constraints with unknown polymorphic types
+    also computes type arguments for the elaborated terms. The resulting system
+    is uniform, simple, extends to support domain-specific constraints, and
+    compares favorably with other approaches to first-class implicit
+    polymorphism
+  link: This paper is open access in the [ACM DL](https://dl.acm.org/doi/10.1145/3828702#)
+
 handling:
   authors: Wenhao Tang, Daniel Hillerström, Sam Lindley, J. Garrett Morris
   title: Soundly Handling Linearity
   venue: POPL '24
   abstract: |-
-    We propose a novel approach to soundly combining linear types with multi-shot effect handlers. Linear type systems statically ensure that resources such as file handles and communication channels are used exactly once. Effect handlers provide a rich modular programming abstraction for implementing features ranging from exceptions to concurrency to backtracking. Whereas conventional linear type systems bake in the assumption that continuations are invoked exactly once, effect handlers allow continuations to be discarded (e.g. for exceptions) or invoked more than once (e.g. for backtracking). This mismatch leads to soundness bugs in existing systems such as the programming language Links, which combines linearity (for session types) with effect handlers. We introduce control-flow linearity as a means to ensure that continuations are used in accordance with the linearity of any resources they capture, ruling out such soundness bugs.
+    We propose a novel approach to soundly combining linear types with
+    multi-shot effect handlers. Linear type systems statically ensure that
+    resources such as file handles and communication channels are used exactly
+    once. Effect handlers provide a rich modular programming abstraction for
+    implementing features ranging from exceptions to concurrency to
+    backtracking. Whereas conventional linear type systems bake in the
+    assumption that continuations are invoked exactly once, effect handlers
+    allow continuations to be discarded (e.g. for exceptions) or invoked more
+    than once (e.g. for backtracking). This mismatch leads to soundness bugs in
+    existing systems such as the programming language Links, which combines
+    linearity (for session types) with effect handlers. We introduce
+    control-flow linearity as a means to ensure that continuations are used in
+    accordance with the linearity of any resources they capture, ruling out such
+    soundness bugs.
 
-    We formalise the notion of control-flow linearity in a System F-style core calculus F<sub>eff</sub><sup>∘</sup> equipped with linear types, an effect type system, and effect handlers. We define a linearity-aware semantics in order to formally prove that F<sub>eff</sub><sup>∘</sup> preserves the integrity of linear values in the sense that no linear value is discarded or duplicated. In order to show that control-flow linearity can be made practical, we adapt <span style="font-variant: small-caps">Links</span> based on the design of F<sub>eff</sub><sup>∘</sup>, in doing so fixing a long-standing soundness bug.
+    We formalise the notion of control-flow linearity in a System F-style core
+    calculus F<sub>eff</sub><sup>∘</sup> equipped with linear types, an effect
+    type system, and effect handlers. We define a linearity-aware semantics in
+    order to formally prove that F<sub>eff</sub><sup>∘</sup> preserves the
+    integrity of linear values in the sense that no linear value is discarded or
+    duplicated. In order to show that control-flow linearity can be made
+    practical, we adapt <span style="font-variant: small-caps">Links</span>
+    based on the design of F<sub>eff</sub><sup>∘</sup>, in doing so fixing a
+    long-standing soundness bug.
 
-    Finally, to better expose the potential of control-flow linearity, we define an ML-style core calculus Q<sub>eff</sub><sup>∘</sup>, based on qualified types, which requires no programmer provided annotations, and instead relies entirely on type inference to infer control-flow linearity. Both linearity and effects are captured by qualified types. Q<sub>eff</sub><sup>∘</sup> overcomes a number of practical limitations of F<sub>eff</sub><sup>∘</sup>, supporting abstraction over linearity, linearity dependencies between type variables, and a much more fine-grained notion of control-flow linearity.
+    Finally, to better expose the potential of control-flow linearity, we define
+    an ML-style core calculus Q<sub>eff</sub><sup>∘</sup>, based on qualified
+    types, which requires no programmer provided annotations, and instead relies
+    entirely on type inference to infer control-flow linearity. Both linearity
+    and effects are captured by qualified types. Q<sub>eff</sub><sup>∘</sup>
+    overcomes a number of practical limitations of F<sub>eff</sub><sup>∘</sup>,
+    supporting abstraction over linearity, linearity dependencies between type
+    variables, and a much more fine-grained notion of control-flow linearity.
   link: This paper is open access in the [ACM DL](https://dl.acm.org/doi/10.1145/3632896)
 
 higher:
