@@ -26,3 +26,10 @@ alberto:
   name: "Alberto Maria Segre"
   link: https://pisa.cs.uiowa.edu/compepi/
   status: external
+
+oscar:
+  name: "Oscar Bender-Stone"
+  link: https://oscar-bender-stone.github.io/
+
+sue:
+  name: "Susan Harding"
