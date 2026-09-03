@@ -50,7 +50,7 @@
 
     <section id="short">
       <p>
-        I am an assistant professor in the <a href="https://cs.uiowa.edu">Department of
+        I am faculty in the <a href="https://cs.uiowa.edu">Department of
         Computer Science</a> at the <a href="https://www.uiowa.edu">University of
         Iowa</a>, where I lead the <a href="#group">Iowa Foundations of Programming Group</a>
         and co-lead the <a href="https://clc.cs.uiowa.edu/site/index.shtml">Computational
@@ -62,7 +62,7 @@
 
     <section id="long">
       <p>
-        I am an assistant professor in the <a href="https://cs.uiowa.edu">Department of
+        I am faculty in the <a href="https://cs.uiowa.edu">Department of
         Computer Science</a> at the <a href="https://www.uiowa.edu">University of
         Iowa</a>, where I lead the <a href="#group">Iowa Foundations of Programming Group</a>
         and co-lead the <a href="https://clc.cs.uiowa.edu/site/index.shtml">Computational
@@ -153,6 +153,18 @@
     foundations of type classes, type families, and extensibility. See <a
     href="postdoc.html">here</a> for more details.
   </p>
+</div>
+
+<div class="box" id="writing">
+  <h1>writing</h1>
+
+  <ul>
+  {% for post in site.posts %}
+    <li>
+      <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
 
 </div>
 
@@ -179,7 +191,7 @@
         </section>
 
         <p>
-          This is NSF award <a href="{{ project.agency-url }}">{{ project.agency-id }}</a>; progress will be recounted <a href="{{ project.url }}">here</a>.
+          This is NSF award <a href="{{ project.agency-url }}">{{ project.agency-id }}</a>; progress will be recounted <a href="{{ project.url | relative_url }}">here</a>.
         </p>
       </div>
 
